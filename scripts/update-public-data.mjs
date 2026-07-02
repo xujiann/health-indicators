@@ -6,6 +6,7 @@ import { FileBlob, SpreadsheetFile, Workbook } from "@oai/artifact-tool";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
 const privateRoot = path.resolve(repoRoot, "..", "health-indicators-private");
+const additionsPath = path.join(repoRoot, "data", "stat-bulletin-additions.json");
 
 async function firstXlsx(dir) {
   const files = await fs.readdir(dir);
@@ -65,6 +66,26 @@ function publicizeSubprov(record) {
   return next;
 }
 
+async function loadAdditions() {
+  try {
+    const text = await fs.readFile(additionsPath, "utf8");
+    return JSON.parse(text).map(normalizeRecord);
+  } catch (error) {
+    if (error.code === "ENOENT") return [];
+    throw error;
+  }
+}
+
+function recordKey(record) {
+  return [
+    record.region_code,
+    record.year,
+    record.compare_key,
+    record.nature,
+    record.region_tier,
+  ].join("|");
+}
+
 async function buildWorkbook(headers, records, outputPath) {
   const workbook = Workbook.create();
   const note = workbook.worksheets.add("说明");
@@ -111,7 +132,12 @@ async function main() {
   const privateRecords = rowObjects(privateRows).map(normalizeRecord);
   const basePublic = publicRecords.filter((record) => !String(record.region_tier || "").startsWith("3"));
   const subprov = privateRecords.filter(isPublishableSubprov).map(publicizeSubprov);
-  const merged = [...basePublic, ...subprov].map(normalizeRecord).sort(sortRecord);
+  const additions = await loadAdditions();
+  const mergedMap = new Map();
+  [...basePublic, ...subprov, ...additions].map(normalizeRecord).forEach((record) => {
+    mergedMap.set(recordKey(record), record);
+  });
+  const merged = [...mergedMap.values()].sort(sortRecord);
 
   await buildWorkbook(headers, merged, publicXlsx);
 
@@ -126,6 +152,7 @@ async function main() {
   console.log(JSON.stringify({
     publicBaseRows: basePublic.length,
     subprovRows: subprov.length,
+    additions: additions.length,
     subprovCities: cityCount,
     mergedRows: merged.length,
     publicXlsx,
