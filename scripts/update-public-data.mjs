@@ -6,7 +6,25 @@ import { FileBlob, SpreadsheetFile, Workbook } from "@oai/artifact-tool";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
 const privateRoot = path.resolve(repoRoot, "..", "health-indicators-private");
-const additionsPath = path.join(repoRoot, "data", "stat-bulletin-additions.json");
+const additionsDir = path.join(repoRoot, "data");
+
+const nationalHealthMetricDefinitions = {
+  total_institutions: { subcategory: "卫生资源", indicator: "医疗卫生机构总数", compare_key: "医疗卫生机构总数", unit: "个" },
+  hospitals: { subcategory: "卫生资源", indicator: "医院数", compare_key: "医院数", unit: "个" },
+  beds: { subcategory: "卫生资源", indicator: "医疗卫生机构实有床位数", compare_key: "医疗卫生机构实有床位数", unit: "万张" },
+  beds_per_1000: { subcategory: "卫生资源", indicator: "每千人口医疗卫生机构床位数", compare_key: "每千人口医疗卫生机构床位数", unit: "张" },
+  health_workers: { subcategory: "卫生人员", indicator: "卫生人员总数", compare_key: "卫生人员总数", unit: "万人" },
+  health_technicians: { subcategory: "卫生人员", indicator: "卫生技术人员数", compare_key: "卫生技术人员数", unit: "万人" },
+  physicians_assistants: { subcategory: "卫生人员", indicator: "执业(助理)医师数", compare_key: "执业(助理)医师数", unit: "万人" },
+  registered_nurses: { subcategory: "卫生人员", indicator: "注册护士数", compare_key: "注册护士数", unit: "万人" },
+  physicians_per_1000: { subcategory: "卫生人员", indicator: "每千人口执业(助理)医师数", compare_key: "每千人口执业(助理)医师数", unit: "人" },
+  nurses_per_1000: { subcategory: "卫生人员", indicator: "每千人口注册护士数", compare_key: "每千人口注册护士数", unit: "人" },
+  general_practitioners_per_10000: { subcategory: "卫生人员", indicator: "每万人口全科医生数", compare_key: "每万人口全科医生数", unit: "人" },
+  total_visits: { subcategory: "医疗服务", indicator: "总诊疗人次", compare_key: "总诊疗人次", unit: "亿人次" },
+  admissions: { subcategory: "医疗服务", indicator: "入院人次", compare_key: "入院人次", unit: "万人次" },
+  total_health_expenditure: { subcategory: "卫生费用", indicator: "卫生总费用", compare_key: "卫生总费用", unit: "亿元" },
+  health_expenditure_per_capita: { subcategory: "卫生费用", indicator: "人均卫生总费用", compare_key: "人均卫生总费用", unit: "元" },
+};
 
 async function firstXlsx(dir) {
   const files = await fs.readdir(dir);
@@ -36,6 +54,34 @@ function rowObjects(matrix) {
 
 function normalizeRecord(record) {
   return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value == null ? "" : value]));
+}
+
+function expandNationalHealthSeries(payload) {
+  return payload.years.flatMap((entry) => Object.entries(entry.metrics).map(([metricKey, value]) => {
+    const definition = nationalHealthMetricDefinitions[metricKey];
+    if (!definition) throw new Error(`Unknown national health metric: ${metricKey}`);
+    return normalizeRecord({
+      region_code: "000000",
+      region: "全国",
+      level: "国家",
+      year: entry.year,
+      category: "卫生健康",
+      subcategory: definition.subcategory,
+      indicator: definition.indicator,
+      nature: "实际值",
+      value,
+      unit: definition.unit,
+      yoy: "",
+      deadline: "",
+      responsible: "国家卫生健康委",
+      source: `${entry.year}年我国卫生健康事业发展统计公报`,
+      doc_no: "—（公开统计公报）",
+      source_url: entry.source_url,
+      note: payload.note || "国家卫健委统计公报补录",
+      compare_key: definition.compare_key,
+      region_tier: "1·全国",
+    });
+  }));
 }
 
 function sortRecord(a, b) {
@@ -68,8 +114,19 @@ function publicizeSubprov(record) {
 
 async function loadAdditions() {
   try {
-    const text = await fs.readFile(additionsPath, "utf8");
-    return JSON.parse(text).map(normalizeRecord);
+    const files = (await fs.readdir(additionsDir)).filter((name) => name.endsWith("-additions.json")).sort();
+    const additions = [];
+    for (const file of files) {
+      const payload = JSON.parse(await fs.readFile(path.join(additionsDir, file), "utf8"));
+      if (Array.isArray(payload)) {
+        additions.push(...payload.map(normalizeRecord));
+      } else if (payload.kind === "national-health-series-v1") {
+        additions.push(...expandNationalHealthSeries(payload));
+      } else {
+        throw new Error(`Unsupported additions payload in ${file}`);
+      }
+    }
+    return additions;
   } catch (error) {
     if (error.code === "ENOENT") return [];
     throw error;
@@ -90,8 +147,8 @@ async function buildWorkbook(headers, records, outputPath) {
   const workbook = Workbook.create();
   const note = workbook.worksheets.add("说明");
   note.getRange("A1").values = [["国家·辽宁·大连 公开指标数据库"]];
-  note.getRange("A3").values = [[`本表仅含公开发布及经确认可公开的副省级城市指标数据，共${records.length}条，不含未公开规划文件。`]];
-  note.getRange("A4").values = [["本版纳入15个副省级城市公开对标数据；引用请以原始公报或正式来源为准。"]];
+  note.getRange("A3").values = [[`本表仅含公开发布及经确认可公开的指标数据，共${records.length}条，不含未公开规划文件。`]];
+  note.getRange("A4").values = [["本版纳入全国近十年卫生健康统计公报核心序列及15个副省级城市公开对标数据；引用请以原始公报或正式来源为准。"]];
   note.getRange("A1:A4").format = { font: { name: "Microsoft YaHei" }, wrapText: true };
   note.getRange("A1").format = { font: { bold: true, size: 14, color: "#1F4E79" } };
   note.getRange("A:A").format.columnWidth = 88;
