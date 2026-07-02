@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国家·辽宁·大连 公开指标对比</title>
+<style>
+:root{
+  --ink:#1a2332;--ink2:#48566b;--ink3:#8492a6;--line:#dde3ec;--line2:#eef2f7;
+  --bg:#f3f5f8;--panel:#fff;--brand:#1f4e79;--brand2:#2d6094;--brand-soft:#e8f0f7;
+  --actual:#0a7d52;--target:#b9770a;--limit:#b23b3b;--task:#5a4b9c;
+  --t1:#1f4e79;--t2:#0a7d52;--t3:#c0392b;--t4:#7a5cc7;
+  --good:#0a7d52;--insight-bg:#f0f6fb;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei","PingFang SC",sans-serif;
+  background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding:0 18px}
+header{background:linear-gradient(135deg,#1f4e79,#2d6094);color:#fff;padding:18px 0}
+header .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+h1{font-size:18px;font-weight:700;letter-spacing:.5px}
+h1 small{display:block;font-size:11.5px;font-weight:400;opacity:.82;margin-top:3px}
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.13);padding:3px;border-radius:9px}
+.tab{padding:7px 15px;border-radius:7px;font-size:13px;cursor:pointer;color:#dce6f0;font-weight:500;transition:.12s}
+.tab.on{background:#fff;color:var(--brand)}
+
+.controls{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;box-shadow:0 1px 3px rgba(20,40,70,.05)}
+.controls .wrap{padding:11px 18px}
+.srow{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+#q{flex:1;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit}
+#q:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.count{font-size:12px;color:var(--ink2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.filters{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fl{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{padding:5px 11px;border:1px solid var(--line);background:#fff;border-radius:14px;font-size:12.5px;cursor:pointer;color:var(--ink2);transition:.12s;white-space:nowrap}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.tchip{display:inline-flex;align-items:center;gap:5px}
+.tchip::before{content:"";width:8px;height:8px;border-radius:2px;display:inline-block;background:var(--line)}
+.tchip[data-t="1"].on{background:#1f4e79;border-color:#1f4e79;color:#fff}
+.tchip[data-t="2"].on{background:#0a7d52;border-color:#0a7d52;color:#fff}
+.tchip[data-t="3"].on{background:#0d8a9c;border-color:#0d8a9c;color:#fff}
+.tchip[data-t="1"]::before{background:#1f4e79}
+.tchip[data-t="2"]::before{background:#0a7d52}
+.tchip[data-t="3"]::before{background:#0d8a9c}
+.tchip.on::before{background:#fff}
+.ychip.on{background:#5a4b9c;border-color:#5a4b9c;color:#fff}
+.cchip.on{background:#1f4e79;border-color:#1f4e79;color:#fff}
+.schip{font-size:12px;border-style:dashed;color:var(--ink2)}
+.schip.on{background:var(--brand2);border-color:var(--brand2);border-style:solid;color:#fff}
+.toggle{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);cursor:pointer;user-select:none;padding-bottom:2px}
+.toggle input{display:none}
+.sw{width:34px;height:19px;background:var(--line);border-radius:10px;position:relative;transition:.15s;flex:none}
+.sw::after{content:"";position:absolute;width:15px;height:15px;background:#fff;border-radius:50%;top:2px;left:2px;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.toggle input:checked + .sw{background:var(--brand)}
+.toggle input:checked + .sw::after{left:17px}
+
+main{padding:16px 0 60px}
+.secthead{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.8px;
+  margin:20px 2px 10px;padding-bottom:6px;border-bottom:2px solid var(--brand-soft);display:flex;justify-content:space-between;align-items:center}
+.secthead:first-child{margin-top:0}
+.secthead .c{font-size:11px;color:var(--ink3);font-weight:500;letter-spacing:0}
+.cmpgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(560px,1fr));gap:14px}
+@media(max-width:1240px){.cmpgrid{grid-template-columns:1fr}}
+.card{background:var(--panel);border-radius:11px;box-shadow:0 1px 3px rgba(20,40,70,.07);overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}
+.chead{padding:12px 15px 10px;border-bottom:1px solid var(--line2);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ctitle{font-size:15px;font-weight:700;color:var(--ink);line-height:1.3}
+.ccat{font-size:11px;color:var(--ink3);margin-top:3px}
+.cright{display:flex;align-items:center;gap:7px;flex:none}
+.cbadge{font-size:10.5px;padding:3px 8px;border-radius:5px;white-space:nowrap;font-weight:600}
+.b-cmp{background:var(--brand-soft);color:var(--brand)}
+.b-trend{background:#e6f4ec;color:var(--actual)}
+.b-goal{background:#fdf3e0;color:var(--target)}
+.b-single{background:#f0f2f5;color:var(--ink3)}
+.copybtn{font-size:14px;width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;color:var(--ink3);transition:.12s;display:flex;align-items:center;justify-content:center;flex:none}
+.copybtn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.cbody{padding:13px 15px;flex:1}
+
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center}
+.bar .lab{font-size:12px;color:var(--ink2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .lab b{display:block;font-size:9.5px;color:var(--ink3);font-weight:400}
+.track{height:22px;background:var(--line2);border-radius:5px;position:relative;overflow:hidden}
+.fill{height:100%;border-radius:5px;transition:width .5s ease;min-width:3px}
+.bar .num{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:74px;text-align:right}
+.bar .num small{font-size:10px;color:var(--ink3);font-weight:500}
+.bar.me .lab{color:var(--ink);font-weight:700}
+.bar.me .track{box-shadow:0 0 0 1.5px var(--brand)}
+.ranked .bar .lab{position:relative}
+.ranked .rk{display:inline-block;min-width:17px;height:17px;line-height:17px;text-align:center;background:var(--line);color:var(--ink2);
+  border-radius:50%;font-size:10px;font-weight:700;margin-right:6px;font-variant-numeric:tabular-nums}
+.ranked .bar.me .fill{background:#c0392b!important}
+.ranked .bar.me .num{color:#c0392b!important}
+.ranked .bar.me .rk{background:#c0392b;color:#fff}
+.ranked .bar.me .track{box-shadow:0 0 0 2px #c0392b}
+.medline{position:absolute;top:-2px;bottom:-2px;width:0;border-left:1.5px dashed #b9770a;z-index:2}
+.vchartwrap{overflow-x:auto;margin:0 -4px;padding:0 4px}
+svg.vchart{display:block;height:240px;min-width:100%}
+.medlabel{margin-top:8px;font-size:11px;color:var(--ink3);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.medmark{display:inline-block;width:14px;border-top:1.5px dashed #b9770a}
+.tier-1 .fill{background:var(--t1)} .tier-1 .num{color:var(--t1)}
+.tier-2 .fill{background:var(--t2)} .tier-2 .num{color:var(--t2)}
+.tier-3 .fill{background:#0d8a9c} .tier-3 .num{color:#0d8a9c}
+
+.insight{margin-top:11px;padding:9px 11px;background:var(--insight-bg);border-radius:7px;font-size:12px;color:var(--ink2);line-height:1.7}
+.insight b{color:var(--brand);font-weight:700}
+.insight .hl{color:var(--t3);font-weight:700}
+.scalenote{font-size:10px;color:var(--ink3);margin-top:7px;font-style:italic}
+
+svg.spark{width:100%;height:152px;display:block}
+.trendlegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:11.5px;color:var(--ink2)}
+.trendlegend span{display:inline-flex;align-items:center;gap:5px}
+.ld{width:14px;height:3px;border-radius:2px;display:inline-block}
+
+.goalrow{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line2)}
+.goalrow:last-child{border:none}
+.goalrow .gr{font-size:12px;color:var(--ink2);width:118px;white-space:nowrap}
+.goalrow .gr b{display:block;font-size:9.5px;color:var(--ink3);font-weight:400}
+.goalrow.me .gr{color:var(--ink);font-weight:700}
+.flow{flex:1;display:flex;align-items:center;gap:9px;font-variant-numeric:tabular-nums}
+.flow .base{font-size:14px;font-weight:700;color:var(--ink2)}
+.flow .arrow{color:var(--ink3);font-size:13px}
+.flow .goal{font-size:15px;font-weight:700}
+.flow.up .goal{color:var(--actual)} .flow.down .goal{color:var(--limit)}
+.flow .u{font-size:10px;color:var(--ink3);font-weight:500}
+.flow .badge2{margin-left:auto;font-size:10px;color:var(--ink3)}
+
+.gaps{margin-top:10px;padding-top:9px;border-top:1px solid var(--line2);font-size:11.5px;color:var(--ink3)}
+.gaps b{color:var(--target)}
+.note-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.nt{font-size:10.5px;padding:2px 7px;background:#f5f7fa;border-radius:4px;color:var(--ink3)}
+.single{display:flex;align-items:baseline;gap:8px}
+.single .v{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.single .u{font-size:12px;color:var(--ink3)}
+.single .meta{margin-left:auto;font-size:11px;color:var(--ink3);text-align:right}
+
+.empty{text-align:center;padding:60px;color:var(--ink3)}
+.empty b{display:block;font-size:16px;color:var(--ink2);margin-bottom:6px}
+
+table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(20,40,70,.06)}
+thead th{background:#f7f9fb;color:#5a6b80;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;text-align:left;padding:10px 12px;border-bottom:2px solid var(--line);cursor:pointer}
+tbody td{padding:9px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
+tbody tr:hover{background:#f9fbfd}
+.tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap}
+.t-actual{background:#e6f4ec;color:var(--actual)}.t-target{background:#fdf3e0;color:var(--target)}
+.t-limit{background:#fbeaea;color:var(--limit)}.t-task{background:#eeebfa;color:var(--task)}
+.valc{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px}
+.note{font-size:11px;color:var(--ink3);margin-top:2px;display:block}
+
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;
+  padding:11px 20px;border-radius:9px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.25);transition:transform .25s;z-index:99;max-width:90vw}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast .ttxt{font-size:11.5px;color:#cdd6e0;margin-top:5px;line-height:1.5;max-height:120px;overflow:auto;user-select:all}
+
+footer{text-align:center;padding:22px;color:var(--ink3);font-size:11.5px;line-height:1.7}
+footer b{color:var(--limit)}
+@media(max-width:760px){.hide-m{display:none}.tabs{order:3;width:100%}.cmpgrid{grid-template-columns:1fr}.bar{grid-template-columns:96px 1fr auto}}
+</style></head>
+<body>
+<header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div></div></header>
+<div class="controls"><div class="wrap"><div class="srow"><input id="q" placeholder="搜索指标，如 GDP、床位、医师、预期寿命、财政、医保…"><span class="count" id="count"></span></div><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div>
+<main><div class="wrap"><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
+<div id="toast"></div>
+<footer>数据来源：国家统计局、财政部及辽宁省、大连市、上海市、沈阳市统计公报等政府官网公开发布资料。<br>本页仅含各级政府官网正式发布的统计公报与财政公开数据；<b>不含任何未公开或内部文件</b>。引用请以原始公报为准。</footer>
+<script>
+const DATA=[{"region_code": "000000", "region": "全国", "level": "国家", "year": 2021, "category": "经济", "subcategory": "经济总量", "indicator": "国内生产总值(GDP)", "nature": "实际值", "value": 1143670, "unit": "亿元", "yoy": "8.1%", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/tjgb/ndtjgb/", "note": "后按年报/普查修订", "compare_key": "GDP", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2022, "category": "经济", "subcategory": "经济总量", "indicator": "国内生产总值(GDP)", "nature": "实际值", "value": 1210207, "unit": "亿元", "yoy": "3.0%", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/tjgb/ndtjgb/", "note": "后修订", "compare_key": "GDP", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2023, "category": "经济", "subcategory": "经济总量", "indicator": "国内生产总值(GDP)", "nature": "实际值", "value": 1260582, "unit": "亿元", "yoy": "5.2%", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/tjgb/ndtjgb/", "note": "五经普后修订为129.4万亿", "compare_key": "GDP", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2024, "category": "经济", "subcategory": "经济总量", "indicator": "国内生产总值(GDP)", "nature": "实际值", "value": 1349084, "unit": "亿元", "yoy": "5.0%", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/tjgb/ndtjgb/", "note": "初步核算", "compare_key": "GDP", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2025, "category": "经济", "subcategory": "经济总量", "indicator": "国内生产总值(GDP)", "nature": "实际值", "value": 1401879, "unit": "亿元", "yoy": "5.0%", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/zxfb/202602/t20260228_1962662.html", "note": "初步核算，首破140万亿", "compare_key": "GDP", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2025, "category": "经济", "subcategory": "经济总量", "indicator": "人均GDP", "nature": "实际值", "value": 99665, "unit": "元", "yoy": "5.1%", "deadline": "", "responsible": "", "source": "2025年国家统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/zxfb/202602/t20260228_1962662.html", "note": "按年均汇率折13953美元", "compare_key": "人均GDP", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2021, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末全国人口", "nature": "实际值", "value": 141260, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/tjgb/ndtjgb/", "note": "2025年比上年减少339万", "compare_key": "年末全国人口", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2022, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末全国人口", "nature": "实际值", "value": 141175, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/tjgb/ndtjgb/", "note": "2025年比上年减少339万", "compare_key": "年末全国人口", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2023, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末全国人口", "nature": "实际值", "value": 140967, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/tjgb/ndtjgb/", "note": "2025年比上年减少339万", "compare_key": "年末全国人口", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2024, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末全国人口", "nature": "实际值", "value": 140828, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/tjgb/ndtjgb/", "note": "2025年比上年减少339万", "compare_key": "年末全国人口", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末全国人口", "nature": "实际值", "value": 140489, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "国家统计局历年统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/zxfb/202602/t20260228_1962662.html", "note": "2025年比上年减少339万", "compare_key": "年末全国人口", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "出生人口", "nature": "实际值", "value": 792, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年国家统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/zxfb/202602/t20260228_1962662.html", "note": "出生率5.63‰，自然增长率-2.41‰", "compare_key": "出生人口", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "城镇化率(常住)", "nature": "实际值", "value": 67.89, "unit": "%", "yoy": "+0.89个百分点", "deadline": "", "responsible": "", "source": "2025年国家统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/zxfb/202602/t20260228_1962662.html", "note": "", "compare_key": "城镇化率(常住)", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "60周岁及以上人口", "nature": "实际值", "value": 32338, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年国家统计公报", "doc_no": "", "source_url": "https://www.stats.gov.cn/sj/zxfb/202602/t20260228_1962662.html", "note": "占23.0%；65岁及以上占15.9%", "compare_key": "60周岁及以上人口", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2021, "category": "财政", "subcategory": "财政收支", "indicator": "全国一般公共预算收入", "nature": "实际值", "value": 202539, "unit": "亿元", "yoy": "10.7%", "deadline": "", "responsible": "", "source": "财政部历年财政收支情况", "doc_no": "", "source_url": "https://gks.mof.gov.cn/tongjishuju/", "note": "", "compare_key": "全国一般公共预算收入", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2022, "category": "财政", "subcategory": "财政收支", "indicator": "全国一般公共预算收入", "nature": "实际值", "value": 203703, "unit": "亿元", "yoy": "0.6%", "deadline": "", "responsible": "", "source": "财政部历年财政收支情况", "doc_no": "", "source_url": "https://gks.mof.gov.cn/tongjishuju/", "note": "", "compare_key": "全国一般公共预算收入", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2023, "category": "财政", "subcategory": "财政收支", "indicator": "全国一般公共预算收入", "nature": "实际值", "value": 216784, "unit": "亿元", "yoy": "6.4%", "deadline": "", "responsible": "", "source": "财政部历年财政收支情况", "doc_no": "", "source_url": "https://gks.mof.gov.cn/tongjishuju/", "note": "", "compare_key": "全国一般公共预算收入", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2024, "category": "财政", "subcategory": "财政收支", "indicator": "全国一般公共预算收入", "nature": "实际值", "value": 219702, "unit": "亿元", "yoy": "1.3%", "deadline": "", "responsible": "", "source": "财政部历年财政收支情况", "doc_no": "", "source_url": "https://gks.mof.gov.cn/tongjishuju/", "note": "", "compare_key": "全国一般公共预算收入", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "全国一般公共预算收入", "nature": "实际值", "value": 216045, "unit": "亿元", "yoy": "-1.7%", "deadline": "", "responsible": "", "source": "财政部历年财政收支情况", "doc_no": "", "source_url": "https://gks.mof.gov.cn/tongjishuju/202601/t20260130_3982923.htm", "note": "", "compare_key": "全国一般公共预算收入", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "卫生健康支出", "nature": "实际值", "value": 21446, "unit": "亿元", "yoy": "5.7%", "deadline": "", "responsible": "", "source": "财政部2025年度财政收支发布会", "doc_no": "", "source_url": "https://gks.mof.gov.cn/tongjishuju/202601/t20260130_3982923.htm", "note": "", "compare_key": "卫生健康支出", "region_tier": "1·全国"}, {"region_code": "000000", "region": "全国", "level": "国家", "year": 2024, "category": "卫生健康", "subcategory": "健康水平", "indicator": "人均预期寿命", "nature": "实际值", "value": 79, "unit": "岁", "yoy": "", "deadline": "", "responsible": "", "source": "2024年我国卫生健康事业发展统计公报(国家卫健委)", "doc_no": "", "source_url": "https://www.nhc.gov.cn/", "note": "卫健委年度公报，2025年公报预计2026年发布", "compare_key": "人均预期寿命", "region_tier": "1·全国"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2023, "category": "经济", "subcategory": "经济总量", "indicator": "地区生产总值(GDP)", "nature": "实际值", "value": 30209.4, "unit": "亿元", "yoy": "5.3%", "deadline": "", "responsible": "", "source": "辽宁省统计局", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/zwgkx/tjgb2/index.shtml", "note": "", "compare_key": "GDP", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2024, "category": "经济", "subcategory": "经济总量", "indicator": "地区生产总值(GDP)", "nature": "实际值", "value": 32612.7, "unit": "亿元", "yoy": "5.1%", "deadline": "", "responsible": "", "source": "辽宁省统计局", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/zwgkx/tjgb2/index.shtml", "note": "统计公报初步数", "compare_key": "GDP", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2025, "category": "经济", "subcategory": "经济总量", "indicator": "地区生产总值(GDP)", "nature": "实际值", "value": 33182.9, "unit": "亿元", "yoy": "3.7%", "deadline": "", "responsible": "", "source": "辽宁省统计局", "doc_no": "", "source_url": "https://tjj.ln.gov.cn/tjj/tjsj/sjfb/sqzx/2026012109084644983/index.shtml", "note": "省统计局统一核算", "compare_key": "GDP", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2024, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末常住人口", "nature": "实际值", "value": 4155, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "辽宁省统计公报/省情概况", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/sqgk/lngk/", "note": "", "compare_key": "年末常住人口", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末常住人口", "nature": "实际值", "value": 4131, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "辽宁省统计公报/省情概况", "doc_no": "", "source_url": "https://finance.sina.com.cn/wm/2026-03-31/doc-inhswicu3364274.shtml", "note": "", "compare_key": "年末常住人口", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "出生人口", "nature": "实际值", "value": 14.1, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年辽宁省统计公报", "doc_no": "", "source_url": "https://finance.sina.com.cn/wm/2026-03-31/doc-inhswicu3364274.shtml", "note": "出生率3.40‰，自然增长率-6.88‰，省际净流入4.5万人", "compare_key": "出生人口", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "60周岁及以上人口", "nature": "实际值", "value": 1346, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年辽宁省统计公报", "doc_no": "", "source_url": "https://finance.sina.com.cn/wm/2026-03-31/doc-inhswicu3364274.shtml", "note": "占常住人口32.58%，老龄化显著高于全国", "compare_key": "60周岁及以上人口", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "城镇化率(常住)", "nature": "实际值", "value": 74.63, "unit": "%", "yoy": "", "deadline": "", "responsible": "", "source": "2025年辽宁省统计公报", "doc_no": "", "source_url": "https://finance.sina.com.cn/wm/2026-03-31/doc-inhswicu3364274.shtml", "note": "", "compare_key": "城镇化率(常住)", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2024, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算收入", "nature": "实际值", "value": 2905.8, "unit": "亿元", "yoy": "5.5%", "deadline": "", "responsible": "", "source": "辽宁省预算执行报告/统计公报", "doc_no": "", "source_url": "https://czt.ln.gov.cn/", "note": "", "compare_key": "地方一般公共预算收入", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算收入", "nature": "实际值", "value": 2918.2, "unit": "亿元", "yoy": "0.4%", "deadline": "", "responsible": "", "source": "辽宁省预算执行报告/统计公报", "doc_no": "", "source_url": "https://epaper.lnd.com.cn/lnrbepaper/pad/con/202602/14/content_317720.html", "note": "", "compare_key": "地方一般公共预算收入", "region_tier": "2·省(区市)"}, {"region_code": "210000", "region": "辽宁省", "level": "省", "year": 2025, "category": "卫生健康", "subcategory": "医疗保障", "indicator": "参加基本医疗保险人数", "nature": "实际值", "value": 3708.9, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年辽宁省统计公报", "doc_no": "", "source_url": "https://finance.sina.com.cn/wm/2026-03-31/doc-inhswicu3364274.shtml", "note": "其中职工医保2115.7万人", "compare_key": "参加基本医疗保险人数", "region_tier": "2·省(区市)"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2023, "category": "经济", "subcategory": "经济总量", "indicator": "地区生产总值(GDP)", "nature": "实际值", "value": 8752.9, "unit": "亿元", "yoy": "6.0%", "deadline": "", "responsible": "", "source": "大连市统计局", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/sqgk/csmp/2025101310551499142/index.shtml", "note": "", "compare_key": "GDP", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2024, "category": "经济", "subcategory": "经济总量", "indicator": "地区生产总值(GDP)", "nature": "实际值", "value": 9516.9, "unit": "亿元", "yoy": "5.2%", "deadline": "", "responsible": "", "source": "大连市统计局", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/sqgk/csmp/2025101310551499142/index.shtml", "note": "统计公报初步数", "compare_key": "GDP", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "经济", "subcategory": "经济总量", "indicator": "地区生产总值(GDP)", "nature": "实际值", "value": 10002.1, "unit": "亿元", "yoy": "5.7%", "deadline": "", "responsible": "", "source": "大连市统计局", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "东北首个万亿GDP城市", "compare_key": "GDP", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2024, "category": "经济", "subcategory": "经济总量", "indicator": "人均GDP", "nature": "实际值", "value": 126185, "unit": "元", "yoy": "5.1%", "deadline": "", "responsible": "", "source": "2024年大连市统计公报", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/zwgkx/tjgb2/shizfgzbg/dls/index.shtml", "note": "按常住人口计算", "compare_key": "人均GDP", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "经济", "subcategory": "工业", "indicator": "规模以上工业增加值增速", "nature": "实际值", "value": "", "unit": "", "yoy": "11.7%", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "装备制造业+15.4%，高技术制造业+13.9%", "compare_key": "规模以上工业增加值增速", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "经济", "subcategory": "消费与外贸", "indicator": "社会消费品零售总额", "nature": "实际值", "value": 2180.8, "unit": "亿元", "yoy": "2.1%", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "", "compare_key": "社会消费品零售总额", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "经济", "subcategory": "消费与外贸", "indicator": "进出口总额", "nature": "实际值", "value": 4492.6, "unit": "亿元", "yoy": "-0.3%", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "出口2432.5亿元(+10.6%)", "compare_key": "进出口总额", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2022, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末常住人口", "nature": "实际值", "value": 753, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "大连市统计公报", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/zwgkx/tjgb2/shizfgzbg/dls/index.shtml", "note": "2025年常住人口以公报/年鉴更新为准", "compare_key": "年末常住人口", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2023, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末常住人口", "nature": "实际值", "value": 753.9, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "大连市统计公报", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/zwgkx/tjgb2/shizfgzbg/dls/index.shtml", "note": "2025年常住人口以公报/年鉴更新为准", "compare_key": "年末常住人口", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2024, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末常住人口", "nature": "实际值", "value": 754.4, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "大连市统计公报", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/zwgkx/tjgb2/shizfgzbg/dls/index.shtml", "note": "2025年常住人口以公报/年鉴更新为准", "compare_key": "年末常住人口", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2024, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末户籍人口", "nature": "实际值", "value": 609.2, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "大连市统计公报(公安口径)", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/zwgkx/tjgb2/shizfgzbg/dls/index.shtml", "note": "", "compare_key": "年末户籍人口", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末户籍人口", "nature": "实际值", "value": 607.8, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "大连市统计公报(公安口径)", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "", "compare_key": "年末户籍人口", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "户籍出生人口", "nature": "实际值", "value": 2.5, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "出生率4.09‰，自然增长率-5.46‰", "compare_key": "户籍出生人口", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2024, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算收入", "nature": "实际值", "value": 774.6, "unit": "亿元", "yoy": "3.3%", "deadline": "", "responsible": "", "source": "大连市统计公报", "doc_no": "", "source_url": "https://www.ln.gov.cn/web/sqgk/csmp/2025101310551499142/index.shtml", "note": "", "compare_key": "地方一般公共预算收入", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算收入", "nature": "实际值", "value": 749.5, "unit": "亿元", "yoy": "-3.3%", "deadline": "", "responsible": "", "source": "大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "", "compare_key": "地方一般公共预算收入", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算支出", "nature": "实际值", "value": 1122, "unit": "亿元", "yoy": "3.4%", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "民生支出969.1亿元，占86.4%", "compare_key": "地方一般公共预算支出", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "卫生健康支出", "nature": "实际值", "value": 79.1, "unit": "亿元", "yoy": "5.4%", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "", "compare_key": "卫生健康支出", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "各类卫生机构数(含村卫生室)", "nature": "实际值", "value": 5195, "unit": "个", "yoy": "", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "其中医院255个", "compare_key": "各类卫生机构数(含村卫生室)", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "医疗卫生机构实有床位", "nature": "实际值", "value": 53522, "unit": "张", "yoy": "", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "", "compare_key": "医疗卫生机构实有床位", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "卫生人员总数", "nature": "实际值", "value": 90223, "unit": "人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "其中卫生技术人员75393人", "compare_key": "卫生人员总数", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "健康水平", "indicator": "人均期望寿命", "nature": "实际值", "value": 82.63, "unit": "岁", "yoy": "", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "显著高于全国水平", "compare_key": "人均期望寿命", "region_tier": "3·副省级城市"}, {"region_code": "210200", "region": "大连市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "医疗保障", "indicator": "参加基本医疗保险人数", "nature": "实际值", "value": 638.9, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年大连市统计公报", "doc_no": "", "source_url": "https://www.dl-library.net.cn/wenxian/dlnet/content.php?id=529685", "note": "", "compare_key": "参加基本医疗保险人数", "region_tier": "3·副省级城市"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "经济", "subcategory": "经济总量", "indicator": "地区生产总值(GDP)", "nature": "实际值", "value": 56708.71, "unit": "亿元", "yoy": "5.4%", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "第三产业占79.3%", "compare_key": "GDP", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "经济", "subcategory": "消费与外贸", "indicator": "社会消费品零售总额", "nature": "实际值", "value": 16600.93, "unit": "亿元", "yoy": "4.6%", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "", "compare_key": "社会消费品零售总额", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "经济", "subcategory": "消费与外贸", "indicator": "货物进出口总额", "nature": "实际值", "value": 45103.4, "unit": "亿元", "yoy": "5.6%", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "出口20150.38亿(+10.8%)", "compare_key": "货物进出口总额", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末常住人口", "nature": "实际值", "value": 2485.41, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "户籍常住1510.91万,外来974.50万", "compare_key": "年末常住人口", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "出生人口", "nature": "实际值", "value": 10.7, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "出生率4.31‰,自然增长率-2.3‰", "compare_key": "出生人口", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算收入", "nature": "实际值", "value": 8500.91, "unit": "亿元", "yoy": "1.5%", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "", "compare_key": "地方一般公共预算收入", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算支出", "nature": "实际值", "value": 9975.99, "unit": "亿元", "yoy": "1.0%", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "", "compare_key": "地方一般公共预算支出", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "卫生机构数", "nature": "实际值", "value": 6566, "unit": "所", "yoy": "", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "", "compare_key": "卫生机构数", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "卫生技术人员数", "nature": "实际值", "value": 282100, "unit": "人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "28.21万人", "compare_key": "卫生技术人员数", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "健康水平", "indicator": "婴儿死亡率", "nature": "实际值", "value": 2.34, "unit": "‰", "yoy": "", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "上海地区", "compare_key": "婴儿死亡率", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "健康水平", "indicator": "孕产妇死亡率", "nature": "实际值", "value": 1.85, "unit": "1/10万", "yoy": "", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "", "compare_key": "孕产妇死亡率", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "医疗保障", "indicator": "参加职工基本医疗保险人数", "nature": "实际值", "value": 1643.49, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "含离退休;另城乡居民398.96万", "compare_key": "参加基本医疗保险人数", "region_tier": "2·省(区市)"}, {"region_code": "310000", "region": "上海市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "城镇居民人均可支配收入", "nature": "实际值", "value": 96842, "unit": "元", "yoy": "4.0%", "deadline": "", "responsible": "", "source": "2025年上海市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://tjj.sh.gov.cn/tjgb/20260330/e0772941e8e041eaaad2df850b44ef98.html", "note": "农村48122元", "compare_key": "城镇居民人均可支配收入", "region_tier": "2·省(区市)"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "经济", "subcategory": "经济总量", "indicator": "地区生产总值(GDP)", "nature": "实际值", "value": 9100.3, "unit": "亿元", "yoy": "2.0%", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "三产结构4.1:32.8:63.1", "compare_key": "GDP", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "经济", "subcategory": "经济总量", "indicator": "人均GDP", "nature": "实际值", "value": 98281, "unit": "元", "yoy": "1.6%", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "", "compare_key": "人均GDP", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "经济", "subcategory": "消费与外贸", "indicator": "社会消费品零售总额", "nature": "实际值", "value": 4195.4, "unit": "亿元", "yoy": "1.0%", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "", "compare_key": "社会消费品零售总额", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "经济", "subcategory": "消费与外贸", "indicator": "货物进出口总额", "nature": "实际值", "value": 1353.7, "unit": "亿元", "yoy": "-7.6%", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "出口633.3亿(+8.8%)", "compare_key": "货物进出口总额", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末常住人口", "nature": "实际值", "value": 927.6, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "比上年末+3.3万;城镇化率85.87%", "compare_key": "年末常住人口", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "年末户籍人口", "nature": "实际值", "value": 763.2, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "", "compare_key": "年末户籍人口", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "出生人口", "nature": "实际值", "value": 3.4, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "出生率4.40‰,自然增长率-4.58‰", "compare_key": "出生人口", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "城镇化率(常住)", "nature": "实际值", "value": 85.87, "unit": "%", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "", "compare_key": "城镇化率(常住)", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算收入", "nature": "实际值", "value": 794.2, "unit": "亿元", "yoy": "-3.8%", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "", "compare_key": "地方一般公共预算收入", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "地方一般公共预算支出", "nature": "实际值", "value": 1031.9, "unit": "亿元", "yoy": "-11.3%", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "", "compare_key": "地方一般公共预算支出", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "财政", "subcategory": "财政收支", "indicator": "卫生健康支出", "nature": "实际值", "value": 89.3, "unit": "亿元", "yoy": "10.7%", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "", "compare_key": "卫生健康支出", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "医疗卫生机构总数", "nature": "实际值", "value": 6172, "unit": "个", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "医院306/基层5792/专业公卫44", "compare_key": "医疗卫生机构总数(含村卫生室)", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "医院数", "nature": "实际值", "value": 306, "unit": "个", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "公立101,民营205", "compare_key": "医院数", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "疾病预防控制中心数", "nature": "实际值", "value": 18, "unit": "个", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "", "compare_key": "疾病预防控制中心数", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "医疗卫生机构实有床位数", "nature": "实际值", "value": 78728, "unit": "张", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "医院73846", "compare_key": "医疗卫生机构实有床位数", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "卫生资源", "indicator": "卫生技术人员数", "nature": "实际值", "value": 112691, "unit": "人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "执业(助理)医师46180,注册护士51218", "compare_key": "卫生技术人员数", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "医疗服务", "indicator": "总诊疗人次", "nature": "实际值", "value": 6070.8, "unit": "万人次", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "出院224.8万人", "compare_key": "总诊疗人次", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "卫生健康", "subcategory": "医疗保障", "indicator": "参加职工基本医疗保险人数", "nature": "实际值", "value": 391.5, "unit": "万人", "yoy": "", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "另城乡居民397.7万", "compare_key": "参加基本医疗保险人数", "region_tier": "3·副省级城市"}, {"region_code": "210100", "region": "沈阳市", "level": "市", "year": 2025, "category": "人口", "subcategory": "人口规模与结构", "indicator": "城镇居民人均可支配收入", "nature": "实际值", "value": 58297, "unit": "元", "yoy": "3.9%", "deadline": "", "responsible": "", "source": "2025年沈阳市国民经济和社会发展统计公报", "doc_no": "—（公开统计公报）", "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202605/t20260519_5027959.html", "note": "农村27196元", "compare_key": "城镇居民人均可支配收入", "region_tier": "3·副省级城市"}];
+const $=s=>document.querySelector(s);
+const state={mode:'compare',q:'',cat:'',sub:'',year:'',onlyCmp:true,tiers:new Set([1,2,3]),chart:'vbar'};
+const TIERS=[['1·全国','全国','tier-1'],['2·省(区市)','省·区市','tier-2'],['3·副省级城市','副省级城市','tier-3']];
+const tierClass=t=>({'1·全国':'tier-1','2·省(区市)':'tier-2','3·副省级城市':'tier-3'}[t]||'tier-1');
+const tierName=t=>(t||'').split('·').slice(1).join('·')||t;
+const tierNo=t=>+(String(t)[0]||9);
+function natKind(n){n=n||'';if(n.indexOf('实际')>=0)return'actual';if(n.indexOf('约束')>=0)return'limit';if(n.indexOf('目标')>=0||n.indexOf('指导')>=0)return'target';return'task';}
+const catShort=c=>c.replace('卫生健康(','').replace(')','');
+const numOf=v=>{const m=String(v).match(/-?\d[\d,]*\.?\d*/);return m?parseFloat(m[0].replace(/,/g,'')):null;};
+const TOTAL_UNITS=['亿元','万人','个','张','人','万人次','所','支','家'];
+const isTotal=u=>TOTAL_UNITS.includes(String(u||'').trim());
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+// chips
+function chipSet(el,vals,key,labelFn){
+  el.innerHTML='';
+  const a=document.createElement('div');a.className='chip on';a.textContent='全部';a.dataset.v='';
+  a.onclick=()=>{state[key]='';sync();render();};el.appendChild(a);
+  vals.forEach(v=>{const c=document.createElement('div');c.className='chip';c.textContent=labelFn?labelFn(v):v;c.dataset.v=v;
+    c.onclick=()=>{state[key]=state[key]===v?'':v;sync();render();};el.appendChild(c);});
+}
+// 类别(单选) + 其下"具体分类"联动下钻
+(function(){const el=$('#fCat');const cats=[...new Set(DATA.map(d=>d.category))];
+  const all=document.createElement('div');all.className='chip on';all.dataset.v='';all.textContent='全部';
+  all.onclick=()=>{state.cat='';state.sub='';buildSub();sync();render();};el.appendChild(all);
+  cats.forEach(v=>{const c=document.createElement('div');c.className='chip';c.dataset.v=v;c.textContent=catShort(v);
+    c.onclick=()=>{state.cat=state.cat===v?'':v;state.sub='';buildSub();sync();render();};el.appendChild(c);});
+})();
+function sync(){document.querySelectorAll('#fCat .chip').forEach(c=>c.classList.toggle('on',(c.dataset.v||'')===(state.cat||'')));}
+function buildSub(){
+  const el=$('#fSub'),wrap=$('#subWrap');
+  if(!state.cat){wrap.style.display='none';el.innerHTML='';return;}
+  const subs=[...new Set(DATA.filter(d=>d.category===state.cat).map(d=>d.subcategory).filter(Boolean))];
+  if(subs.length<=1){wrap.style.display='none';el.innerHTML='';return;}
+  wrap.style.display='flex';el.innerHTML='';
+  const all=document.createElement('div');all.className='chip schip on';all.dataset.v='';all.textContent='全部';
+  all.onclick=()=>{state.sub='';syncSub();render();};el.appendChild(all);
+  subs.forEach(v=>{const c=document.createElement('div');c.className='chip schip';c.dataset.v=v;c.textContent=v;
+    c.onclick=()=>{state.sub=state.sub===v?'':v;syncSub();render();};el.appendChild(c);});
+  syncSub();
+}
+function syncSub(){document.querySelectorAll('#fSub .chip').forEach(c=>c.classList.toggle('on',(c.dataset.v||'')===(state.sub||'')));}
+
+// 对比层级多选开关
+const TIER_OPTS=[[1,'全国'],[2,'省（区市）'],[3,'副省级城市']];
+(function(){const el=$('#fTier');TIER_OPTS.forEach(([n,label])=>{const c=document.createElement('div');
+  c.className='chip tchip on';c.dataset.t=n;c.textContent=label;
+  c.onclick=()=>{if(state.tiers.has(n)){if(state.tiers.size>1)state.tiers.delete(n);}else state.tiers.add(n);syncTier();render();};
+  el.appendChild(c);});})();
+function syncTier(){document.querySelectorAll('#fTier .chip').forEach(c=>c.classList.toggle('on',state.tiers.has(+c.dataset.t)));}
+
+// 年份(单选)
+(function(){const el=$('#fYear');
+  const years=[...new Set(DATA.map(d=>String(d.year)).filter(y=>/^\d{4}$/.test(y)))].sort((a,b)=>b-a);
+  const all=document.createElement('div');all.className='chip ychip on';all.dataset.v='';all.textContent='全部';
+  all.onclick=()=>{state.year='';syncYear();render();};el.appendChild(all);
+  years.forEach(y=>{const c=document.createElement('div');c.className='chip ychip';c.dataset.v=y;
+    c.textContent=(y==='2030'?'2030目标':y);c.onclick=()=>{state.year=state.year===y?'':y;syncYear();render();};el.appendChild(c);});
+})();
+function syncYear(){document.querySelectorAll('#fYear .chip').forEach(c=>c.classList.toggle('on',(c.dataset.v||'')===(state.year||'')));}
+
+// 多城市图示样式切换(柱状图/条形图)
+(function(){const el=$('#fChart');[['vbar','柱状图'],['hbar','条形图']].forEach(([v,label])=>{
+  const c=document.createElement('div');c.className='chip cchip'+(state.chart===v?' on':'');c.dataset.v=v;c.textContent=label;
+  c.onclick=()=>{state.chart=v;syncChart();render();};el.appendChild(c);});})();
+function syncChart(){document.querySelectorAll('#fChart .chip').forEach(c=>c.classList.toggle('on',(c.dataset.v||'')===state.chart));}
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+  state.mode=t.dataset.m;
+  $('#compareView').style.display=state.mode==='compare'?'block':'none';
+  $('#listView').style.display=state.mode==='list'?'block':'none';
+  $('#cmpToggleWrap').style.display=state.mode==='compare'?'flex':'none';
+  $('#tierWrap').style.display=state.mode==='compare'?'flex':'none';
+  $('#chartWrap').style.display=state.mode==='compare'?'flex':'none';
+  render();
+});
+$('#q').oninput=e=>{state.q=e.target.value.trim();render();};
+$('#onlyCmp').onchange=e=>{state.onlyCmp=e.target.checked;render();};
+
+function baseFilter(d){
+  if(state.cat&&d.category!==state.cat)return false;
+  if(state.sub&&d.subcategory!==state.sub)return false;
+  if(state.year&&String(d.year)!==state.year)return false;
+  if(state.q){const s=(d.indicator+' '+d.compare_key+' '+d.subcategory+' '+d.note+' '+d.region).toLowerCase();
+    if(!state.q.toLowerCase().split(/\s+/).every(w=>s.includes(w)))return false;}
+  return true;
+}
+function render(){state.mode==='compare'?renderCompare():renderList();}
+
+function groupInfo(recs){
+  const regions=new Set(recs.map(r=>r.region));
+  const years=new Set(recs.map(r=>+r.year).filter(y=>y&&y<2030));
+  const hasGoal=recs.some(r=>['target','limit'].includes(natKind(r.nature)));
+  const hasActual=recs.some(r=>natKind(r.nature)==='actual');
+  let mode;
+  if(regions.size>=2&&hasGoal)mode='goal';
+  else if(years.size>=2&&hasActual)mode='trend';
+  else if(regions.size>=2)mode='cmp';
+  else mode='single';
+  const comparable=(regions.size>=2)||(years.size>=2&&hasActual);
+  return {regions,years,hasGoal,hasActual,mode,comparable};
+}
+
+function renderCompare(){
+  const recs=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
+  const g={};recs.forEach(d=>{(g[d.compare_key]=g[d.compare_key]||[]).push(d);});
+  let keys=Object.keys(g);
+  // 计算每组信息
+  const info={};keys.forEach(k=>info[k]=groupInfo(g[k]));
+  if(state.onlyCmp)keys=keys.filter(k=>info[k].comparable);
+  // 按类别分组 + 组内可对比优先
+  const modeRank={goal:0,trend:1,cmp:2,single:3};
+  keys.sort((a,b)=>{
+    const ca=catShort(g[a][0].category),cb=catShort(g[b][0].category);
+    if(ca!==cb)return ca<cb?-1:1;
+    return modeRank[info[a].mode]-modeRank[info[b].mode];
+  });
+  const host=$('#compareView');host.innerHTML='';
+  $('#count').textContent=keys.length+' 个指标';
+  $('#empty').style.display=keys.length?'none':'block';
+  let curCat=null;
+  keys.forEach(k=>{
+    const cat=catShort(g[k][0].category);
+    if(cat!==curCat){
+      curCat=cat;
+      const inThis=keys.filter(x=>catShort(g[x][0].category)===cat).length;
+      const h=document.createElement('div');h.className='secthead';
+      h.innerHTML=esc(cat)+'<span class="c">'+inThis+' 个指标</span>';
+      host.appendChild(h);
+      const grid=document.createElement('div');grid.className='cmpgrid';grid.dataset.cat=cat;host.appendChild(grid);
+    }
+    host.querySelector('.cmpgrid[data-cat="'+cssEsc(cat)+'"]').appendChild(card(k,g[k],info[k]));
+  });
+}
+function cssEsc(s){return s.replace(/["\\]/g,'\\$&');}
+
+function card(key,recs,inf){
+  const el=document.createElement('div');el.className='card';
+  const cat=catShort(recs[0].category), unit=recs[0].unit||'';
+  let body,badge,copytext;
+  if(inf.mode==='goal'){[body,copytext]=renderGoal(key,recs,unit);badge='<span class="cbadge b-goal">基数→目标 · 多级</span>';}
+  else if(inf.mode==='trend'){[body,copytext]=renderTrend(key,recs,unit);badge='<span class="cbadge b-trend">历年趋势</span>';}
+  else if(inf.mode==='cmp'){[body,copytext]=renderCmp(key,recs,unit);badge='<span class="cbadge b-cmp">跨级对标</span>';}
+  else {[body,copytext]=renderSingle(key,recs,unit);badge='<span class="cbadge b-single">单点</span>';}
+  const tiersPresent=new Set(recs.map(r=>r.region_tier));
+  const missing=TIERS.filter(t=>state.tiers.has(tierNo(t[0]))&&!tiersPresent.has(t[0])).map(t=>t[1]);
+  const gap=missing.length?'<div class="gaps">缺：<b>'+missing.join('、')+'</b>（补录后自动填入）</div>':'';
+  el.innerHTML='<div class="chead"><div><div class="ctitle">'+esc(key)+'</div><div class="ccat">'+esc(cat)+(unit?' · 单位 '+esc(unit):'')+'</div></div>'+
+    '<div class="cright">'+badge+'<button class="copybtn" title="复制为材料文字">⧉</button></div></div>'+
+    '<div class="cbody">'+body+gap+'</div>';
+  el.querySelector('.copybtn').onclick=()=>copyText(copytext);
+  return el;
+}
+
+// 占比/排名洞察
+function insights(key,recs,unit){
+  const acts=recs.filter(r=>natKind(r.nature)==='actual'&&numOf(r.value)!=null);
+  if(!acts.length)return '';
+  // 每地区取最新年
+  const byReg={};acts.forEach(r=>{const k=r.region;if(!byReg[k]||+r.year>+byReg[k].year)byReg[k]=r;});
+  const dl=byReg['大连市'], prov=byReg['辽宁省'], nat=byReg['全国'];
+  const cities=Object.values(byReg).filter(r=>tierNo(r.region_tier)>=3);
+  let parts=[];
+  // 副省级城市排名(大连已在该层,最具可比性)
+  const subprov=acts.filter(r=>tierNo(r.region_tier)===3);
+  const dlAct=acts.find(r=>r.region==='大连市');
+  if(subprov.length>=3&&dlAct&&numOf(dlAct.value)!=null){
+    const pool=subprov.slice();
+    const sorted=pool.slice().sort((a,b)=>numOf(b.value)-numOf(a.value));
+    const rank=sorted.findIndex(r=>r.region==='大连市')+1;
+    const med=numOf(sorted[Math.floor(sorted.length/2)].value);
+    if(rank>0)parts.push('副省级城市中大连居 <span class="hl">第'+rank+'/'+pool.length+'位</span>（中位 '+med+unit+'）');
+  }
+  // 占全省比重(仅总量)
+  if(dl&&prov&&isTotal(unit)){
+    const s=(numOf(dl.value)/numOf(prov.value)*100);
+    if(isFinite(s)&&s<=100)parts.push('大连占全省 <b>'+s.toFixed(1)+'%</b>');
+  }
+  // 与全国比(人均/比率类)
+  if(dl&&nat&&!isTotal(unit)){
+    const dv=numOf(dl.value),nv=numOf(nat.value);
+    if(isFinite(dv)&&isFinite(nv)&&nv){
+      const diff=((dv-nv)/nv*100);
+      parts.push('大连为全国的 <b>'+(dv/nv*100).toFixed(0)+'%</b>（'+(diff>=0?'高':'低')+' '+Math.abs(diff).toFixed(0)+'%）');
+    }
+  }
+  return parts.length?'<div class="insight">'+parts.join('；<br>')+'</div>':'';
+}
+
+function fmtNum(v){const n=numOf(v);if(n==null)return esc(v);
+  if(String(v).match(/^-?\d[\d,]*\.?\d*$/)&&Math.abs(n)>=1000)return n.toLocaleString('en-US',{maximumFractionDigits:2});
+  return esc(v);}
+function abbr(n){if(n==null)return '';const a=Math.abs(n);
+  if(a>=10000)return (n/10000).toFixed(a>=100000?0:1)+'万';
+  if(a>=1000)return n.toLocaleString('en-US',{maximumFractionDigits:0});
+  return (Math.round(n*100)/100).toString();}
+
+// 纵向柱状图(直方图)：多城市同层排名比较
+function vbar(key,items,unit,median,avg){
+  const n=items.length;
+  const W=Math.max(520, n*36), H=240, L=12, R=12, T=20, B=70;
+  const plotW=W-L-R, plotH=H-T-B, base=H-B;
+  const vals=items.map(r=>numOf(r.value));
+  const maxV=Math.max(...vals);
+  const slot=plotW/n, barW=Math.min(34, slot*0.62);
+  const hy=v=>base-(v/maxV)*plotH;
+  let svg='<svg class="vchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">';
+  // 中位线
+  if(median!=null){const my=hy(median);
+    svg+='<line x1="'+L+'" y1="'+my+'" x2="'+(W-R)+'" y2="'+my+'" stroke="#b9770a" stroke-width="1.2" stroke-dasharray="5 4"/>';
+    svg+='<text x="'+(W-R)+'" y="'+(my-4)+'" font-size="9" fill="#b9770a" text-anchor="end">中位 '+abbr(median)+'</text>';}
+  // 基线
+  svg+='<line x1="'+L+'" y1="'+base+'" x2="'+(W-R)+'" y2="'+base+'" stroke="#cfd8e3" stroke-width="1"/>';
+  items.forEach((r,i)=>{
+    const v=numOf(r.value), cx=L+slot*i+slot/2, bx=cx-barW/2, by=hy(v), bh=base-by;
+    const me=r.region==='大连市';
+    const col=me?'#c0392b':'#0d8a9c';
+    svg+='<rect x="'+bx+'" y="'+by+'" width="'+barW+'" height="'+Math.max(1,bh)+'" rx="2.5" fill="'+col+'"'+(me?'':' opacity="0.82"')+'><title>'+esc(r.region)+' '+esc(r.value)+esc(unit)+'</title></rect>';
+    // 名次(柱顶)
+    svg+='<text x="'+cx+'" y="'+(by-13)+'" font-size="8.5" fill="#8492a6" text-anchor="middle">'+(i+1)+'</text>';
+    // 数值(柱顶)
+    svg+='<text x="'+cx+'" y="'+(by-3)+'" font-size="9" font-weight="'+(me?'700':'600')+'" fill="'+(me?'#c0392b':'#48566b')+'" text-anchor="middle">'+abbr(v)+'</text>';
+    // 城市名(底部旋转)
+    const nm=r.region.replace('市','');
+    svg+='<text x="'+cx+'" y="'+(base+12)+'" font-size="10" font-weight="'+(me?'700':'400')+'" fill="'+(me?'#c0392b':'#48566b')+'" text-anchor="end" transform="rotate(-45 '+cx+' '+(base+12)+')">'+esc(nm)+'</text>';
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+function renderCmp(key,recs,unit){
+  let use=recs.filter(r=>natKind(r.nature)==='actual'&&numOf(r.value)!=null);
+  if(!use.length)use=recs.filter(r=>numOf(r.value)!=null);
+  const byReg={};use.forEach(r=>{const k=r.region;if(!byReg[k]||+r.year>+byReg[k].year)byReg[k]=r;});
+  let items=Object.values(byReg);
+  const tierset=new Set(items.map(r=>tierNo(r.region_tier)));
+  const rankMode=(tierset.size===1&&items.length>=5);
+  if(rankMode)items.sort((a,b)=>numOf(b.value)-numOf(a.value));
+  else items.sort((a,b)=>tierNo(a.region_tier)-tierNo(b.region_tier)||numOf(b.value)-numOf(a.value));
+  const nums=items.map(r=>numOf(r.value)).filter(n=>n!=null).sort((a,b)=>a-b);
+  const median=nums.length?nums[Math.floor((nums.length-1)/2)]:null;
+  const avg=nums.length?nums.reduce((a,b)=>a+b,0)/nums.length:null;
+  let html;
+  const wantVbar=(state.chart!=='hbar');
+  if(rankMode&&wantVbar){
+    // 纵向柱状图
+    html='<div class="vchartwrap">'+vbar(key,items,unit,median,avg)+'</div>';
+    if(median!=null)html+='<div class="medlabel"><span class="medmark"></span>橙色虚线为中位值 '+fmtNum(median)+unit+'　·　均值 '+fmtNum(+avg.toFixed(2))+unit+'　·　<span style="color:#c0392b;font-weight:700">红柱为大连</span></div>';
+    html+=insights(key,recs,unit);
+  }else{
+    // 横向条形(用户切换/跨层级少数地区)
+    const max=nums[nums.length-1];
+    const ratio=max/(nums[0]||1), useSqrt=ratio>12, scaleMax=useSqrt?Math.sqrt(max):max;
+    const sc=v=>(useSqrt?Math.sqrt(v):v)/scaleMax*100;
+    const medX=(rankMode&&median!=null)?sc(median):null;
+    html='<div class="bars'+(rankMode?' ranked':'')+'">';
+    items.forEach((r,i)=>{
+      const nn=numOf(r.value), w=nn!=null&&nn>0?Math.max(2.5,sc(nn)):0;
+      const me=r.region==='大连市'?' me':'';
+      const rk=rankMode?'<span class="rk">'+(i+1)+'</span>':'';
+      const medline=(medX!=null)?'<div class="medline" style="left:'+medX+'%"></div>':'';
+      html+='<div class="bar '+tierClass(r.region_tier)+me+'">'+
+        '<div class="lab">'+rk+esc(r.region)+'<b>'+(rankMode?'':esc(tierName(r.region_tier))+' · ')+esc(r.year)+'</b></div>'+
+        '<div class="track">'+medline+'<div class="fill" style="width:'+w+'%"></div></div>'+
+        '<div class="num">'+fmtNum(r.value)+'<small> '+esc(unit)+'</small></div></div>';
+    });
+    html+='</div>';
+    if(rankMode&&median!=null)html+='<div class="medlabel"><span class="medmark"></span>虚线为中位值 '+fmtNum(median)+unit+'　·　均值 '+fmtNum(+avg.toFixed(2))+unit+'</div>';
+    if(useSqrt)html+='<div class="scalenote">注：各地数值量级差异大，条形按平方根缩放以便观察，数值以右侧为准。</div>';
+    html+=insights(key,recs,unit);
+  }
+  const ct=key+'（'+(items[0]?items[0].year:'')+'年）：'+items.map((r,i)=>(rankMode?(i+1)+'.':'')+r.region+' '+r.value+unit).join('、')+'。';
+  return [html,ct];
+}
+
+function renderGoal(key,recs,unit){
+  let html='';let ctlines=[];
+  TIERS.forEach(([tk])=>{
+    const tr=recs.filter(r=>r.region_tier===tk);
+    if(!tr.length)return;
+    const base=tr.find(r=>natKind(r.nature)==='actual');
+    const goal=tr.find(r=>['target','limit'].includes(natKind(r.nature)));
+    const region=tr[0].region;
+    const me=region==='大连市'?' me':'';
+    if(base&&goal){
+      const up=natKind(goal.nature)==='target';
+      html+='<div class="goalrow'+me+'"><div class="gr">'+esc(tierName(tk))+'<b>'+esc(region)+'</b></div>'+
+        '<div class="flow '+(up?'up':'down')+'"><span class="base">'+esc(base.value)+'</span><span class="arrow">→</span>'+
+        '<span class="goal">'+esc(goal.value)+'<span class="u"> '+esc(unit)+'</span></span>'+
+        '<span class="badge2">'+(up?'目标·下限':'约束·上限')+'</span></div></div>';
+      ctlines.push(region+(base?'：'+base.value+'('+base.year+'基数)→'+goal.value+'('+(goal.deadline||'2030')+'目标)':''));
+    }else{
+      const one=goal||base;
+      html+='<div class="goalrow'+me+'"><div class="gr">'+esc(tierName(tk))+'<b>'+esc(region)+'</b></div>'+
+        '<div class="flow"><span class="goal" style="color:var(--ink)">'+esc(one.value)+'<span class="u"> '+esc(unit)+'</span></span>'+
+        '<span class="badge2">'+(natKind(one.nature)==='actual'?'仅基数':'仅目标')+'</span></div></div>';
+      ctlines.push(region+'：'+one.value+unit+'('+(natKind(one.nature)==='actual'?one.year+'实际':(one.deadline||'2030')+'目标')+')');
+    }
+  });
+  html+=insights(key,recs,unit);
+  return [html, key+'（'+unit+'）—— '+ctlines.join('；')+'。'];
+}
+
+function renderTrend(key,recs,unit){
+  const act=recs.filter(r=>natKind(r.nature)==='actual'&&numOf(r.value)!=null&&+r.year<2030);
+  const series={};act.forEach(r=>{(series[r.region_tier]=series[r.region_tier]||[]).push(r);});
+  Object.values(series).forEach(s=>s.sort((a,b)=>+a.year-+b.year));
+  const allYears=[...new Set(act.map(r=>+r.year))].sort((a,b)=>a-b);
+  const allVals=act.map(r=>numOf(r.value));
+  if(allYears.length<2)return renderCmp(key,recs,unit);
+  const minY=allYears[0],maxY=allYears[allYears.length-1];
+  let lo=Math.min(...allVals),hi=Math.max(...allVals);
+  if(lo===hi){lo*=0.95;hi*=1.05;}
+  const pad=(hi-lo)*0.14;lo-=pad;hi+=pad;
+  const W=520,H=150,L=40,R=10,T=14,B=24;
+  const x=y=>L+(y-minY)/(maxY-minY||1)*(W-L-R);
+  const yy=v=>T+(1-(v-lo)/(hi-lo||1))*(H-T-B);
+  const colors={'1·全国':'#1f4e79','2·省(区市)':'#0a7d52','3·副省级城市':'#0d8a9c'};
+  let svg='<svg class="spark" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">';
+  // y轴网格线+刻度(3档)
+  const gv=[lo+(hi-lo)*0.15,(lo+hi)/2,hi-(hi-lo)*0.15];
+  gv.forEach(v=>{const gy=yy(v);
+    svg+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="#eef2f7" stroke-width="1"/>';
+    svg+='<text x="'+(L-5)+'" y="'+(gy+3)+'" font-size="8.5" fill="#aab4c2" text-anchor="end">'+(+v.toFixed(v>100?0:1)).toLocaleString('en-US')+'</text>';});
+  allYears.forEach(yr=>{svg+='<text x="'+x(yr)+'" y="'+(H-6)+'" font-size="9" fill="#8492a6" text-anchor="middle">'+yr+'</text>';});
+  let leg='',ctlines=[],defs='';
+  Object.keys(series).sort().forEach((tk,gi)=>{
+    const s=series[tk].filter(r=>numOf(r.value)!=null);if(!s.length)return;
+    const col=colors[tk]||'#888';const gid='ga'+gi;
+    if(s.length>=2){
+      defs+='<linearGradient id="'+gid+'" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="'+col+'" stop-opacity="0.18"/><stop offset="100%" stop-color="'+col+'" stop-opacity="0"/></linearGradient>';
+      const pts=s.map(r=>x(+r.year)+','+yy(numOf(r.value)));
+      svg+='<polygon points="'+x(s[0].year)+','+(H-B)+' '+pts.join(' ')+' '+x(s[s.length-1].year)+','+(H-B)+'" fill="url(#'+gid+')"/>';
+      svg+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>';
+    }
+    s.forEach(r=>{svg+='<circle cx="'+x(+r.year)+'" cy="'+yy(numOf(r.value))+'" r="3.2" fill="#fff" stroke="'+col+'" stroke-width="2"/>';});
+    const last=s[s.length-1];
+    svg+='<text x="'+x(+last.year)+'" y="'+(yy(numOf(last.value))-8)+'" font-size="10" font-weight="700" fill="'+col+'" text-anchor="end">'+esc(last.value)+'</text>';
+    leg+='<span><i class="ld" style="background:'+col+'"></i>'+esc(tierName(tk))+'·'+esc(s[0].region)+'</span>';
+    const f=s[0],l=s[s.length-1];
+    ctlines.push(s[0].region+' '+f.year+'年'+f.value+'→'+l.year+'年'+l.value+unit);
+  });
+  svg='<svg class="spark" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><defs>'+defs+'</defs>'+svg.slice(svg.indexOf('>')+1)+'</svg>';
+  const goals=recs.filter(r=>['target','limit'].includes(natKind(r.nature)));
+  let gtxt=goals.length?'<div class="note-tags">'+goals.map(gg=>'<span class="nt">'+esc(tierName(gg.region_tier))+' 2030目标 '+esc(gg.value)+esc(unit)+'</span>').join('')+'</div>':'';
+  return [svg+'<div class="trendlegend">'+leg+'</div>'+gtxt+insights(key,recs,unit),
+          key+'（'+unit+'）历年：'+ctlines.join('；')+'。'];
+}
+
+function renderSingle(key,recs,unit){
+  const r=recs.find(x=>natKind(x.nature)==='actual')||recs[0];
+  let html='<div class="single"><span class="v" style="color:var(--'+natKind(r.nature)+')">'+esc(r.value)+'</span><span class="u">'+esc(unit)+'</span>'+
+    '<span class="meta">'+esc(r.region)+' · '+esc(r.year)+'<br>'+esc((r.nature||'').replace(/\(.*/,''))+'</span></div>';
+  if(recs.length>1)html+='<div class="note-tags">'+recs.slice(0,10).map(x=>'<span class="nt">'+esc(x.region)+esc(x.year)+'：'+esc(x.value)+esc(unit)+'</span>').join('')+'</div>';
+  else if(r.note)html+='<div class="note-tags"><span class="nt">'+esc(r.note)+'</span></div>';
+  return [html, key+'：'+r.region+r.year+'年 '+r.value+unit+'。'];
+}
+
+// 复制
+function copyText(t){
+  let ok=false;
+  try{navigator.clipboard.writeText(t);ok=true;}catch(e){}
+  if(!ok){try{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok=true;}catch(e){}}
+  showToast(ok?'已复制到剪贴板':'复制失败，可手动选择下方文字',t);
+}
+let toastTimer;
+function showToast(msg,detail){
+  const el=$('#toast');el.innerHTML=esc(msg)+(detail?'<div class="ttxt">'+esc(detail)+'</div>':'');
+  el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),detail?6000:2000);
+}
+
+function renderList(){
+  let rows=DATA.filter(baseFilter);
+  $('#count').textContent=rows.length+' 条记录';
+  const tb=$('#rows');tb.innerHTML='';$('#empty').style.display=rows.length?'none':'block';
+  const f=document.createDocumentFragment();
+  rows.forEach(d=>{const k=natKind(d.nature);const tr=document.createElement('tr');
+    tr.innerHTML='<td><b>'+esc(d.indicator)+'</b>'+(d.note?'<span class="note">'+esc(d.note)+'</span>':'')+'</td>'+
+      '<td><span class="valc">'+esc(d.value)+' '+esc(d.unit)+'</span></td>'+
+      '<td><span class="tag t-'+k+'">'+esc((d.nature||'').replace(/\(.*/,''))+'</span></td>'+
+      '<td>'+esc(d.year)+'</td><td>'+esc(d.region)+'</td>'+
+      '<td class="hide-m"><span class="note" style="margin:0">'+esc(d.source)+'</span></td>';
+    f.appendChild(tr);});
+  tb.appendChild(f);
+}
+document.querySelectorAll('thead th').forEach(th=>{let dir=1;th.onclick=()=>{const k=th.dataset.k;dir=-dir;
+  DATA.sort((a,b)=>{let x=a[k],y=b[k];if(k==='year'){x=+x;y=+y;}if(k==='value'){const px=numOf(x),py=numOf(y);if(px!=null&&py!=null){x=px;y=py;}}return(x>y?1:x<y?-1:0)*dir;});renderList();};});
+
+render();
+</script>
+</body></html>
