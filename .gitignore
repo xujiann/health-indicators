@@ -2,3 +2,6 @@
 Thumbs.db
 *.tmp
 ~$*.xlsx
+node_modules
+*.png
+*.inspect.ndjson
