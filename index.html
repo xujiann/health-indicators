@@ -35,6 +35,10 @@ h1 small{display:block;font-size:11.5px;font-weight:400;opacity:.82;margin-top:3
 .filterbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 10px;color:var(--ink3);font-size:11.5px}
 .filterbar b{font-size:11px;color:var(--ink2);font-weight:600}
 .fpill{display:inline-flex;align-items:center;max-width:220px;border:1px solid var(--line2);background:#f8fafc;border-radius:5px;padding:2px 7px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quickbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 0 10px;color:var(--ink3);font-size:11.5px}
+.quickbar b{font-size:11px;color:var(--ink2);font-weight:600}
+.quickchip{border:1px solid var(--line);background:#fff;color:var(--brand);border-radius:15px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:inherit;transition:.12s;white-space:nowrap}
+.quickchip:hover{border-color:var(--brand);background:var(--brand-soft)}
 .filters{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
 .fg{display:flex;flex-direction:column;gap:5px}
 .fl{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
@@ -169,7 +173,7 @@ footer b{color:var(--limit)}
 </style></head>
 <body>
 <header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div></div></header>
-<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标，如 GDP、床位、医师、预期寿命、财政、医保…"><span class="count" id="count"></span></div><div class="filterbar" id="filterbar"></div><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div>
+<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span></div><div class="filterbar" id="filterbar"></div><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健十年</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button></div><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div>
 <main><div class="wrap"><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
 <div id="toast"></div>
 <footer>数据来源：国家统计局、财政部及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>本页不含未确认公开的规划征求意见稿、重点工作任务等内部政策文件；引用请以原始公报或正式来源为准。</footer>
@@ -242,6 +246,37 @@ function syncYear(){document.querySelectorAll('#fYear .chip').forEach(c=>c.class
   c.onclick=()=>{state.chart=v;syncChart();render();};el.appendChild(c);});})();
 function syncChart(){document.querySelectorAll('#fChart .chip').forEach(c=>c.classList.toggle('on',(c.dataset.v||'')===state.chart));}
 
+function syncControls(){
+  $('#q').value=state.q;
+  $('#onlyCmp').checked=state.onlyCmp;
+  sync();
+  buildSub();
+  syncTier();
+  syncYear();
+  syncChart();
+}
+
+function applyPreset(name){
+  const healthCat=DATA.find(d=>catShort(d.category)==='卫生健康')?.category||'卫生健康';
+  if(name==='nhc'){
+    Object.assign(state,{q:'国家卫生健康委',cat:healthCat,sub:'',year:'',onlyCmp:true,chart:'hbar'});
+    state.tiers=new Set([1]);
+  }else if(name==='resource'){
+    Object.assign(state,{q:'',cat:healthCat,sub:'卫生资源',year:'',onlyCmp:true,chart:'vbar'});
+    state.tiers=new Set([1,2,3]);
+  }else if(name==='dalian'){
+    Object.assign(state,{q:'大连',cat:'',sub:'',year:'',onlyCmp:true,chart:'hbar'});
+    state.tiers=new Set([3]);
+  }else if(name==='bulletin'){
+    Object.assign(state,{q:'统计公报',cat:'',sub:'',year:'',onlyCmp:false,chart:'hbar'});
+    state.tiers=new Set([1,2,3]);
+  }
+  syncControls();
+  render();
+}
+
+document.querySelectorAll('#quickbar .quickchip').forEach(btn=>btn.onclick=()=>applyPreset(btn.dataset.p));
+
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
   state.mode=t.dataset.m;
@@ -259,7 +294,7 @@ function baseFilter(d){
   if(state.cat&&d.category!==state.cat)return false;
   if(state.sub&&d.subcategory!==state.sub)return false;
   if(state.year&&String(d.year)!==state.year)return false;
-  if(state.q){const s=(d.indicator+' '+d.compare_key+' '+d.subcategory+' '+d.note+' '+d.region).toLowerCase();
+  if(state.q){const s=(d.indicator+' '+d.compare_key+' '+d.subcategory+' '+d.note+' '+d.region+' '+d.source+' '+d.responsible+' '+d.doc_no).toLowerCase();
     if(!state.q.toLowerCase().split(/\s+/).every(w=>s.includes(w)))return false;}
   return true;
 }
