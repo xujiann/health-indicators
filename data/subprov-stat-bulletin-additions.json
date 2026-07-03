@@ -1,0 +1,101 @@
+{
+  "kind": "subprov-stat-bulletin-series-v1",
+  "note": "副省级城市官方统计公报补录；本批先补2023年核心经济、人口、财政指标，其他年份按官方来源逐批扩展",
+  "records": [
+    {
+      "region_code": "320100",
+      "region": "南京市",
+      "year": 2023,
+      "responsible": "南京市统计局、国家统计局南京调查队",
+      "source_url": "https://tjj.nanjing.gov.cn/bmfw/njsj/202405/t20240511_4663449.html",
+      "metrics": {
+        "gdp": 17421.4,
+        "gdp_per_capita": 183015,
+        "resident_population": 954.7,
+        "urbanization_rate": 87.2,
+        "local_public_budget_revenue": 1620
+      }
+    },
+    {
+      "region_code": "440100",
+      "region": "广州市",
+      "year": 2023,
+      "responsible": "广州市统计局、国家统计局广州调查队",
+      "source_url": "https://www.gz.gov.cn/zwgk/sjfb/tjgb/content/post_9570687.html",
+      "metrics": {
+        "gdp": 30355.73,
+        "gdp_per_capita": 161634,
+        "resident_population": 1882.7,
+        "registered_population": 1056.61,
+        "urbanization_rate": 86.76
+      }
+    },
+    {
+      "region_code": "440300",
+      "region": "深圳市",
+      "year": 2023,
+      "responsible": "深圳市统计局、国家统计局深圳调查队",
+      "source_url": "https://tjj.sz.gov.cn/gkmlpt/content/11/11264/post_11264245.html",
+      "indicator_overrides": {
+        "registered_population": "常住户籍人口"
+      },
+      "metric_notes": {
+        "registered_population": "公报口径为常住户籍人口"
+      },
+      "metrics": {
+        "gdp": 34606.4,
+        "gdp_per_capita": 195230.17,
+        "resident_population": 1779.01,
+        "registered_population": 606.14,
+        "local_public_budget_revenue": 4112.78,
+        "local_public_budget_expenditure": 5012.07
+      }
+    },
+    {
+      "region_code": "420100",
+      "region": "武汉市",
+      "year": 2023,
+      "responsible": "武汉市统计局、国家统计局武汉调查队",
+      "source_url": "https://tjj.wuhan.gov.cn/tjfw/tjgb/202404/t20240405_2384677.shtml",
+      "metrics": {
+        "gdp": 20011.65,
+        "gdp_per_capita": 145471,
+        "resident_population": 1377.4,
+        "registered_population": 949.52,
+        "urbanization_rate": 84.79,
+        "local_public_budget_revenue": 1601.2
+      }
+    },
+    {
+      "region_code": "370100",
+      "region": "济南市",
+      "year": 2023,
+      "responsible": "济南市统计局、国家统计局济南调查队",
+      "source_url": "https://jntj.jinan.gov.cn/col18254/art/2024/art_18254_4750937.html",
+      "metrics": {
+        "gdp": 12757.4,
+        "resident_population": 943.7,
+        "registered_population": 825.3,
+        "urbanization_rate": 75.3,
+        "local_public_budget_revenue": 1060.8,
+        "local_public_budget_expenditure": 1365.3
+      }
+    },
+    {
+      "region_code": "210100",
+      "region": "沈阳市",
+      "year": 2023,
+      "responsible": "沈阳市统计局、国家统计局沈阳调查队",
+      "source_url": "https://www.shenyang.gov.cn/zwgk/fdzdgknr/tjxx/tjgb/202404/t20240415_4630416.html",
+      "metrics": {
+        "gdp": 8122.1,
+        "gdp_per_capita": 88519,
+        "resident_population": 920.4,
+        "registered_population": 764,
+        "urbanization_rate": 85.12,
+        "local_public_budget_revenue": 800.9,
+        "local_public_budget_expenditure": 1082.1
+      }
+    }
+  ]
+}

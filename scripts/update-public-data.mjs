@@ -26,6 +26,16 @@ const nationalHealthMetricDefinitions = {
   health_expenditure_per_capita: { subcategory: "卫生费用", indicator: "人均卫生总费用", compare_key: "人均卫生总费用", unit: "元" },
 };
 
+const subprovStatMetricDefinitions = {
+  gdp: { category: "经济", subcategory: "经济总量", indicator: "地区生产总值（GDP）", compare_key: "GDP", unit: "亿元" },
+  gdp_per_capita: { category: "经济", subcategory: "经济总量", indicator: "人均GDP", compare_key: "人均GDP", unit: "元" },
+  resident_population: { category: "人口", subcategory: "人口规模与结构", indicator: "年末常住人口", compare_key: "年末常住人口", unit: "万人" },
+  registered_population: { category: "人口", subcategory: "人口规模与结构", indicator: "年末户籍人口", compare_key: "年末户籍人口", unit: "万人" },
+  urbanization_rate: { category: "人口", subcategory: "人口规模与结构", indicator: "城镇化率(常住)", compare_key: "城镇化率(常住)", unit: "%" },
+  local_public_budget_revenue: { category: "财政", subcategory: "财政收支", indicator: "地方一般公共预算收入", compare_key: "地方一般公共预算收入", unit: "亿元" },
+  local_public_budget_expenditure: { category: "财政", subcategory: "财政收支", indicator: "地方一般公共预算支出", compare_key: "地方一般公共预算支出", unit: "亿元" },
+};
+
 async function firstXlsx(dir) {
   const files = await fs.readdir(dir);
   const found = files.find((name) => name.toLowerCase().endsWith(".xlsx") && !name.startsWith("~$"));
@@ -84,6 +94,34 @@ function expandNationalHealthSeries(payload) {
   }));
 }
 
+function expandSubprovStatBulletinSeries(payload) {
+  return payload.records.flatMap((entry) => Object.entries(entry.metrics).map(([metricKey, value]) => {
+    const definition = subprovStatMetricDefinitions[metricKey];
+    if (!definition) throw new Error(`Unknown subprov stat metric: ${metricKey}`);
+    return normalizeRecord({
+      region_code: entry.region_code,
+      region: entry.region,
+      level: "市",
+      year: entry.year,
+      category: definition.category,
+      subcategory: definition.subcategory,
+      indicator: entry.indicator_overrides?.[metricKey] || definition.indicator,
+      nature: "实际值",
+      value,
+      unit: definition.unit,
+      yoy: entry.yoy?.[metricKey] || "",
+      deadline: "",
+      responsible: entry.responsible || "",
+      source: `${entry.year}年${entry.region}国民经济和社会发展统计公报`,
+      doc_no: "—（公开统计公报）",
+      source_url: entry.source_url,
+      note: [payload.note, entry.note, entry.metric_notes?.[metricKey]].filter(Boolean).join("；"),
+      compare_key: definition.compare_key,
+      region_tier: "3·副省级城市",
+    });
+  }));
+}
+
 function sortRecord(a, b) {
   const tier = String(a.region_tier).localeCompare(String(b.region_tier), "zh-Hans");
   if (tier) return tier;
@@ -122,6 +160,8 @@ async function loadAdditions() {
         additions.push(...payload.map(normalizeRecord));
       } else if (payload.kind === "national-health-series-v1") {
         additions.push(...expandNationalHealthSeries(payload));
+      } else if (payload.kind === "subprov-stat-bulletin-series-v1") {
+        additions.push(...expandSubprovStatBulletinSeries(payload));
       } else {
         throw new Error(`Unsupported additions payload in ${file}`);
       }
