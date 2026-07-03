@@ -72,6 +72,19 @@ h1 small{display:block;font-size:11.5px;font-weight:400;opacity:.82;margin-top:3
 .toggle input:checked + .sw::after{left:17px}
 
 main{padding:16px 0 60px}
+.overview{display:none;margin-bottom:14px}
+.overview.show{display:block}
+.ovpanel{background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 3px rgba(20,40,70,.06);padding:12px 14px}
+.ovtop{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:10px}
+.ovtitle{font-size:13px;font-weight:700;color:var(--brand)}
+.ovmeta{font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums;text-align:right}
+.ovgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:8px}
+.ovitem{border:1px solid var(--line2);background:#f8fafc;border-radius:7px;padding:8px 10px;text-align:left;font-family:inherit;cursor:pointer;color:var(--ink);transition:.12s;min-height:74px}
+.ovitem:hover{border-color:var(--brand);background:var(--brand-soft)}
+.ovitem.on{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand);background:#fff}
+.ovname{font-size:13px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ovnums{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ovnums span{font-size:10.5px;color:var(--ink3);background:#fff;border:1px solid var(--line2);border-radius:5px;padding:2px 6px;font-variant-numeric:tabular-nums}
 .secthead{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.8px;
   margin:20px 2px 10px;padding-bottom:6px;border-bottom:2px solid var(--brand-soft);display:flex;justify-content:space-between;align-items:center}
 .secthead:first-child{margin-top:0}
@@ -179,7 +192,7 @@ footer b{color:var(--limit)}
 <body>
 <header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div></div></header>
 <div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button></div><div class="filterbar" id="filterbar"></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
-<main><div class="wrap"><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
+<main><div class="wrap"><div id="overview" class="overview"></div><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
 <div id="toast"></div>
 <footer>数据来源：国家统计局、财政部及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>国家卫生健康委统计公报当前收录 2015-2024 年核心序列，并补入 2022-2024 年官方 PDF 中可稳定结构化的 12 类扩展指标；引用请以原始公报或正式来源为准。</footer>
 <script>
@@ -311,11 +324,56 @@ function baseFilter(d){
 }
 function render(){
   renderSummary();
+  renderOverview();
   state.mode==='compare'?renderCompare():renderList();
 }
 
 function filteredRows(){
   return DATA.filter(d=>baseFilter(d)&&(state.mode!=='compare'||state.tiers.has(tierNo(d.region_tier))));
+}
+
+function isNHCView(){
+  return state.q.indexOf('国家卫生健康委')>=0||(catShort(state.cat)==='卫生健康'&&state.tiers.size===1&&state.tiers.has(1));
+}
+
+function renderOverview(){
+  const host=$('#overview');
+  if(!host)return;
+  const nhcRows=DATA.filter(d=>d.region==='全国'&&catShort(d.category)==='卫生健康'&&d.responsible==='国家卫生健康委');
+  if(!isNHCView()||!nhcRows.length){host.className='overview';host.innerHTML='';return;}
+  const groups={};
+  nhcRows.forEach(r=>{
+    const sub=r.subcategory||'未分类';
+    const g=groups[sub]||(groups[sub]={rows:0,keys:new Set(),years:new Set(),latest:0});
+    g.rows++;
+    if(r.compare_key)g.keys.add(r.compare_key);
+    if(+r.year&&+r.year<2030){g.years.add(+r.year);g.latest=Math.max(g.latest,+r.year);}
+  });
+  const order=['卫生资源','床位资源','卫生人员','卫生费用','医疗服务','医院运行','医疗质量与服务','基层卫生服务','中医药服务','疾病控制与公共卫生','妇幼与公共卫生','健康结果'];
+  const entries=Object.entries(groups).sort((a,b)=>{
+    const ia=order.indexOf(a[0]),ib=order.indexOf(b[0]);
+    if(ia>=0||ib>=0)return (ia<0?999:ia)-(ib<0?999:ib);
+    return a[0].localeCompare(b[0],'zh-Hans');
+  });
+  const totalKeys=new Set(nhcRows.map(r=>r.compare_key).filter(Boolean)).size;
+  const years=[...new Set(nhcRows.map(r=>+r.year).filter(y=>y&&y<2030))].sort((a,b)=>a-b);
+  host.className='overview show';
+  host.innerHTML='<div class="ovpanel"><div class="ovtop"><div class="ovtitle">公报分类概览</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+nhcRows.length+' 条记录 · '+years[0]+'-'+years[years.length-1]+'</div></div><div class="ovgrid">'+
+    entries.map(([sub,g],i)=>{
+      const ys=[...g.years].sort((a,b)=>a-b);
+      const yr=ys.length?(ys[0]===ys[ys.length-1]?ys[0]:ys[0]+'-'+ys[ys.length-1]):'—';
+      return '<button type="button" class="ovitem'+(state.sub===sub?' on':'')+'" data-i="'+i+'"><div class="ovname">'+esc(sub)+'</div><div class="ovnums"><span>'+g.keys.size+' 指标</span><span>'+g.rows+' 条</span><span>'+yr+'</span></div></button>';
+    }).join('')+'</div></div>';
+  document.querySelectorAll('#overview .ovitem').forEach(btn=>{
+    btn.onclick=()=>{
+      const sub=entries[+btn.dataset.i][0];
+      const healthCat=nhcRows[0].category;
+      Object.assign(state,{q:'国家卫生健康委',cat:healthCat,sub,year:'',onlyCmp:true,chart:'hbar'});
+      state.tiers=new Set([1]);
+      syncControls();
+      render();
+    };
+  });
 }
 
 function renderSummary(){
@@ -341,7 +399,7 @@ function renderSummary(){
   if(state.year)parts.push(['年份',state.year]);
   if(state.mode==='compare')parts.push(['层级',tiers.join('、')||'未选择']);
   if(state.mode==='compare'&&state.onlyCmp)parts.push(['显示','仅可对比']);
-  const nhcCoreView=state.q.indexOf('国家卫生健康委')>=0||(catShort(state.cat)==='卫生健康'&&state.tiers.size===1&&state.tiers.has(1));
+  const nhcCoreView=isNHCView();
   if(nhcCoreView)parts.push(['卫健公报','2015-2024核心序列，2022-2024扩展分类']);
   $('#filterbar').innerHTML='<b>当前视图</b>'+(parts.length?parts.map(([k,v])=>'<span class="fpill">'+esc(k)+'：'+esc(v)+'</span>').join(''):'<span class="fpill">全部公开指标</span>');
   const open=$('#filterPanel').classList.contains('open');
