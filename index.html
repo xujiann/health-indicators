@@ -32,10 +32,13 @@ h1 small{display:block;font-size:11.5px;font-weight:400;opacity:.82;margin-top:3
 .stat{display:flex;align-items:baseline;gap:6px;background:#f8fafc;border:1px solid var(--line2);border-radius:7px;padding:4px 8px;min-width:0;min-height:30px}
 .stat b{display:block;font-size:14px;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stat span{display:block;margin-top:0;font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.control-strip{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;min-width:0}
+.control-strip{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;min-width:0}
 .filterbar{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:0;color:var(--ink3);font-size:11.5px;min-width:0;scrollbar-width:thin}
 .filterbar b{font-size:11px;color:var(--ink2);font-weight:600;white-space:nowrap;flex:none}
 .fpill{display:inline-flex;align-items:center;max-width:220px;border:1px solid var(--line2);background:#f8fafc;border-radius:5px;padding:2px 7px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.view-actions{display:flex;align-items:center;gap:6px;justify-content:flex-end;flex-wrap:nowrap}
+.actionbtn{border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:6px;padding:4px 8px;font-size:11.5px;cursor:pointer;font-family:inherit;transition:.12s;white-space:nowrap}
+.actionbtn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
 .quickbar{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:0;color:var(--ink3);font-size:11.5px;scrollbar-width:thin}
 .quickbar b{font-size:11px;color:var(--ink2);font-weight:600;white-space:nowrap;flex:none}
 .quickchip{border:1px solid var(--line);background:#fff;color:var(--brand);border-radius:15px;padding:3px 9px;font-size:12px;cursor:pointer;font-family:inherit;transition:.12s;white-space:nowrap}
@@ -191,7 +194,7 @@ footer b{color:var(--limit)}
 </style></head>
 <body>
 <header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div></div></header>
-<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button></div><div class="filterbar" id="filterbar"></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
+<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
 <main><div class="wrap"><div id="overview" class="overview"></div><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
 <div id="toast"></div>
 <footer>数据来源：国家统计局、财政部及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>国家卫生健康委统计公报当前收录 2015-2024 年核心序列，并补入 2022-2024 年官方 PDF 中可稳定结构化的 12 类扩展指标；引用请以原始公报或正式来源为准。</footer>
@@ -693,6 +696,59 @@ function renderSingle(key,recs,unit){
 }
 
 // 复制
+function currentVisibleRows(){
+  if(state.mode==='list')return DATA.filter(baseFilter);
+  const recs=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
+  const g={};recs.forEach(d=>{(g[d.compare_key]=g[d.compare_key]||[]).push(d);});
+  let keys=Object.keys(g);
+  const info={};keys.forEach(k=>info[k]=groupInfo(g[k]));
+  if(state.onlyCmp)keys=keys.filter(k=>info[k].comparable);
+  const keep=new Set(keys);
+  return recs.filter(d=>keep.has(d.compare_key));
+}
+
+function viewSummaryText(){
+  const rows=currentVisibleRows();
+  const regions=[...new Set(rows.map(d=>d.region).filter(Boolean))];
+  const keys=[...new Set(rows.map(d=>d.compare_key).filter(Boolean))];
+  const years=rows.map(d=>+d.year).filter(y=>y&&y<2030).sort((a,b)=>a-b);
+  const cats=[...new Set(rows.map(d=>catShort(d.category)).filter(Boolean))];
+  const filters=[];
+  if(state.q)filters.push('关键词='+state.q);
+  if(state.cat)filters.push('类别='+catShort(state.cat));
+  if(state.sub)filters.push('分类='+state.sub);
+  if(state.year)filters.push('年份='+state.year);
+  if(state.mode==='compare')filters.push('层级='+[...state.tiers].sort().map(n=>({1:'全国',2:'省区市',3:'副省级城市'}[n])).filter(Boolean).join('/'));
+  if(state.mode==='compare'&&state.onlyCmp)filters.push('仅可对比');
+  const yr=years.length?(years[0]===years[years.length-1]?years[0]:years[0]+'-'+years[years.length-1]):'—';
+  return [
+    '公开指标查询视图摘要',
+    '筛选：'+(filters.join('；')||'全部公开指标'),
+    '范围：'+rows.length+'条记录，'+keys.length+'个指标口径，'+regions.length+'个地区，年份'+yr+'。',
+    '类别：'+(cats.join('、')||'—')+'。',
+    '地区：'+(regions.slice(0,12).join('、')+(regions.length>12?'等':'')||'—')+'。',
+    '引用：请以原始统计公报或正式公开来源为准。'
+  ].join('\n');
+}
+
+function csvCell(v){
+  const s=(v==null?'':String(v)).replace(/\r?\n/g,' ');
+  return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+}
+function exportCsv(){
+  const rows=currentVisibleRows();
+  if(!rows.length){showToast('当前没有可导出的记录');return;}
+  const fields=['region_code','region','level','year','category','subcategory','indicator','nature','value','unit','yoy','deadline','responsible','source','doc_no','source_url','note','compare_key','region_tier'];
+  const csv='\ufeff'+[fields.join(',')].concat(rows.map(r=>fields.map(f=>csvCell(r[f])).join(','))).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='health-indicators-view-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(a.href),1200);
+  showToast('已导出当前视图CSV',rows.length+'条记录');
+}
+
 function copyText(t){
   let ok=false;
   try{navigator.clipboard.writeText(t);ok=true;}catch(e){}
@@ -722,6 +778,8 @@ function renderList(){
 document.querySelectorAll('thead th').forEach(th=>{let dir=1;th.onclick=()=>{const k=th.dataset.k;dir=-dir;
   DATA.sort((a,b)=>{let x=a[k],y=b[k];if(k==='year'){x=+x;y=+y;}if(k==='value'){const px=numOf(x),py=numOf(y);if(px!=null&&py!=null){x=px;y=py;}}return(x>y?1:x<y?-1:0)*dir;});renderList();};});
 
+$('#copyView').onclick=()=>copyText(viewSummaryText());
+$('#exportCsv').onclick=exportCsv;
 render();
 </script>
 </body></html>
