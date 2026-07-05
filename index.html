@@ -196,7 +196,7 @@ footer b{color:var(--limit)}
 </style></head>
 <body>
 <header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div></div></header>
-<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
+<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
 <main><div class="wrap"><div id="overview" class="overview"></div><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
 <div id="toast"></div>
 <footer>数据来源：国家统计局、财政部及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>国家卫生健康委统计公报当前收录 2015-2024 年核心序列，并补入 2022-2024 年官方 PDF 中可稳定结构化的 12 类扩展指标；引用请以原始公报或正式来源为准。</footer>
@@ -817,6 +817,41 @@ function sourceListText(){
   return lines.join('\n');
 }
 
+function gapListText(){
+  if(state.mode!=='compare')return '缺口清单仅按对比视图计算；请切换到对比视图后使用。';
+  const recs=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
+  const g={};recs.forEach(d=>{(g[d.compare_key]=g[d.compare_key]||[]).push(d);});
+  let keys=Object.keys(g);
+  const info={};keys.forEach(k=>info[k]=groupInfo(g[k]));
+  if(state.onlyCmp)keys=keys.filter(k=>info[k].comparable);
+  const tierLabels={1:'全国',2:'省区市',3:'副省级城市'};
+  const selected=[...state.tiers].sort();
+  const gaps=keys.map(k=>{
+    const present=new Set(g[k].map(r=>tierNo(r.region_tier)));
+    const missing=selected.filter(n=>!present.has(n));
+    const years=[...new Set(g[k].map(r=>+r.year).filter(y=>y&&y<2030))].sort((a,b)=>a-b);
+    return {key:k,cat:catShort(g[k][0].category),missing,rows:g[k].length,years};
+  }).filter(x=>x.missing.length).sort((a,b)=>b.missing.length-a.missing.length||a.cat.localeCompare(b.cat,'zh-Hans')||a.key.localeCompare(b.key,'zh-Hans'));
+  if(!gaps.length)return '当前对比视图未发现所选层级缺口。';
+  const filters=[];
+  if(state.q)filters.push('关键词='+state.q);
+  if(state.cat)filters.push('类别='+catShort(state.cat));
+  if(state.sub)filters.push('分类='+state.sub);
+  if(state.year)filters.push('年份='+state.year);
+  filters.push('层级='+selected.map(n=>tierLabels[n]).join('/'));
+  const lines=[
+    '当前视图指标缺口清单',
+    '筛选：'+filters.join('；'),
+    '缺口指标：'+gaps.length+'个；引用请以原始统计公报或正式公开来源为准。'
+  ];
+  gaps.slice(0,60).forEach((x,i)=>{
+    const yr=x.years.length?(x.years[0]===x.years[x.years.length-1]?x.years[0]:x.years[0]+'-'+x.years[x.years.length-1]):'—';
+    lines.push((i+1)+'. ['+x.cat+'] '+x.key+'；缺 '+x.missing.map(n=>tierLabels[n]).join('、')+'；已有记录 '+x.rows+'条；年份 '+yr);
+  });
+  if(gaps.length>60)lines.push('其余 '+(gaps.length-60)+' 个缺口请通过CSV导出或调整筛选查看。');
+  return lines.join('\n');
+}
+
 function csvCell(v){
   const s=(v==null?'':String(v)).replace(/\r?\n/g,' ');
   return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
@@ -869,6 +904,7 @@ $('#resetView').onclick=()=>{resetState();setMode(state.mode);syncControls();ren
 $('#copyLink').onclick=()=>copyText(currentViewUrl());
 $('#copyView').onclick=()=>copyText(viewSummaryText());
 $('#copySources').onclick=()=>copyText(sourceListText());
+$('#copyGaps').onclick=()=>copyText(gapListText());
 $('#exportCsv').onclick=exportCsv;
 setMode(state.mode);
 syncControls();
