@@ -196,7 +196,7 @@ footer b{color:var(--limit)}
 </style></head>
 <body>
 <header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div></div></header>
-<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
+<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copyTable" type="button">复制表格</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
 <main><div class="wrap"><div id="overview" class="overview"></div><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
 <div id="toast"></div>
 <footer>数据来源：国家统计局、财政部及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>国家卫生健康委统计公报当前收录 2015-2024 年核心序列，并补入 2022-2024 年官方 PDF 中可稳定结构化的 12 类扩展指标；引用请以原始公报或正式来源为准。</footer>
@@ -852,6 +852,27 @@ function gapListText(){
   return lines.join('\n');
 }
 
+function mdCell(v){
+  return String(v==null?'':v).replace(/\r?\n/g,' ').replace(/\|/g,'/').trim();
+}
+function tableText(){
+  const rows=currentVisibleRows();
+  if(!rows.length)return '当前视图没有可复制为表格的记录。';
+  const sorted=rows.slice().sort((a,b)=>(+b.year||0)-(+a.year||0)||String(a.region).localeCompare(String(b.region),'zh-Hans')||String(a.compare_key).localeCompare(String(b.compare_key),'zh-Hans'));
+  const out=[
+    '当前视图数据表（前 '+Math.min(sorted.length,30)+' 条，共 '+rows.length+' 条）',
+    '',
+    '| 指标 | 地区 | 年份 | 数值 | 来源 |',
+    '| --- | --- | --- | --- | --- |'
+  ];
+  sorted.slice(0,30).forEach(r=>{
+    out.push('| '+[r.compare_key||r.indicator,r.region,r.year,(r.value||'')+(r.unit?' '+r.unit:''),r.source||''].map(mdCell).join(' | ')+' |');
+  });
+  if(rows.length>30)out.push('', '其余 '+(rows.length-30)+' 条请使用“导出CSV”查看。');
+  out.push('', '引用：请以原始统计公报或正式公开来源为准。');
+  return out.join('\n');
+}
+
 function csvCell(v){
   const s=(v==null?'':String(v)).replace(/\r?\n/g,' ');
   return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
@@ -903,6 +924,7 @@ window.addEventListener('hashchange',()=>{applyStateFromHash();setMode(state.mod
 $('#resetView').onclick=()=>{resetState();setMode(state.mode);syncControls();render();showToast('已重置为默认视图');};
 $('#copyLink').onclick=()=>copyText(currentViewUrl());
 $('#copyView').onclick=()=>copyText(viewSummaryText());
+$('#copyTable').onclick=()=>copyText(tableText());
 $('#copySources').onclick=()=>copyText(sourceListText());
 $('#copyGaps').onclick=()=>copyText(gapListText());
 $('#exportCsv').onclick=exportCsv;
