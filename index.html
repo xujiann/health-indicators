@@ -109,6 +109,8 @@ main{padding:16px 0 60px}
 .copybtn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
 .sourcebtn{font-size:12px;width:28px;height:28px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;color:var(--ink3);transition:.12s;display:flex;align-items:center;justify-content:center;flex:none;text-decoration:none}
 .sourcebtn:hover{border-color:var(--actual);color:var(--actual);background:#e6f4ec}
+.detailbtn{font-size:11px;height:28px;min-width:36px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;color:var(--ink3);transition:.12s;display:flex;align-items:center;justify-content:center;flex:none;font-family:inherit;padding:0 7px}
+.detailbtn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
 .cbody{padding:13px 15px;flex:1}
 
 .bars{display:flex;flex-direction:column;gap:8px}
@@ -304,14 +306,17 @@ function setFiltersOpen(open){
 $('#filterToggle').onclick=()=>{setFiltersOpen(!$('#filterPanel').classList.contains('open'));renderSummary();};
 setFiltersOpen(false);
 
+function setMode(mode){
+  state.mode=mode;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.m===mode));
+  $('#compareView').style.display=mode==='compare'?'block':'none';
+  $('#listView').style.display=mode==='list'?'block':'none';
+  $('#cmpToggleWrap').style.display=mode==='compare'?'flex':'none';
+  $('#tierWrap').style.display=mode==='compare'?'flex':'none';
+  $('#chartWrap').style.display=mode==='compare'?'flex':'none';
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
-  state.mode=t.dataset.m;
-  $('#compareView').style.display=state.mode==='compare'?'block':'none';
-  $('#listView').style.display=state.mode==='list'?'block':'none';
-  $('#cmpToggleWrap').style.display=state.mode==='compare'?'flex':'none';
-  $('#tierWrap').style.display=state.mode==='compare'?'flex':'none';
-  $('#chartWrap').style.display=state.mode==='compare'?'flex':'none';
+  setMode(t.dataset.m);
   render();
 });
 $('#q').oninput=e=>{state.q=e.target.value.trim();render();};
@@ -343,7 +348,7 @@ function renderOverview(){
   const host=$('#overview');
   if(!host)return;
   const nhcRows=DATA.filter(d=>d.region==='全国'&&catShort(d.category)==='卫生健康'&&d.responsible==='国家卫生健康委');
-  if(!isNHCView()||!nhcRows.length){host.className='overview';host.innerHTML='';return;}
+  if(state.mode!=='compare'||!isNHCView()||!nhcRows.length){host.className='overview';host.innerHTML='';return;}
   const groups={};
   nhcRows.forEach(r=>{
     const sub=r.subcategory||'未分类';
@@ -471,11 +476,22 @@ function card(key,recs,inf){
   const gap=missing.length?'<div class="gaps">缺：<b>'+missing.join('、')+'</b>（补录后自动填入）</div>':'';
   const source=bestSource(recs);
   const sourceBtn=source?'<a class="sourcebtn" title="打开来源" target="_blank" rel="noopener" href="'+esc(source.source_url)+'">↗</a>':'';
+  const detailBtn='<button class="detailbtn" type="button" title="查看明细记录">明细</button>';
   el.innerHTML='<div class="chead"><div><div class="ctitle">'+esc(key)+'</div><div class="ccat">'+esc(cat)+(unit?' · 单位 '+esc(unit):'')+'</div></div>'+
-    '<div class="cright">'+badge+sourceBtn+'<button class="copybtn" title="复制为材料文字">⧉</button></div></div>'+
+    '<div class="cright">'+badge+detailBtn+sourceBtn+'<button class="copybtn" title="复制为材料文字">⧉</button></div></div>'+
     '<div class="cbody">'+body+gap+'</div>';
+  el.querySelector('.detailbtn').onclick=()=>openIndicatorDetail(key,recs);
   el.querySelector('.copybtn').onclick=()=>copyText(copytext);
   return el;
+}
+
+function openIndicatorDetail(key,recs){
+  const first=recs[0]||{};
+  Object.assign(state,{q:key,cat:first.category||'',sub:'',year:'',onlyCmp:false});
+  setMode('list');
+  syncControls();
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function bestSource(recs){
