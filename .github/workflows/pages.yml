@@ -30,6 +30,7 @@ jobs:
           set -euo pipefail
           mkdir -p _site
           cp index.html _site/
+          cp about.html _site/
           cp README.md _site/
           cp .nojekyll _site/
           cp "公开指标数据库.xlsx" _site/
