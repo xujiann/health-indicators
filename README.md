@@ -20,7 +20,8 @@ GitHub Pages 发布后访问：
 ## 数据内容
 
 - `index.html`：可直接托管到 GitHub Pages 的静态查询分析系统，数据已内嵌，离线也可打开。
-- `公开指标数据库.xlsx`：结构化公开数据，共 1516 条、19 个字段，包含全国近十年卫生健康统计公报核心序列、2022-2024 年公报扩展分类指标及 15 个副省级城市对标数据。
+- `公开指标数据库.xlsx`：结构化公开数据，共 1912 条、19 个字段，包含全国近十年卫生健康统计公报核心序列、2022-2024 年公报扩展分类指标、1998-2025 年全国经济人口卫生医保图片长序列及 15 个副省级城市对标数据。
+- `data/national-economy-pop-health-insurance-additions.json`：根据用户提供图片表结构化录入的 1998-2025 年全国经济、人口、卫生、医保相关长序列数据；空白单元未录入，正式引用需复核原始来源。
 - `data/national-health-bulletin-additions.json`：国家卫健委 2015-2024 年卫生健康统计公报核心指标补录数据。
 - `data/national-health-bulletin-expanded-additions.json`：国家卫健委 2022-2024 年卫生健康统计公报 PDF 表格扩展指标，按资源、人员、费用、服务、运行、疾控、妇幼、中医药等分类。
 - `data/stat-bulletin-additions.json`：相关城市 2024 年官方统计公报补录数据。

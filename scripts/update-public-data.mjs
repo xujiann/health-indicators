@@ -122,6 +122,32 @@ function expandSubprovStatBulletinSeries(payload) {
   }));
 }
 
+function expandNationalCrossDomainSeries(payload) {
+  return payload.records.flatMap((series) => Object.entries(series.values || {})
+    .filter(([, value]) => value !== null && value !== "")
+    .map(([year, value]) => normalizeRecord({
+      region_code: "000000",
+      region: "全国",
+      level: "国家",
+      year: Number(year),
+      category: series.category,
+      subcategory: series.subcategory,
+      indicator: series.indicator,
+      nature: "实际值",
+      value,
+      unit: series.unit,
+      yoy: "",
+      deadline: "",
+      responsible: payload.responsible || "",
+      source: payload.source,
+      doc_no: payload.doc_no || "—（公开补录）",
+      source_url: payload.source_url || "",
+      note: [payload.note, series.note].filter(Boolean).join("；"),
+      compare_key: series.compare_key || series.indicator,
+      region_tier: "1·全国",
+    })));
+}
+
 function sortRecord(a, b) {
   const tier = String(a.region_tier).localeCompare(String(b.region_tier), "zh-Hans");
   if (tier) return tier;
@@ -169,6 +195,8 @@ async function loadAdditions() {
         additions.push(...expandNationalHealthSeries(payload));
       } else if (payload.kind === "subprov-stat-bulletin-series-v1") {
         additions.push(...expandSubprovStatBulletinSeries(payload));
+      } else if (payload.kind === "national-cross-domain-series-v1") {
+        additions.push(...expandNationalCrossDomainSeries(payload));
       } else {
         throw new Error(`Unsupported additions payload in ${file}`);
       }
