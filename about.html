@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于 · 卫生健康数据可视化</title>
+<style>
+:root{--ink:#1a2332;--muted:#667085;--line:#dde3ec;--bg:#f3f5f8;--panel:#fff;--brand:#1f4e79}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei","PingFang SC",sans-serif;line-height:1.65}
+.wrap{width:min(960px,100%);margin:0 auto;padding:18px}
+.nav{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px}.nav a{min-height:36px;display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--brand);padding:0 12px;text-decoration:none;font-weight:800;font-size:13px}
+.hero,.grid article{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 24px rgba(20,40,70,.06)}
+.hero{padding:26px}.hero span{color:var(--brand);font-size:12px;font-weight:900}.hero h1{margin:8px 0 10px;font-size:30px}.hero p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}.grid article{padding:18px}.grid h2{margin:0 0 8px;font-size:18px}.grid p{margin:0;color:var(--muted);font-size:14px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.hero{padding:20px}.hero h1{font-size:24px}.nav{justify-content:flex-start;overflow-x:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <nav class="nav" aria-label="统一导航">
+    <a href="https://xujiann.github.io/healthpolicy/">主页</a>
+    <a href="index.html">数据首页</a>
+  </nav>
+  <section class="hero">
+    <span>ABOUT</span>
+    <h1>卫生健康数据可视化</h1>
+    <p>用于快速查看国家、辽宁、大连等公开卫生健康与相关经济社会指标，支持检索、筛选、对比、复制摘要和导出。</p>
+  </section>
+  <section class="grid">
+    <article><h2>项目定位</h2><p>为政策研究、规划评估和材料撰写提供可阅读、可复制、可追溯的指标入口。</p></article>
+    <article><h2>数据边界</h2><p>以公开统计公报、财政公开数据和经确认可公开的对标数据为基础，引用以原始来源为准。</p></article>
+    <article><h2>统一入口</h2><p>可从“主页”返回卫生健康信息化项目总入口，继续访问政策汇总和健康平台。</p></article>
+  </section>
+</main>
+</body>
+</html>
