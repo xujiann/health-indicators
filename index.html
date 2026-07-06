@@ -111,6 +111,13 @@ main{padding:16px 0 60px}
 .sourcebtn:hover{border-color:var(--actual);color:var(--actual);background:#e6f4ec}
 .detailbtn{font-size:11px;height:28px;min-width:36px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;color:var(--ink3);transition:.12s;display:flex;align-items:center;justify-content:center;flex:none;font-family:inherit;padding:0 7px}
 .detailbtn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.sstatus{font-size:10.5px;padding:3px 7px;border-radius:5px;font-weight:600;white-space:nowrap;background:#f0f2f5;color:var(--ink3);display:inline-flex;align-items:center;gap:4px}
+.sstatus.link{background:#e6f4ec;color:var(--actual)}
+.sstatus.partial{background:#e7f0fb;color:var(--brand)}
+.sstatus.review{background:#fff3cd;color:#9a6a00}
+.sstatus.open{background:#f4eefb;color:#6f42c1}
+.sourcecell{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
+.sourcecell .note{flex:1;min-width:180px}
 .cbody{padding:13px 15px;flex:1}
 
 .bars{display:flex;flex-direction:column;gap:8px}
@@ -526,7 +533,7 @@ function card(key,recs,inf){
   const sourceBtn=source?'<a class="sourcebtn" title="打开来源" target="_blank" rel="noopener" href="'+esc(source.source_url)+'">↗</a>':'';
   const detailBtn='<button class="detailbtn" type="button" title="查看明细记录">明细</button>';
   el.innerHTML='<div class="chead"><div><div class="ctitle">'+esc(key)+'</div><div class="ccat">'+esc(cat)+(unit?' · 单位 '+esc(unit):'')+'</div></div>'+
-    '<div class="cright">'+badge+detailBtn+sourceBtn+'<button class="copybtn" title="复制为材料文字">⧉</button></div></div>'+
+    '<div class="cright">'+sourceStatusHtml(recs)+badge+detailBtn+sourceBtn+'<button class="copybtn" title="复制为材料文字">⧉</button></div></div>'+
     '<div class="cbody">'+body+gap+'</div>';
   el.querySelector('.detailbtn').onclick=()=>openIndicatorDetail(key,recs);
   el.querySelector('.copybtn').onclick=()=>copyText(copytext);
@@ -548,6 +555,22 @@ function bestSource(recs){
   const dl=withUrl.filter(r=>r.region==='大连市').sort((a,b)=>+b.year-+a.year)[0];
   if(dl)return dl;
   return withUrl.sort((a,b)=>+b.year-+a.year)[0];
+}
+
+function sourceStatus(input){
+  const recs=Array.isArray(input)?input:[input];
+  const text=recs.map(r=>[r.source,r.doc_no,r.note].join(' ')).join(' ');
+  const withUrl=recs.filter(r=>r&&r.source_url).length;
+  if(/用户提供图片表|待正式来源复核/.test(text))return {label:'待复核',cls:'review',title:'用户图片表录入，引用前请以正式来源复核'};
+  if(withUrl===recs.length)return {label:'原文链接',cls:'link',title:'全部记录带来源链接'};
+  if(withUrl>0)return {label:'部分链接',cls:'partial',title:'部分记录带来源链接'};
+  if(/经确认可公开|公开统计公报|公开补录/.test(text))return {label:'可公开',cls:'open',title:'已标注公开或经确认可公开'};
+  return {label:'待补链',cls:'',title:'当前记录未提供可打开的来源链接'};
+}
+
+function sourceStatusHtml(input){
+  const s=sourceStatus(input);
+  return '<span class="sstatus '+s.cls+'" title="'+esc(s.title)+'">'+esc(s.label)+'</span>';
 }
 
 // 占比/排名洞察
@@ -918,7 +941,7 @@ function renderList(){
       '<td><span class="valc">'+esc(d.value)+' '+esc(d.unit)+'</span></td>'+
       '<td><span class="tag t-'+k+'">'+esc((d.nature||'').replace(/\(.*/,''))+'</span></td>'+
       '<td>'+esc(d.year)+'</td><td>'+esc(d.region)+'</td>'+
-      '<td class="hide-m"><span class="note" style="margin:0">'+(d.source_url?'<a href="'+esc(d.source_url)+'" target="_blank" rel="noopener">'+esc(d.source)+'</a>':esc(d.source))+'</span></td>';
+      '<td class="hide-m"><div class="sourcecell">'+sourceStatusHtml(d)+'<span class="note" style="margin:0">'+(d.source_url?'<a href="'+esc(d.source_url)+'" target="_blank" rel="noopener">'+esc(d.source)+'</a>':esc(d.source))+'</span></div></td>';
     f.appendChild(tr);});
   tb.appendChild(f);
 }
