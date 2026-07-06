@@ -100,7 +100,9 @@ main{padding:16px 0 60px}
 .politem .yr{font-size:11px;color:var(--brand);font-weight:700}
 .politem p{font-size:11.5px;color:var(--ink2);line-height:1.55;margin:6px 0 0}
 .poltags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
-.poltags span{font-size:10.5px;color:var(--ink3);background:#fff;border:1px solid var(--line2);border-radius:5px;padding:2px 6px}
+.poltags span,.poltags button{font-size:10.5px;color:var(--ink3);background:#fff;border:1px solid var(--line2);border-radius:5px;padding:2px 6px;font-family:inherit}
+.poltags button{cursor:pointer;color:var(--brand)}
+.poltags button:hover{border-color:var(--brand);background:var(--brand-soft)}
 .polsrc{display:inline-flex;margin-top:8px;font-size:11px;color:var(--brand);text-decoration:none}
 .polsrc:hover{text-decoration:underline}
 .secthead{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.8px;
@@ -282,6 +284,31 @@ const POLICIES=[
   {year:'2024',phase:'三医协同',title:'深化医药卫生体制改革2024年重点工作任务',summary:'强调医保、医疗、医药协同发展和治理，推广三明医改经验，推动公益性导向、公立医院改革和分级诊疗体系建设。',tags:['三医协同','三明医改','分级诊疗'],metrics:['医疗服务','卫生费用','基层卫生服务'],source:'中国政府网转载',url:'https://www.mee.gov.cn/zcwj/gwywj/202406/t20240607_1075327.shtml'},
   {year:'2025',phase:'深化推进',title:'2025年全国卫生健康体改工作会议',summary:'继续以地市为单元推广三明医改经验，深化公立医院公益性改革，促进三医协同治理，并以基层为重点加快分级诊疗体系建设。',tags:['地市单元','公益性改革','基层重点'],metrics:['公立医院改革','基层能力','分级诊疗'],source:'国家卫生健康委',url:'https://www.nhc.gov.cn/tigs/c100052/202501/4355b79ee84247af9c4a9befbd1a55a1.shtml'}
 ];
+const POLICY_METRIC_FILTERS={
+  '卫生总费用':{sub:'卫生费用'},
+  '基层卫生服务':{sub:'基层卫生服务'},
+  '医保覆盖':{sub:'医疗保障'},
+  '预期寿命':{sub:'健康结果',q:'平均预期寿命'},
+  '健康素养':{sub:'健康水平',q:'健康素养'},
+  '健康服务能力':{sub:'卫生资源'},
+  '健康结果':{sub:'健康结果'},
+  '疾病控制':{sub:'疾病控制与公共卫生'},
+  '妇幼与公共卫生':{sub:'妇幼与公共卫生'},
+  '医院运行':{sub:'医院运行'},
+  '医疗质量':{sub:'医疗质量与服务'},
+  '床位资源':{sub:'床位资源'},
+  '卫生资源':{sub:'卫生资源'},
+  '基层服务':{sub:'基层卫生服务'},
+  '中医药服务':{sub:'中医药服务'},
+  '医疗服务':{sub:'医疗服务'},
+  '卫生费用':{sub:'卫生费用'},
+  '公立医院改革':{q:'公立医院'},
+  '基层能力':{sub:'基层卫生服务'},
+  '分级诊疗':{q:'基层医疗卫生机构'},
+  '电子健康档案':{q:'电子健康档案',note:'当前公开指标库暂少量覆盖，可作为后续数据补录缺口'},
+  '数据共享':{q:'互认',note:'优先查看检查结果互认、远程医疗等可量化代理指标'},
+  '服务协同':{q:'远程医疗',note:'优先查看远程医疗、预约诊疗等服务协同代理指标'}
+};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 
 // chips
@@ -427,9 +454,21 @@ function renderPolicy(){
   if(state.panel!=='policy'){host.className='policy';host.innerHTML='';return;}
   host.className='policy show';
   host.innerHTML='<div class="polpanel"><div class="poltop"><div><div class="poltitle">卫生健康主要政策发展历程</div><div class="polnote">实现方法：先把重大政策文件抽象为“年份-阶段-主题-指标映射-来源”结构，再与现有统计公报指标同屏比较。这样既能看政策演进，也能继续下钻床位、人员、费用、服务量等量化指标。</div></div><button class="actionbtn" id="copyPolicy" type="button">复制脉络</button></div><div class="polgrid">'+
-    POLICIES.map(p=>'<div class="politem"><span class="yr">'+esc(p.year+' · '+p.phase)+'</span><b>'+esc(p.title)+'</b><p>'+esc(p.summary)+'</p><div class="poltags">'+p.tags.map(t=>'<span>'+esc(t)+'</span>').join('')+'</div><div class="poltags">'+p.metrics.map(t=>'<span>指标：'+esc(t)+'</span>').join('')+'</div><a class="polsrc" href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.source)+'</a></div>').join('')+
+    POLICIES.map(p=>'<div class="politem"><span class="yr">'+esc(p.year+' · '+p.phase)+'</span><b>'+esc(p.title)+'</b><p>'+esc(p.summary)+'</p><div class="poltags">'+p.tags.map(t=>'<span>'+esc(t)+'</span>').join('')+'</div><div class="poltags">'+p.metrics.map(t=>'<button type="button" data-metric="'+esc(t)+'">指标：'+esc(t)+'</button>').join('')+'</div><a class="polsrc" href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.source)+'</a></div>').join('')+
     '</div></div>';
   $('#copyPolicy').onclick=()=>copyText(policyText());
+  document.querySelectorAll('#policyView [data-metric]').forEach(btn=>btn.onclick=()=>applyPolicyMetric(btn.dataset.metric));
+}
+
+function applyPolicyMetric(metric){
+  const f=POLICY_METRIC_FILTERS[metric]||{q:metric};
+  const healthCat=DATA.find(d=>catShort(d.category)==='卫生健康')?.category||'卫生健康';
+  Object.assign(state,{mode:'compare',panel:'data',q:f.q||'',cat:healthCat,sub:f.sub||'',year:'',onlyCmp:false,chart:'hbar'});
+  state.tiers=new Set([1,2,3]);
+  setMode('compare');
+  syncControls();
+  render();
+  showToast('已跳转到关联指标',metric+(f.sub?' → '+f.sub:'')+(f.q?' → '+f.q:'')+(f.note?'\n'+f.note:''));
 }
 
 function filteredRows(){
