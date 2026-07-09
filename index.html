@@ -91,6 +91,29 @@ main{padding:16px 0 60px}
 .ovname{font-size:13px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ovnums{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
 .ovnums span{font-size:10.5px;color:var(--ink3);background:#fff;border:1px solid var(--line2);border-radius:5px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.nhcvis{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr);gap:12px;margin-bottom:12px}
+.nhcmetrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.nhcmetric{background:#f8fafc;border:1px solid var(--line2);border-top:3px solid var(--brand);border-radius:7px;padding:8px 10px;min-width:0}
+.nhcmetric b{display:block;font-size:16px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.2}
+.nhcmetric span{display:block;margin-top:3px;font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nhcsection{background:#fff;border:1px solid var(--line2);border-radius:7px;padding:10px;min-width:0}
+.nhcsection h3{margin:0 0 8px;font-size:12px;color:var(--brand);font-weight:700}
+.yearbar{display:grid;grid-template-columns:42px 1fr 34px;gap:8px;align-items:center;margin:5px 0;font-size:10.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.yearbar i{height:8px;border-radius:5px;background:var(--line2);overflow:hidden}
+.yearbar b{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#1f4e79,#0d8a9c)}
+.subbar{display:grid;grid-template-columns:minmax(92px,140px) 1fr 42px;gap:8px;align-items:center;margin:6px 0;font-size:11px;color:var(--ink2)}
+.subbar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subbar i{height:8px;border-radius:5px;background:var(--line2);overflow:hidden}
+.subbar b{display:block;height:100%;border-radius:5px;background:#0a7d52}
+.nhcfocus{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:10px 0 12px}
+.focusitem{border:1px solid var(--line2);border-radius:7px;padding:8px 10px;background:#fff;display:grid;grid-template-columns:1fr 76px;gap:8px;align-items:center;min-width:0}
+.focusitem .fname{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.focusitem .fval{font-size:14px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums;margin-top:2px}
+.focusitem .fdelta{font-size:10.5px;color:var(--ink3);margin-top:2px}
+.focusitem .fdelta.up{color:var(--actual)} .focusitem .fdelta.down{color:var(--limit)}
+.focusitem svg{width:76px;height:34px;display:block}
+.nhcnote{font-size:11px;color:var(--ink3);line-height:1.5;margin-top:2px}
+@media(max-width:900px){.nhcvis{grid-template-columns:1fr}.nhcmetrics{grid-template-columns:repeat(2,minmax(0,1fr))}.subbar{grid-template-columns:112px 1fr 36px}}
 .secthead{font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.8px;
   margin:20px 2px 10px;padding-bottom:6px;border-bottom:2px solid var(--brand-soft);display:flex;justify-content:space-between;align-items:center}
 .secthead:first-child{margin-top:0}
@@ -400,10 +423,80 @@ function isNHCView(){
   return state.q.indexOf('国家卫生健康委')>=0||(catShort(state.cat)==='卫生健康'&&state.tiers.size===1&&state.tiers.has(1));
 }
 
+function nhcBulletinRows(){
+  return DATA.filter(d=>d.region==='全国'&&catShort(d.category)==='卫生健康'&&(
+    d.responsible==='国家卫生健康委'||
+    String(d.note||'').includes('国家卫健委统计公报')||
+    String(d.source||'').includes('我国卫生健康事业发展统计公报')
+  ));
+}
+
+function sparkline(series){
+  const pts=series.map(r=>({year:+r.year,value:numOf(r.value)})).filter(p=>p.year&&p.value!=null).sort((a,b)=>a.year-b.year);
+  if(pts.length<2)return '';
+  let lo=Math.min(...pts.map(p=>p.value)),hi=Math.max(...pts.map(p=>p.value));
+  if(lo===hi){lo-=1;hi+=1;}
+  const coords=pts.map((p,i)=>{
+    const x=4+i/(pts.length-1)*88;
+    const y=30-(p.value-lo)/(hi-lo)*24;
+    return x.toFixed(1)+','+y.toFixed(1);
+  });
+  return '<svg viewBox="0 0 96 36" preserveAspectRatio="none"><polyline points="'+coords.join(' ')+'" fill="none" stroke="#0d8a9c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="'+coords[coords.length-1].split(',')[0]+'" cy="'+coords[coords.length-1].split(',')[1]+'" r="2.5" fill="#0d8a9c"/></svg>';
+}
+
+function nhcFocusSeries(rows){
+  const specs=[
+    ['机构总量','医疗卫生机构数'],
+    ['床位总量','医疗卫生机构床位数'],
+    ['千人床位','每千人口医疗卫生机构床位数'],
+    ['卫生技术人员','卫生技术人员数'],
+    ['执业医师','执业(助理)医师数'],
+    ['注册护士','注册护士数'],
+    ['总诊疗','总诊疗人次'],
+    ['入院','入院人次'],
+    ['卫生总费用','卫生总费用']
+  ];
+  const keys=new Set(rows.map(r=>r.compare_key));
+  return specs.map(([label,key])=>{
+    if(!keys.has(key))return null;
+    const series=rows.filter(r=>r.compare_key===key&&natKind(r.nature)==='actual'&&numOf(r.value)!=null&&+r.year<2030).sort((a,b)=>+a.year-+b.year);
+    if(series.length<2)return null;
+    const first=series[0],last=series[series.length-1];
+    const fv=numOf(first.value),lv=numOf(last.value);
+    const pct=fv?((lv-fv)/Math.abs(fv)*100):0;
+    return {label,key,series,first,last,pct,unit:last.unit||''};
+  }).filter(Boolean).slice(0,6);
+}
+
+function renderNHCDashboard(rows,entries,years,totalKeys){
+  const latestYear=years[years.length-1];
+  const latestRows=rows.filter(r=>+r.year===latestYear);
+  const latestKeys=new Set(latestRows.map(r=>r.compare_key).filter(Boolean)).size;
+  const linked=rows.filter(r=>r.source_url).length;
+  const yearCounts={};rows.forEach(r=>{const y=+r.year;if(y&&y<2030)yearCounts[y]=(yearCounts[y]||0)+1;});
+  const maxYear=Math.max(...Object.values(yearCounts),1);
+  const maxSub=Math.max(...entries.map(([,g])=>g.keys.size),1);
+  const focus=nhcFocusSeries(rows);
+  const metricHtml=[
+    [years[0]+'-'+latestYear,'公报年份'],
+    [totalKeys+' 个','指标口径'],
+    [latestKeys+' 个',latestYear+' 最新口径'],
+    [Math.round(linked/rows.length*100)+'%','记录带原文链接']
+  ].map(([v,k])=>'<div class="nhcmetric"><b>'+esc(v)+'</b><span>'+esc(k)+'</span></div>').join('');
+  const yearHtml=years.map(y=>'<div class="yearbar"><span>'+y+'</span><i><b style="width:'+((yearCounts[y]||0)/maxYear*100).toFixed(1)+'%"></b></i><em>'+esc(yearCounts[y]||0)+'</em></div>').join('');
+  const subHtml=entries.map(([sub,g])=>'<div class="subbar"><span title="'+esc(sub)+'">'+esc(sub)+'</span><i><b style="width:'+(g.keys.size/maxSub*100).toFixed(1)+'%"></b></i><em>'+g.keys.size+'</em></div>').join('');
+  const focusHtml=focus.map(f=>{
+    const cls=f.pct>=0?'up':'down';
+    const pct=(f.pct>=0?'+':'')+f.pct.toFixed(Math.abs(f.pct)>=10?0:1)+'%';
+    return '<div class="focusitem"><div><div class="fname" title="'+esc(f.key)+'">'+esc(f.label)+'</div><div class="fval">'+fmtNum(f.last.value)+'<small> '+esc(f.unit)+'</small></div><div class="fdelta '+cls+'">较 '+esc(f.first.year)+' 年 '+pct+'</div></div>'+sparkline(f.series)+'</div>';
+  }).join('');
+  return '<div class="nhcmetrics">'+metricHtml+'</div><div class="nhcvis"><div class="nhcsection"><h3>年度收录密度</h3>'+yearHtml+'</div><div class="nhcsection"><h3>分类指标构成</h3>'+subHtml+'</div></div><div class="nhcfocus">'+focusHtml+'</div><div class="nhcnote">核心趋势卡按现有公报序列自动生成；2022-2024 年扩展分类来自已结构化的官方 PDF 表格，引用仍以原始公报为准。</div>';
+}
+
 function renderOverview(){
   const host=$('#overview');
   if(!host)return;
-  const nhcRows=DATA.filter(d=>d.region==='全国'&&catShort(d.category)==='卫生健康'&&d.responsible==='国家卫生健康委');
+  const nhcRows=nhcBulletinRows();
   if(state.mode!=='compare'||!isNHCView()||!nhcRows.length){host.className='overview';host.innerHTML='';return;}
   const groups={};
   nhcRows.forEach(r=>{
@@ -422,7 +515,7 @@ function renderOverview(){
   const totalKeys=new Set(nhcRows.map(r=>r.compare_key).filter(Boolean)).size;
   const years=[...new Set(nhcRows.map(r=>+r.year).filter(y=>y&&y<2030))].sort((a,b)=>a-b);
   host.className='overview show';
-  host.innerHTML='<div class="ovpanel"><div class="ovtop"><div class="ovtitle">公报分类概览</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+nhcRows.length+' 条记录 · '+years[0]+'-'+years[years.length-1]+'</div></div><div class="ovgrid">'+
+  host.innerHTML='<div class="ovpanel nhc"><div class="ovtop"><div class="ovtitle">全国卫生健康统计公报可视化总览</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+nhcRows.length+' 条记录 · '+years[0]+'-'+years[years.length-1]+'</div></div>'+renderNHCDashboard(nhcRows,entries,years,totalKeys)+'<div class="ovgrid">'+
     entries.map(([sub,g],i)=>{
       const ys=[...g.years].sort((a,b)=>a-b);
       const yr=ys.length?(ys[0]===ys[ys.length-1]?ys[0]:ys[0]+'-'+ys[ys.length-1]):'—';
