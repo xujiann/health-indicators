@@ -890,7 +890,46 @@ function currentVisibleRows(){
   return recs.filter(d=>keep.has(d.compare_key));
 }
 
+function nhcSummaryText(){
+  const rows=nhcBulletinRows();
+  if(!rows.length)return '';
+  const years=[...new Set(rows.map(d=>+d.year).filter(y=>y&&y<2030))].sort((a,b)=>a-b);
+  const groups={};
+  rows.forEach(r=>{
+    const sub=r.subcategory||'未分类';
+    const g=groups[sub]||(groups[sub]={rows:0,keys:new Set(),years:new Set()});
+    g.rows++;
+    if(r.compare_key)g.keys.add(r.compare_key);
+    if(+r.year&&+r.year<2030)g.years.add(+r.year);
+  });
+  const entries=Object.entries(groups).sort((a,b)=>b[1].keys.size-a[1].keys.size||a[0].localeCompare(b[0],'zh-Hans'));
+  const latestYear=years[years.length-1];
+  const latestKeys=new Set(rows.filter(r=>+r.year===latestYear).map(r=>r.compare_key).filter(Boolean)).size;
+  const linked=rows.filter(r=>r.source_url).length;
+  const focus=nhcFocusSeries(rows).map(f=>{
+    const pct=(f.pct>=0?'+':'')+f.pct.toFixed(Math.abs(f.pct)>=10?0:1)+'%';
+    return f.label+'：'+f.last.year+'年 '+f.last.value+(f.unit||'')+'，较'+f.first.year+'年 '+pct;
+  });
+  const subLine=entries.slice(0,6).map(([sub,g])=>sub+' '+g.keys.size+'项').join('；');
+  const filters=[];
+  if(state.sub)filters.push('当前聚焦分类='+state.sub);
+  if(state.year)filters.push('当前年份='+state.year);
+  return [
+    '全国卫生健康统计公报专题摘要',
+    '数据范围：收录'+years[0]+'-'+latestYear+'年国家卫生健康委统计公报相关记录'+rows.length+'条，覆盖'+new Set(rows.map(r=>r.compare_key).filter(Boolean)).size+'个指标口径；'+latestYear+'年可见指标口径'+latestKeys+'个。',
+    '分类构成：共'+entries.length+'类；'+subLine+'。',
+    '核心趋势：'+(focus.length?focus.join('；')+'。':'当前核心趋势序列不足以生成变化幅度。'),
+    '来源状态：'+Math.round(linked/rows.length*100)+'%记录带原文链接；2022-2024年扩展分类来自已结构化的官方PDF表格。',
+    (filters.length?'当前视图：'+filters.join('；')+'。':'当前视图：全国层级公报专题总览。'),
+    '引用：请以国家卫生健康委原始统计公报或正式公开来源为准。'
+  ].join('\n');
+}
+
 function viewSummaryText(){
+  if(state.mode==='compare'&&isNHCView()){
+    const text=nhcSummaryText();
+    if(text)return text;
+  }
   const rows=currentVisibleRows();
   const regions=[...new Set(rows.map(d=>d.region).filter(Boolean))];
   const keys=[...new Set(rows.map(d=>d.compare_key).filter(Boolean))];
