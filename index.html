@@ -51,6 +51,7 @@ h1 small{display:block;font-size:11.5px;font-weight:400;opacity:.82;margin-top:3
 .quickbar b{font-size:11px;color:var(--ink2);font-weight:600;white-space:nowrap;flex:none}
 .quickchip{border:1px solid var(--line);background:#fff;color:var(--brand);border-radius:15px;padding:3px 9px;font-size:12px;cursor:pointer;font-family:inherit;transition:.12s;white-space:nowrap}
 .quickchip:hover{border-color:var(--brand);background:var(--brand-soft)}
+.quickchip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700}
 .filter-toggle{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:7px;padding:7px 11px;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;min-width:72px}
 .filter-toggle:hover{background:var(--brand2)}
 .filter-panel{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--line2)}
@@ -370,6 +371,7 @@ function syncControls(){
   syncTier();
   syncYear();
   syncChart();
+  syncQuickchips();
 }
 
 function applyPreset(name){
@@ -399,6 +401,19 @@ function applyPreset(name){
 }
 
 document.querySelectorAll('#quickbar .quickchip').forEach(btn=>btn.onclick=()=>applyPreset(btn.dataset.p));
+function activePreset(){
+  if(isInsuranceView())return 'insurance';
+  if(isNHCView())return 'nhc';
+  if(catShort(state.cat)==='卫生健康'&&state.sub==='卫生资源')return 'resource';
+  if(state.q.includes('大连')&&state.tiers.size===1&&state.tiers.has(3))return 'dalian';
+  if(state.q.includes('统计公报'))return 'bulletin';
+  if(state.q.includes('图片长序列'))return 'longseries';
+  return '';
+}
+function syncQuickchips(){
+  const active=activePreset();
+  document.querySelectorAll('#quickbar .quickchip').forEach(btn=>btn.classList.toggle('on',btn.dataset.p===active));
+}
 function setFiltersOpen(open){
   $('#filterPanel').classList.toggle('open',open);
   $('#filterToggle').setAttribute('aria-expanded',open?'true':'false');
@@ -694,6 +709,13 @@ function renderProfile(rows){
   const latestKeys=new Set(latestRows.map(d=>d.compare_key).filter(Boolean)).size;
   const linked=rows.filter(d=>d.source_url).length;
   const linkRate=rows.length?Math.round(linked/rows.length*100):0;
+  const statusMix=Object.values(rows.reduce((acc,d)=>{
+    const s=sourceStatus(d);
+    const g=acc[s.label]||(acc[s.label]={label:s.label,rows:0});
+    g.rows++;
+    return acc;
+  },{})).sort((a,b)=>b.rows-a.rows||a.label.localeCompare(b.label,'zh-Hans'));
+  const statusText=statusMix.slice(0,3).map(x=>x.label+x.rows).join(' / ');
   const topSource=Object.values(rows.reduce((acc,d)=>{
     const name=d.source||'未注明来源';
     const g=acc[name]||(acc[name]={name,rows:0});
@@ -705,6 +727,7 @@ function renderProfile(rows){
     ['层级分布',tiers.map(x=>x.label+x.count).join(' / ')||'—'],
     ['来源',sourceCount+' 个'],
     ['有链接',linkRate+'%'],
+    ['来源状态',statusText||'—'],
     ['最新年指标',latestYear?latestYear+' 年 '+latestKeys+' 个':'—'],
     ['主来源',topSource?topSource.name:'—']
   ];
