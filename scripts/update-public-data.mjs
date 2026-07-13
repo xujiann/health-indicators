@@ -7,6 +7,8 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
 const privateRoot = path.resolve(repoRoot, "..", "health-indicators-private");
 const additionsDir = path.join(repoRoot, "data");
+const publicWorkbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
+const privateWorkbookPath = path.join(privateRoot, "核心指标数据库.xlsx");
 
 const nationalHealthMetricDefinitions = {
   total_institutions: { subcategory: "卫生资源", indicator: "医疗卫生机构总数", compare_key: "医疗卫生机构总数", unit: "个" },
@@ -36,11 +38,13 @@ const subprovStatMetricDefinitions = {
   local_public_budget_expenditure: { category: "财政", subcategory: "财政收支", indicator: "地方一般公共预算支出", compare_key: "地方一般公共预算支出", unit: "亿元" },
 };
 
-async function firstXlsx(dir) {
-  const files = await fs.readdir(dir);
-  const found = files.find((name) => name.toLowerCase().endsWith(".xlsx") && !name.startsWith("~$"));
-  if (!found) throw new Error(`No xlsx found in ${dir}`);
-  return path.join(dir, found);
+async function assertFileExists(filePath) {
+  try {
+    await fs.access(filePath);
+  } catch {
+    throw new Error(`Required workbook not found: ${filePath}`);
+  }
+  return filePath;
 }
 
 async function readWorkbookRows(xlsxPath) {
@@ -249,14 +253,16 @@ async function buildWorkbook(headers, records, outputPath) {
   dataSheet.showGridLines = false;
 
   const preview = await workbook.render({ sheetName: "公开指标数据", range: "A1:S18", scale: 1, format: "png" });
-  await fs.writeFile(path.join(repoRoot, "workbook-preview.png"), new Uint8Array(await preview.arrayBuffer()));
+  const tmpDir = path.join(repoRoot, "tmp");
+  await fs.mkdir(tmpDir, { recursive: true });
+  await fs.writeFile(path.join(tmpDir, "workbook-preview.png"), new Uint8Array(await preview.arrayBuffer()));
   const output = await SpreadsheetFile.exportXlsx(workbook);
   await output.save(outputPath);
 }
 
 async function main() {
-  const publicXlsx = await firstXlsx(repoRoot);
-  const privateXlsx = await firstXlsx(privateRoot);
+  const publicXlsx = await assertFileExists(publicWorkbookPath);
+  const privateXlsx = await assertFileExists(privateWorkbookPath);
   const publicRows = await readWorkbookRows(publicXlsx);
   const privateRows = await readWorkbookRows(privateXlsx);
   const headers = publicRows[0];
