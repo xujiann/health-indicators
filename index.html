@@ -35,6 +35,11 @@ h1 small{display:block;font-size:11.5px;font-weight:400;opacity:.82;margin-top:3
 .stat{display:flex;align-items:baseline;gap:6px;background:#f8fafc;border:1px solid var(--line2);border-radius:7px;padding:4px 8px;min-width:0;min-height:30px}
 .stat b{display:block;font-size:14px;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stat span{display:block;margin-top:0;font-size:10.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile{display:none;margin:-1px 0 6px}
+.profile.show{display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:thin}
+.profile .pitem{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line2);background:#fff;border-radius:6px;padding:3px 7px;white-space:nowrap;color:var(--ink2);font-size:11px}
+.profile .pitem b{color:var(--brand);font-size:11.5px;font-variant-numeric:tabular-nums;max-width:170px;overflow:hidden;text-overflow:ellipsis}
+.profile .pitem.warn b{color:var(--limit)}
 .control-strip{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;min-width:0}
 .filterbar{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin:0;color:var(--ink3);font-size:11.5px;min-width:0;scrollbar-width:thin}
 .filterbar b{font-size:11px;color:var(--ink2);font-weight:600;white-space:nowrap;flex:none}
@@ -224,12 +229,12 @@ tbody tr:hover{background:#f9fbfd}
 
 footer{text-align:center;padding:22px;color:var(--ink3);font-size:11.5px;line-height:1.7}
 footer b{color:var(--limit)}
-@media(max-width:900px){.summary{display:flex;overflow-x:auto;scrollbar-width:thin}.stat{min-width:138px}.control-strip{grid-template-columns:1fr}.quickbar,.filterbar{padding-bottom:1px}}
+@media(max-width:900px){.summary{display:flex;overflow-x:auto;scrollbar-width:thin}.stat{min-width:138px}.profile.show{padding-bottom:1px}.control-strip{grid-template-columns:1fr}.quickbar,.filterbar{padding-bottom:1px}}
 @media(max-width:760px){.hide-m{display:none}.tabs{order:3;width:100%}.project-nav{order:2;width:100%;justify-content:flex-end}.cmpgrid{grid-template-columns:1fr}.bar{grid-template-columns:96px 1fr auto}.srow{grid-template-columns:1fr auto}.srow #q{grid-column:1/-1}.count{justify-self:start}.filterbar{font-size:11px}.filters{gap:10px}.fg{width:100%}}
 </style></head>
 <body>
 <header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><nav class="project-nav" aria-label="统一导航"><a href="https://xujiann.github.io/healthpolicy/">主页</a><a href="about.html">关于</a></nav><div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div></div></header>
-<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="insurance">医保待遇专题</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button><button class="quickchip" data-p="longseries">全国长序列</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copyTable" type="button">复制表格</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
+<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="profile" id="profile"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="insurance">医保待遇专题</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button><button class="quickchip" data-p="longseries">全国长序列</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copyTable" type="button">复制表格</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
 <main><div class="wrap"><div id="overview" class="overview"></div><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
 <div id="toast"></div>
 <footer>数据来源：国家统计局、财政部、国家卫生健康委、国家医疗保障局及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>国家卫生健康委统计公报当前收录 2015-2024 年核心序列，并补入 2022-2024 年官方 PDF 中可稳定结构化的 12 类扩展指标；医保待遇专题来自国家医保局医保数智库 2012-2025 年公开数据；引用请以原始公报或正式来源为准。</footer>
@@ -433,7 +438,7 @@ function render(){
 }
 
 function filteredRows(){
-  return DATA.filter(d=>baseFilter(d)&&(state.mode!=='compare'||state.tiers.has(tierNo(d.region_tier))));
+  return DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
 }
 
 function isNHCView(){
@@ -641,7 +646,7 @@ function renderOverview(){
 }
 
 function renderSummary(){
-  const rows=filteredRows();
+  const rows=currentVisibleRows();
   const regions=[...new Set(rows.map(d=>d.region).filter(Boolean))];
   const years=rows.map(d=>+d.year).filter(y=>y&&y<2030);
   const cats=[...new Set(rows.map(d=>catShort(d.category)).filter(Boolean))];
@@ -669,9 +674,42 @@ function renderSummary(){
   const hasImageLongSeries=rows.some(d=>String(d.source||'').includes('用户提供图片表'));
   if(hasImageLongSeries)parts.push(['长序列','用户图片表录入，待正式来源复核']);
   $('#filterbar').innerHTML='<b>当前视图</b>'+(parts.length?parts.map(([k,v])=>'<span class="fpill">'+esc(k)+'：'+esc(v)+'</span>').join(''):'<span class="fpill">全部公开指标</span>');
+  renderProfile(rows);
   const open=$('#filterPanel').classList.contains('open');
   const active=parts.length;
   $('#filterToggle').textContent=(open?'收起':'筛选')+(active?' · '+active:'');
+}
+
+function renderProfile(rows){
+  const host=$('#profile');
+  if(!host)return;
+  if(!rows.length){host.className='profile';host.innerHTML='';return;}
+  const years=rows.map(d=>+d.year).filter(y=>y&&y<2030).sort((a,b)=>a-b);
+  const yr=years.length?(years[0]===years[years.length-1]?String(years[0]):years[0]+'-'+years[years.length-1]):'—';
+  const tierLabels={1:'全国',2:'省级',3:'副省级'};
+  const tiers=[1,2,3].map(n=>({label:tierLabels[n],count:rows.filter(d=>tierNo(d.region_tier)===n).length})).filter(x=>x.count);
+  const sourceCount=new Set(rows.map(d=>(d.source||'')+'|'+(d.source_url||'')).filter(Boolean)).size;
+  const latestYear=years.length?years[years.length-1]:null;
+  const latestRows=latestYear?rows.filter(d=>+d.year===latestYear):[];
+  const latestKeys=new Set(latestRows.map(d=>d.compare_key).filter(Boolean)).size;
+  const linked=rows.filter(d=>d.source_url).length;
+  const linkRate=rows.length?Math.round(linked/rows.length*100):0;
+  const topSource=Object.values(rows.reduce((acc,d)=>{
+    const name=d.source||'未注明来源';
+    const g=acc[name]||(acc[name]={name,rows:0});
+    g.rows++;
+    return acc;
+  },{})).sort((a,b)=>b.rows-a.rows||a.name.localeCompare(b.name,'zh-Hans'))[0];
+  const items=[
+    ['年份跨度',yr],
+    ['层级分布',tiers.map(x=>x.label+x.count).join(' / ')||'—'],
+    ['来源',sourceCount+' 个'],
+    ['有链接',linkRate+'%'],
+    ['最新年指标',latestYear?latestYear+' 年 '+latestKeys+' 个':'—'],
+    ['主来源',topSource?topSource.name:'—']
+  ];
+  host.className='profile show';
+  host.innerHTML=items.map(([k,v])=>'<span class="pitem">'+esc(k)+' <b title="'+esc(v)+'">'+esc(v)+'</b></span>').join('');
 }
 
 function groupInfo(recs){
