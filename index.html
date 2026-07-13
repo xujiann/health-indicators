@@ -707,6 +707,7 @@ function renderCompare(){
   $('#count').textContent=keys.length+' 个指标';
   $('#empty').style.display=keys.length?'none':'block';
   let curCat=null;
+  let curGrid=null;
   keys.forEach(k=>{
     const cat=catShort(g[k][0].category);
     if(cat!==curCat){
@@ -715,12 +716,11 @@ function renderCompare(){
       const h=document.createElement('div');h.className='secthead';
       h.innerHTML=esc(cat)+'<span class="c">'+inThis+' 个指标</span>';
       host.appendChild(h);
-      const grid=document.createElement('div');grid.className='cmpgrid';grid.dataset.cat=cat;host.appendChild(grid);
+      curGrid=document.createElement('div');curGrid.className='cmpgrid';curGrid.dataset.cat=cat;host.appendChild(curGrid);
     }
-    host.querySelector('.cmpgrid[data-cat="'+cssEsc(cat)+'"]').appendChild(card(k,g[k],info[k]));
+    curGrid.appendChild(card(k,g[k],info[k]));
   });
 }
-function cssEsc(s){return s.replace(/["\\]/g,'\\$&');}
 
 function card(key,recs,inf){
   const el=document.createElement('div');el.className='card';
@@ -987,8 +987,22 @@ function renderSingle(key,recs,unit){
 }
 
 // 复制
+const listSort={key:null,dir:1};
+function listRows(){
+  let rows=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
+  if(listSort.key){
+    const k=listSort.key,dir=listSort.dir;
+    rows=rows.slice().sort((a,b)=>{
+      let x=a[k],y=b[k];
+      if(k==='year'){x=+x;y=+y;}
+      if(k==='value'){const px=numOf(x),py=numOf(y);if(px!=null&&py!=null){x=px;y=py;}}
+      return(x>y?1:x<y?-1:0)*dir;
+    });
+  }
+  return rows;
+}
 function currentVisibleRows(){
-  if(state.mode==='list')return DATA.filter(baseFilter);
+  if(state.mode==='list')return listRows();
   const recs=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
   const g={};recs.forEach(d=>{(g[d.compare_key]=g[d.compare_key]||[]).push(d);});
   let keys=Object.keys(g);
@@ -1208,7 +1222,11 @@ function exportCsv(){
 async function copyText(t){
   let ok=false;
   try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(t);ok=true;}}catch(e){}
-  if(!ok){try{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok=true;}catch(e){}}
+  if(!ok){
+    const ta=document.createElement('textarea');
+    try{ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ok=true;}catch(e){}
+    finally{if(ta.parentNode)ta.parentNode.removeChild(ta);}
+  }
   showToast(ok?'已复制到剪贴板':'复制失败，可手动选择下方文字',t);
 }
 let toastTimer;
@@ -1218,7 +1236,7 @@ function showToast(msg,detail){
 }
 
 function renderList(){
-  let rows=DATA.filter(baseFilter);
+  let rows=listRows();
   $('#count').textContent=rows.length+' 条记录';
   const tb=$('#rows');tb.innerHTML='';$('#empty').style.display=rows.length?'none':'block';
   const f=document.createDocumentFragment();
@@ -1232,7 +1250,7 @@ function renderList(){
   tb.appendChild(f);
 }
 document.querySelectorAll('thead th').forEach(th=>{let dir=1;th.onclick=()=>{const k=th.dataset.k;dir=-dir;
-  DATA.sort((a,b)=>{let x=a[k],y=b[k];if(k==='year'){x=+x;y=+y;}if(k==='value'){const px=numOf(x),py=numOf(y);if(px!=null&&py!=null){x=px;y=py;}}return(x>y?1:x<y?-1:0)*dir;});renderList();};});
+  listSort.key=k;listSort.dir=dir;renderList();};});
 
 window.addEventListener('hashchange',()=>{applyStateFromHash();setMode(state.mode);syncControls();render();});
 $('#resetView').onclick=()=>{resetState();setMode(state.mode);syncControls();render();showToast('已重置为默认视图');};
