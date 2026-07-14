@@ -215,8 +215,13 @@ svg.spark{width:100%;height:152px;display:block}
 
 table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(20,40,70,.06)}
 thead th{background:#f7f9fb;color:#5a6b80;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;text-align:left;padding:10px 12px;border-bottom:2px solid var(--line);cursor:pointer}
+thead th[aria-sort="ascending"]::after{content:" ↑";color:var(--brand)}
+thead th[aria-sort="descending"]::after{content:" ↓";color:var(--brand)}
 tbody td{padding:9px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
 tbody tr:hover{background:#f9fbfd}
+.listpager{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px 0;color:var(--ink3);font-size:11.5px;font-variant-numeric:tabular-nums}
+.listpager button{border:1px solid var(--brand);background:#fff;color:var(--brand);border-radius:6px;padding:5px 10px;font:inherit;cursor:pointer;white-space:nowrap}
+.listpager button:hover{background:var(--brand-soft)}
 .tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap}
 .t-actual{background:#e6f4ec;color:var(--actual)}.t-target{background:#fdf3e0;color:var(--target)}
 .t-limit{background:#fbeaea;color:var(--limit)}.t-task{background:#eeebfa;color:var(--task)}
@@ -231,12 +236,12 @@ tbody tr:hover{background:#f9fbfd}
 footer{text-align:center;padding:22px;color:var(--ink3);font-size:11.5px;line-height:1.7}
 footer b{color:var(--limit)}
 @media(max-width:900px){.summary{display:flex;overflow-x:auto;scrollbar-width:thin}.stat{min-width:138px}.profile.show{padding-bottom:1px}.control-strip{grid-template-columns:1fr}.quickbar,.filterbar{padding-bottom:1px}}
-@media(max-width:760px){.hide-m{display:none}.tabs{order:3;width:100%}.project-nav{order:2;width:100%;justify-content:flex-end}.cmpgrid{grid-template-columns:1fr}.bar{grid-template-columns:96px 1fr auto}.srow{grid-template-columns:1fr auto}.srow #q{grid-column:1/-1}.count{justify-self:start}.filterbar{font-size:11px}.filters{gap:10px}.fg{width:100%}}
+@media(max-width:760px){.hide-m{display:none}.tabs{order:3;width:100%}.project-nav{order:2;width:100%;justify-content:flex-end}.cmpgrid{grid-template-columns:1fr}.bar{grid-template-columns:96px 1fr auto}.srow{grid-template-columns:1fr auto}.srow #q{grid-column:1/-1}.count{justify-self:start}.filterbar{font-size:11px}.filters{gap:10px}.fg{width:100%}.listpager{align-items:flex-start;flex-direction:column}.listpager button{width:100%}}
 </style></head>
 <body>
 <header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><nav class="project-nav" aria-label="统一导航"><a href="https://xujiann.github.io/healthpolicy/">主页</a><a href="about.html">关于</a></nav><div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div></div></header>
-<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="profile" id="profile"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="insurance">医保待遇专题</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button><button class="quickchip" data-p="longseries">全国长序列</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copyTable" type="button">复制表格</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
-<main><div class="wrap"><div id="overview" class="overview"></div><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator">指标</th><th data-k="value">数值</th><th data-k="nature">性质</th><th data-k="year">年度</th><th data-k="region">地区</th><th data-k="source" class="hide-m">来源</th></tr></thead><tbody id="rows"></tbody></table></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
+<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="profile" id="profile"></div><div class="srow"><input id="q" placeholder="搜索指标、来源或地区，如 国家卫生健康委、统计公报、床位、医师、GDP…"><span class="count" id="count"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="insurance">医保待遇专题</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button><button class="quickchip" data-p="longseries">全国长序列</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copyTable" type="button">复制表格</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copySourceIssues" type="button">复制待核来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
+<main><div class="wrap"><div id="overview" class="overview"></div><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator" aria-sort="none">指标</th><th data-k="value" aria-sort="none">数值</th><th data-k="nature" aria-sort="none">性质</th><th data-k="year" aria-sort="none">年度</th><th data-k="region" aria-sort="none">地区</th><th data-k="source" class="hide-m" aria-sort="none">来源</th></tr></thead><tbody id="rows"></tbody></table><div class="listpager" id="listPager"></div></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
 <div id="toast"></div>
 <footer>数据来源：国家统计局、财政部、国家卫生健康委、国家医疗保障局及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>国家卫生健康委统计公报当前收录 2015-2024 年核心序列，并补入 2022-2024 年官方 PDF 中可稳定结构化的 12 类扩展指标；医保待遇专题来自国家医保局医保数智库 2012-2025 年公开数据；引用请以原始公报或正式来源为准。</footer>
 <script>
@@ -434,7 +439,13 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   setMode(t.dataset.m);
   render();
 });
-$('#q').oninput=e=>{state.q=e.target.value.trim();render();};
+let queryTimer;
+$('#q').oninput=e=>{
+  const next=e.target.value.trim();
+  clearTimeout(queryTimer);
+  queryTimer=setTimeout(()=>{if(state.q!==next){state.q=next;render();}},120);
+};
+$('#q').onkeydown=e=>{if(e.key==='Escape'&&e.target.value){e.target.value='';clearTimeout(queryTimer);state.q='';render();}};
 $('#onlyCmp').onchange=e=>{state.onlyCmp=e.target.checked;render();};
 
 function baseFilter(d){
@@ -586,7 +597,7 @@ function renderInsuranceDashboard(rows,entries,years,totalKeys){
 function renderOverview(){
   const host=$('#overview');
   if(!host)return;
-  const insRows=insuranceRows();
+  const insRows=insuranceRows().filter(baseFilter);
   if(state.mode==='compare'&&isInsuranceView()&&insRows.length){
     const groups={};
     insRows.forEach(r=>{
@@ -605,7 +616,8 @@ function renderOverview(){
     const totalKeys=new Set(insRows.map(r=>r.compare_key).filter(Boolean)).size;
     const years=[...new Set(insRows.map(r=>+r.year).filter(y=>y&&y<2030))].sort((a,b)=>a-b);
     host.className='overview show';
-    host.innerHTML='<div class="ovpanel nhc insurance"><div class="ovtop"><div class="ovtitle">医保待遇专题数据总览</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+insRows.length+' 条记录 · '+years[0]+'-'+years[years.length-1]+'</div></div>'+renderInsuranceDashboard(insRows,entries,years,totalKeys)+'<div class="ovgrid">'+
+    const scope=state.sub||state.year?'筛选分析':'数据总览';
+    host.innerHTML='<div class="ovpanel nhc insurance"><div class="ovtop"><div class="ovtitle">医保待遇专题'+scope+'</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+insRows.length+' 条记录 · '+years[0]+'-'+years[years.length-1]+'</div></div>'+renderInsuranceDashboard(insRows,entries,years,totalKeys)+'<div class="ovgrid">'+
       entries.map(([sub,g],i)=>{
         const ys=[...g.years].sort((a,b)=>a-b);
         const yr=ys.length?(ys[0]===ys[ys.length-1]?ys[0]:ys[0]+'-'+ys[ys.length-1]):'—';
@@ -623,7 +635,7 @@ function renderOverview(){
     });
     return;
   }
-  const nhcRows=nhcBulletinRows();
+  const nhcRows=nhcBulletinRows().filter(baseFilter);
   if(state.mode!=='compare'||!isNHCView()||!nhcRows.length){host.className='overview';host.innerHTML='';return;}
   const groups={};
   nhcRows.forEach(r=>{
@@ -642,7 +654,8 @@ function renderOverview(){
   const totalKeys=new Set(nhcRows.map(r=>r.compare_key).filter(Boolean)).size;
   const years=[...new Set(nhcRows.map(r=>+r.year).filter(y=>y&&y<2030))].sort((a,b)=>a-b);
   host.className='overview show';
-  host.innerHTML='<div class="ovpanel nhc"><div class="ovtop"><div class="ovtitle">全国卫生健康统计公报可视化总览</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+nhcRows.length+' 条记录 · '+years[0]+'-'+years[years.length-1]+'</div></div>'+renderNHCDashboard(nhcRows,entries,years,totalKeys)+'<div class="ovgrid">'+
+  const scope=state.sub||state.year?'筛选分析':'可视化总览';
+  host.innerHTML='<div class="ovpanel nhc"><div class="ovtop"><div class="ovtitle">全国卫生健康统计公报'+scope+'</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+nhcRows.length+' 条记录 · '+years[0]+'-'+years[years.length-1]+'</div></div>'+renderNHCDashboard(nhcRows,entries,years,totalKeys)+'<div class="ovgrid">'+
     entries.map(([sub,g],i)=>{
       const ys=[...g.years].sort((a,b)=>a-b);
       const yr=ys.length?(ys[0]===ys[ys.length-1]?ys[0]:ys[0]+'-'+ys[ys.length-1]):'—';
@@ -1048,7 +1061,11 @@ function renderSingle(key,recs,unit){
 }
 
 // 复制
+const LIST_BATCH=120;
 const listSort={key:null,dir:1};
+let listLimit=LIST_BATCH;
+let lastListSignature='';
+function listSignature(){return [state.q,state.cat,state.sub,state.year,[...state.tiers].sort().join(','),listSort.key||'',listSort.dir].join('|');}
 function listRows(){
   let rows=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
   if(listSort.key){
@@ -1206,6 +1223,38 @@ function sourceListText(){
   return lines.join('\n');
 }
 
+function sourceIssueText(){
+  const rows=currentVisibleRows();
+  if(!rows.length)return '当前视图没有可检查的来源记录。';
+  const issueRows=rows.map(r=>({row:r,status:sourceStatus(r)})).filter(x=>x.status.cls!=='link');
+  if(!issueRows.length)return '当前视图全部记录均带原文链接，未发现待补链或待复核来源。';
+  const groups={};
+  issueRows.forEach(({row,status})=>{
+    const name=row.source||'未注明来源';
+    const key=status.label+'||'+name+'||'+(row.source_url||'');
+    const g=groups[key]||(groups[key]={status:status.label,name,url:row.source_url||'',years:new Set(),regions:new Set(),indicators:new Set(),rows:0});
+    g.rows++;
+    if(row.year)g.years.add(+row.year);
+    if(row.region)g.regions.add(row.region);
+    if(row.compare_key||row.indicator)g.indicators.add(row.compare_key||row.indicator);
+  });
+  const items=Object.values(groups).sort((a,b)=>b.rows-a.rows||a.status.localeCompare(b.status,'zh-Hans')||a.name.localeCompare(b.name,'zh-Hans'));
+  const byStatus=items.reduce((acc,g)=>{acc[g.status]=(acc[g.status]||0)+g.rows;return acc;},{});
+  const lines=[
+    '当前视图待核来源清单',
+    '记录：'+rows.length+'条；待处理：'+issueRows.length+'条；状态：'+Object.entries(byStatus).map(([k,v])=>k+v+'条').join('、'),
+    '用途：优先补原文链接、复核用户图片表或仅说明来源的记录；引用请以正式公开来源为准。'
+  ];
+  items.slice(0,60).forEach((g,i)=>{
+    const ys=[...g.years].filter(y=>y&&y<2030).sort((a,b)=>a-b);
+    const yr=ys.length?(ys[0]===ys[ys.length-1]?ys[0]:ys[0]+'-'+ys[ys.length-1]):'—';
+    const inds=[...g.indicators].slice(0,3).join('、')||'—';
+    lines.push((i+1)+'. ['+g.status+'] '+g.name+'；年份 '+yr+'；地区 '+g.regions.size+'个；指标 '+g.indicators.size+'个；记录 '+g.rows+'条；示例 '+inds+(g.url?'；链接 '+g.url:''));
+  });
+  if(items.length>60)lines.push('其余 '+(items.length-60)+' 项请通过CSV导出查看。');
+  return lines.join('\n');
+}
+
 function gapListText(){
   if(state.mode!=='compare')return '缺口清单仅按对比视图计算；请切换到对比视图后使用。';
   const recs=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
@@ -1298,10 +1347,13 @@ function showToast(msg,detail){
 
 function renderList(){
   let rows=listRows();
+  const signature=listSignature();
+  if(signature!==lastListSignature){listLimit=LIST_BATCH;lastListSignature=signature;}
+  const shown=rows.slice(0,listLimit);
   $('#count').textContent=rows.length+' 条记录';
   const tb=$('#rows');tb.innerHTML='';$('#empty').style.display=rows.length?'none':'block';
   const f=document.createDocumentFragment();
-  rows.forEach(d=>{const k=natKind(d.nature);const tr=document.createElement('tr');
+  shown.forEach(d=>{const k=natKind(d.nature);const tr=document.createElement('tr');
     tr.innerHTML='<td><b>'+esc(d.indicator)+'</b>'+(d.note?'<span class="note">'+esc(d.note)+'</span>':'')+'</td>'+
       '<td><span class="valc">'+esc(d.value)+' '+esc(d.unit)+'</span></td>'+
       '<td><span class="tag t-'+k+'">'+esc((d.nature||'').replace(/\(.*/,''))+'</span></td>'+
@@ -1309,18 +1361,29 @@ function renderList(){
       '<td class="hide-m"><div class="sourcecell">'+sourceStatusHtml(d)+'<span class="note" style="margin:0">'+(d.source_url?'<a href="'+esc(d.source_url)+'" target="_blank" rel="noopener">'+esc(d.source)+'</a>':esc(d.source))+'</span></div></td>';
     f.appendChild(tr);});
   tb.appendChild(f);
+  const pager=$('#listPager');
+  if(!rows.length){pager.innerHTML='';return;}
+  const remaining=Math.max(0,rows.length-shown.length);
+  pager.innerHTML='<span>已显示 '+shown.length+' / '+rows.length+' 条；CSV、复制和来源清单均包含全部结果。</span>'+(remaining?'<button type="button">继续显示 '+Math.min(LIST_BATCH,remaining)+' 条</button>':'<span>已显示全部记录</span>');
+  const more=pager.querySelector('button');
+  if(more)more.onclick=()=>{listLimit+=LIST_BATCH;renderList();};
 }
-document.querySelectorAll('thead th').forEach(th=>{let dir=1;th.onclick=()=>{const k=th.dataset.k;dir=-dir;
-  listSort.key=k;listSort.dir=dir;renderList();};});
+document.querySelectorAll('thead th').forEach(th=>{th.onclick=()=>{const k=th.dataset.k;
+  listSort.dir=listSort.key===k?-listSort.dir:1;listSort.key=k;
+  document.querySelectorAll('thead th').forEach(h=>h.setAttribute('aria-sort',h===th?(listSort.dir===1?'ascending':'descending'):'none'));
+  renderList();};});
 
 window.addEventListener('hashchange',()=>{applyStateFromHash();setMode(state.mode);syncControls();render();});
 $('#resetView').onclick=()=>{resetState();setMode(state.mode);syncControls();render();showToast('已重置为默认视图');};
-$('#copyLink').onclick=()=>copyText(currentViewUrl());
-$('#copyView').onclick=()=>copyText(viewSummaryText());
-$('#copyTable').onclick=()=>copyText(tableText());
-$('#copySources').onclick=()=>copyText(sourceListText());
-$('#copyGaps').onclick=()=>copyText(gapListText());
-$('#exportCsv').onclick=exportCsv;
+Object.entries({
+  copyLink:()=>copyText(currentViewUrl()),
+  copyView:()=>copyText(viewSummaryText()),
+  copyTable:()=>copyText(tableText()),
+  copySources:()=>copyText(sourceListText()),
+  copySourceIssues:()=>copyText(sourceIssueText()),
+  copyGaps:()=>copyText(gapListText()),
+  exportCsv:exportCsv
+}).forEach(([id,fn])=>{const el=$('#'+id);if(el)el.onclick=fn;});
 setMode(state.mode);
 syncControls();
 render();
