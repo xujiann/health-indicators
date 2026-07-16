@@ -1,0 +1,30 @@
+[
+  {
+    "id": "nhc-health-statistics",
+    "agency": "国家卫生健康委",
+    "topic": "卫生健康事业发展统计公报",
+    "url": "https://www.nhc.gov.cn/guihuaxxs/c100133/new_list.shtml",
+    "coverage": "2015-2024 已入库，监测 2025 年公报"
+  },
+  {
+    "id": "nbs-national-bulletin",
+    "agency": "国家统计局",
+    "topic": "国民经济和社会发展统计公报",
+    "url": "https://www.stats.gov.cn/sj/zxfb/202602/t20260228_1962662.html",
+    "coverage": "2025 卫生资源与服务量已入库"
+  },
+  {
+    "id": "nhsa-statistics-express",
+    "agency": "国家医疗保障局",
+    "topic": "医疗保障事业发展统计快报",
+    "url": "https://www.nhsa.gov.cn/art/2026/3/16/art_7_19918.html",
+    "coverage": "2025 参保、基金和待遇指标已入库"
+  },
+  {
+    "id": "ndcpa-disease-control",
+    "agency": "国家疾病预防控制局",
+    "topic": "疾病控制公开统计栏目",
+    "url": "https://www.ndcpa.gov.cn/jbkzzx/c100016/common/list.html",
+    "coverage": "候选公共卫生数据源，待按月度和年度口径复核"
+  }
+]
