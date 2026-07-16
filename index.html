@@ -559,9 +559,16 @@ function baseFilter(d){
   if(state.sourceState){const cls=sourceStatus(d).cls||'missing';if(cls!==state.sourceState)return false;}
   if(state.insuranceTopic&&(d.region!=='全国'||catShort(d.category)!=='医疗保障'))return false;
   if(state.official2025&&!OFFICIAL_2025_SOURCES.has(d.source))return false;
-  if(state.q){const s=(d.indicator+' '+d.compare_key+' '+d.subcategory+' '+d.note+' '+d.region+' '+d.source+' '+d.responsible+' '+d.doc_no).toLowerCase();
-    if(!state.q.toLowerCase().split(/\s+/).every(w=>s.includes(w)))return false;}
+  if(state.q&&!queryMatches(d,state.q))return false;
   return true;
+}
+
+function queryMatches(d,query){
+  const raw=(d.indicator+' '+d.compare_key+' '+d.subcategory+' '+d.note+' '+d.region+' '+d.source+' '+d.responsible+' '+d.doc_no).toLowerCase();
+  const words=query.toLowerCase().split(/\s+/).filter(Boolean);
+  if(words.every(word=>raw.includes(word)))return true;
+  const requested=indicatorFamily({indicator:query});
+  return words.length===1&&requested.length>=2&&indicatorFamily(d)===requested;
 }
 function render(){
   renderSummary();
@@ -961,7 +968,8 @@ function renderCompare(){
     return modeRank[info[a].mode]-modeRank[info[b].mode];
   });
   const host=$('#compareView');host.innerHTML='';
-  $('#count').textContent=keys.length+' 个指标';
+  const historyCount=keys.filter(k=>info[k].mode==='history').length;
+  $('#count').textContent=keys.length+' 个指标'+(historyCount?' · '+historyCount+' 组国家-地方历史对比':'');
   $('#empty').style.display=keys.length?'none':'block';
   let curCat=null;
   let curGrid=null;
@@ -1014,6 +1022,8 @@ function openIndicatorDetail(key,recs){
 function bestSource(recs){
   const withUrl=recs.filter(r=>r.source_url);
   if(!withUrl.length)return null;
+  const national=withUrl.filter(r=>r.region==='全国').sort((a,b)=>+b.year-+a.year)[0];
+  if(national)return national;
   const dl=withUrl.filter(r=>r.region==='大连市').sort((a,b)=>+b.year-+a.year)[0];
   if(dl)return dl;
   return withUrl.sort((a,b)=>+b.year-+a.year)[0];
