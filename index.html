@@ -886,25 +886,75 @@ function groupInfo(recs){
   const years=new Set(recs.map(r=>+r.year).filter(y=>y&&y<2030));
   const hasGoal=recs.some(r=>['target','limit'].includes(natKind(r.nature)));
   const hasActual=recs.some(r=>natKind(r.nature)==='actual');
+  const actualByRegion={};
+  recs.forEach(r=>{
+    if(natKind(r.nature)!=='actual'||numOf(r.value)==null||+r.year>=2030)return;
+    (actualByRegion[r.region]=actualByRegion[r.region]||new Set()).add(+r.year);
+  });
+  const nationalYears=actualByRegion['全国']||new Set();
+  const localHistory=Object.entries(actualByRegion).some(([region,ys])=>region!=='全国'&&ys.size>=2);
+  const hasNationalLocalHistory=nationalYears.size>=2&&localHistory;
   let mode;
   if(regions.size>=2&&hasGoal)mode='goal';
+  else if(state.q&&hasNationalLocalHistory)mode='history';
   else if(regions.size>=5)mode='cmp';
   else if(years.size>=2&&hasActual)mode='trend';
   else if(regions.size>=2)mode='cmp';
   else mode='single';
   const comparable=(regions.size>=2)||(years.size>=2&&hasActual);
-  return {regions,years,hasGoal,hasActual,mode,comparable};
+  return {regions,years,hasGoal,hasActual,hasNationalLocalHistory,mode,comparable};
+}
+
+function indicatorFamily(d){
+  let name=String(d.indicator||d.compare_key||'')
+    .replace(/[（(][^）)]*[）)]/g,'')
+    .replace(/[\s·、，,：:]/g,'')
+    .replace(/^(全国|地区|国内|年末)/,'');
+  // Common statistical names differ only by national/local wording.
+  if(/人均.*(生产总值|GDP)/i.test(name))return '人均GDP';
+  if(/(生产总值|GDP)/i.test(name))return 'GDP';
+  if(/常住人口/.test(name))return '年末常住人口';
+  return name||String(d.compare_key||'未命名指标');
+}
+
+function canBuildNationalLocalHistory(rows){
+  const yearsByRegion={};
+  rows.forEach(r=>{
+    if(natKind(r.nature)!=='actual'||numOf(r.value)==null||+r.year>=2030)return;
+    (yearsByRegion[r.region]=yearsByRegion[r.region]||new Set()).add(+r.year);
+  });
+  return (yearsByRegion['全国']||new Set()).size>=2&&
+    Object.entries(yearsByRegion).some(([region,years])=>region!=='全国'&&years.size>=2);
+}
+
+function compareGroups(recs){
+  const groups={};
+  recs.forEach(d=>{(groups[d.compare_key]=groups[d.compare_key]||[]).push(d);});
+  if(!state.q)return groups;
+
+  const families={};
+  recs.forEach(d=>{
+    const family=indicatorFamily(d);
+    (families[family]=families[family]||[]).push(d);
+  });
+  Object.entries(families).forEach(([family,rows])=>{
+    if(!canBuildNationalLocalHistory(rows))return;
+    const rawKeys=new Set(rows.map(r=>r.compare_key));
+    rawKeys.forEach(key=>delete groups[key]);
+    groups[family]=rows;
+  });
+  return groups;
 }
 
 function renderCompare(){
   const recs=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
-  const g={};recs.forEach(d=>{(g[d.compare_key]=g[d.compare_key]||[]).push(d);});
+  const g=compareGroups(recs);
   let keys=Object.keys(g);
   // 计算每组信息
   const info={};keys.forEach(k=>info[k]=groupInfo(g[k]));
   if(state.onlyCmp)keys=keys.filter(k=>info[k].comparable);
   // 按类别分组 + 组内可对比优先
-  const modeRank={goal:0,trend:1,cmp:2,single:3};
+  const modeRank={goal:0,history:1,trend:2,cmp:3,single:4};
   keys.sort((a,b)=>{
     const ca=catShort(g[a][0].category),cb=catShort(g[b][0].category);
     if(ca!==cb)return ca<cb?-1:1;
@@ -934,6 +984,7 @@ function card(key,recs,inf){
   const cat=catShort(recs[0].category), unit=recs[0].unit||'';
   let body,badge,copytext;
   if(inf.mode==='goal'){[body,copytext]=renderGoal(key,recs,unit);badge='<span class="cbadge b-goal">基数→目标 · 多级</span>';}
+  else if(inf.mode==='history'){[body,copytext]=renderNationalLocalHistory(key,recs,unit);badge='<span class="cbadge b-trend">国家-地方趋势</span>';}
   else if(inf.mode==='trend'){[body,copytext]=renderTrend(key,recs,unit);badge='<span class="cbadge b-trend">历年趋势</span>';}
   else if(inf.mode==='cmp'){[body,copytext]=renderCmp(key,recs,unit);badge='<span class="cbadge b-cmp">跨级对标</span>';}
   else {[body,copytext]=renderSingle(key,recs,unit);badge='<span class="cbadge b-single">单点</span>';}
@@ -1184,6 +1235,61 @@ function renderTrend(key,recs,unit){
           key+'（'+unit+'）历年：'+ctlines.join('；')+'。'];
 }
 
+function renderNationalLocalHistory(key,recs,unit){
+  const byRegion={};
+  const sourceRank=r=>String(r.source||'').includes('统计公报')?3:(String(r.source||'').includes('统计快报')?2:(r.source_url?1:0));
+  recs.forEach(r=>{
+    if(natKind(r.nature)!=='actual'||numOf(r.value)==null||+r.year>=2030)return;
+    const rows=byRegion[r.region]||(byRegion[r.region]={});
+    const old=rows[r.year];
+    if(!old||sourceRank(r)>sourceRank(old))rows[r.year]=r;
+  });
+  let series=Object.entries(byRegion).map(([region,rows])=>({
+    region,
+    rows:Object.values(rows).sort((a,b)=>+a.year-+b.year)
+  })).filter(s=>s.rows.length>=2);
+  const priority=region=>region==='全国'?0:(region==='辽宁省'?1:(region==='大连市'?2:3));
+  series.sort((a,b)=>priority(a.region)-priority(b.region)||b.rows.length-a.rows.length||a.region.localeCompare(b.region,'zh-Hans'));
+  if(series.length<2)return renderTrend(key,recs,unit);
+
+  const totalSeries=series.length;
+  const maxSeries=state.regions.size?10:8;
+  series=series.slice(0,maxSeries);
+  const allYears=[...new Set(series.flatMap(s=>s.rows.map(r=>+r.year)))].sort((a,b)=>a-b);
+  const values=series.flatMap(s=>s.rows.map(r=>numOf(r.value)));
+  if(allYears.length<2||!values.length)return renderCmp(key,recs,unit);
+  let lo=Math.min(...values),hi=Math.max(...values);
+  if(lo===hi){lo=lo===0?-1:lo*0.94;hi=hi===0?1:hi*1.06;}
+  const pad=(hi-lo)*0.1;lo-=pad;hi+=pad;
+  const W=520,H=170,L=44,R=12,T=16,B=26;
+  const minYear=allYears[0],maxYear=allYears[allYears.length-1];
+  const x=year=>L+(year-minYear)/(maxYear-minYear||1)*(W-L-R);
+  const y=value=>T+(1-(value-lo)/(hi-lo||1))*(H-T-B);
+  const palette=['#1f4e79','#c4473d','#0d8a9c','#0a7d52','#b9770a','#6950a1','#e26d3f','#64748b','#c35c94','#4f7fbc'];
+  let svg='<svg class="spark history-chart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">';
+  [0.16,0.5,0.84].forEach(ratio=>{
+    const value=lo+(hi-lo)*ratio,gy=y(value);
+    svg+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="#eef2f7" stroke-width="1"/>';
+    svg+='<text x="'+(L-5)+'" y="'+(gy+3)+'" font-size="8.5" fill="#aab4c2" text-anchor="end">'+fmtNum(value)+'</text>';
+  });
+  allYears.forEach(year=>{svg+='<text x="'+x(year)+'" y="'+(H-7)+'" font-size="9" fill="#8492a6" text-anchor="middle">'+year+'</text>';});
+  let legend='',copyLines=[];
+  series.forEach((s,index)=>{
+    const color=palette[index%palette.length];
+    const points=s.rows.map(r=>x(+r.year)+','+y(numOf(r.value)));
+    svg+='<polyline points="'+points.join(' ')+'" fill="none" stroke="'+color+'" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/>';
+    s.rows.forEach(r=>{svg+='<circle cx="'+x(+r.year)+'" cy="'+y(numOf(r.value))+'" r="2.6" fill="#fff" stroke="'+color+'" stroke-width="1.8"><title>'+esc(s.region)+' '+esc(r.year)+'：'+esc(r.value)+' '+esc(unit)+'</title></circle>';});
+    const first=s.rows[0],last=s.rows[s.rows.length-1];
+    legend+='<span><i class="ld" style="background:'+color+'"></i>'+esc(s.region)+' '+esc(first.year)+'-'+esc(last.year)+'</span>';
+    copyLines.push(s.region+' '+first.year+'年'+first.value+'→'+last.year+'年'+last.value+unit);
+  });
+  svg+='</svg>';
+  const omitted=totalSeries>series.length?' <span class="nt">另有 '+(totalSeries-series.length)+' 个地方序列未显示；可用地区筛选锁定查看</span>':'';
+  const note='<div class="scalenote">同一纵轴展示全国与地方的实际数值，便于同时判断规模差异与历年变化。</div>';
+  return [svg+'<div class="trendlegend">'+legend+'</div>'+omitted+note+insights(key,recs,unit),
+    key+'（'+unit+'）全国与地方历年比较：'+copyLines.join('；')+'。'];
+}
+
 function renderSingle(key,recs,unit){
   const r=recs.find(x=>natKind(x.nature)==='actual')||recs[0];
   let html='<div class="single"><span class="v" style="color:var(--'+natKind(r.nature)+')">'+esc(r.value)+'</span><span class="u">'+esc(unit)+'</span>'+
@@ -1215,12 +1321,11 @@ function listRows(){
 function currentVisibleRows(){
   if(state.mode==='list')return listRows();
   const recs=DATA.filter(d=>baseFilter(d)&&state.tiers.has(tierNo(d.region_tier)));
-  const g={};recs.forEach(d=>{(g[d.compare_key]=g[d.compare_key]||[]).push(d);});
+  const g=compareGroups(recs);
   let keys=Object.keys(g);
   const info={};keys.forEach(k=>info[k]=groupInfo(g[k]));
   if(state.onlyCmp)keys=keys.filter(k=>info[k].comparable);
-  const keep=new Set(keys);
-  return recs.filter(d=>keep.has(d.compare_key));
+  return keys.flatMap(key=>g[key]);
 }
 
 function nhcSummaryText(){
