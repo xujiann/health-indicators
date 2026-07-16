@@ -26,7 +26,7 @@ function expandRawRecord(record, defaults = {}) {
       ...defaults,
       ...record,
       indicator: record.indicator || metric,
-      compare_key: record.compare_key || metric,
+      compare_key: record.compare_key || (defaults.compare_key_prefix ? `${defaults.compare_key_prefix}:${metric}` : metric),
       year: +record.year,
       value,
     }));
@@ -42,6 +42,9 @@ function expandRawFile(file) {
     doc_no: parsed.doc_no || "",
     source_url: parsed.source_url || "",
     note: parsed.note || "",
+    compare_key_prefix: parsed.kind === "national-medical-insurance-series-v1"
+      ? (parsed.series_label || parsed.source_title || file)
+      : "",
   };
   if (Array.isArray(parsed.records)) return parsed.records.flatMap((record) => expandRawRecord(record, defaults));
   if (Array.isArray(parsed.years)) return parsed.years.flatMap((record) => expandRawRecord(record, defaults));

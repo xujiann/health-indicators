@@ -1,0 +1,75 @@
+{
+  "kind": "national-medical-insurance-series-v1",
+  "series_label": "年度统计公报",
+  "source_title": "全国医疗保障事业发展统计公报",
+  "note": "国家医保局年度统计公报最终口径；与同年统计快报并列保留，数值差异以发布时点和统计口径为准。",
+  "years": [
+    {
+      "year": 2023,
+      "source_url": "https://www.nhsa.gov.cn/art/2024/7/25/art_7_13340.html",
+      "metrics": {
+        "basic_insurance_enrollees": 133389, "basic_fund_income": 33501.36, "basic_fund_expenditure": 28208.38, "basic_fund_current_balance": 5039.59, "basic_fund_cumulative_balance": 33979.75,
+        "employee_enrollees": 37095, "employee_active_enrollees": 27099, "employee_retiree_enrollees": 9996, "resident_enrollees": 96294,
+        "employee_fund_income": 22931.65, "employee_fund_expenditure": 17750.73, "employee_pool_income": 16580.3, "employee_pool_expenditure": 11652.77, "employee_account_income": 6351.35, "employee_account_expenditure": 6097.95,
+        "resident_fund_income": 10569.71, "resident_fund_expenditure": 10457.65, "resident_fund_current_balance": 112.06, "resident_fund_cumulative_balance": 7663.7,
+        "employee_benefit_visits": 25.3, "employee_outpatient_visits": 21.8, "employee_chronic_outpatient_visits": 2.7, "employee_inpatient_visits": 0.8, "employee_pharmacy_visits": 23, "employee_avg_inpatient_cost": 12175, "employee_avg_length_of_stay": 9.8, "employee_medical_expenses": 19879.79, "employee_institution_expenses": 17408.48, "employee_pharmacy_expenses": 2471.31, "employee_catalog_payment_ratio": 84.6,
+        "resident_benefit_visits": 26.1, "resident_outpatient_visits": 20.8, "resident_chronic_outpatient_visits": 3.4, "resident_inpatient_visits": 2, "resident_avg_inpatient_cost": 7674, "resident_avg_length_of_stay": 8.8, "resident_medical_expenses": 19581.56, "resident_institution_expenses": 19426.97, "resident_pharmacy_expenses": 154.59, "resident_catalog_payment_ratio": 68.1,
+        "maternity_enrollees": 24903, "maternity_benefit_visits": 2834, "maternity_fund_expenditure": 1177.23,
+        "medical_assistance_expenditure": 746, "medical_assistance_subsidized_enrollees": 8020, "medical_assistance_visits": 15340, "medical_assistance_inpatient_avg": 1241, "medical_assistance_outpatient_avg": 132,
+        "catalog_drugs": 3088, "catalog_new_drugs": 126, "negotiated_drug_reimbursements": 2.4,
+        "out_of_area_visits": 2.43, "out_of_area_expenses": 7111.05, "recovered_funds": 186.5,
+        "long_term_care_enrollees": 18330.87, "long_term_care_beneficiaries": 134.29, "long_term_care_fund_income": 243.63, "long_term_care_fund_expenditure": 118.56, "long_term_care_institutions": 8080, "long_term_care_workers": 30.28
+      },
+      "metric_notes": {
+        "maternity_benefit_visits": "2023年起待遇享受人次口径增加产前检查、计划生育人次。",
+        "medical_assistance_subsidized_enrollees": "不含其他部门资助参保人数。",
+        "long_term_care_enrollees": "49个试点城市口径。"
+      }
+    },
+    {
+      "year": 2024,
+      "source_url": "https://www.nhsa.gov.cn/art/2025/7/14/art_7_17248.html",
+      "metrics": {
+        "basic_insurance_enrollees": 132662.08, "basic_insurance_coverage_rate": 95, "basic_fund_income": 34913.37, "basic_fund_expenditure": 29764.03, "basic_fund_current_balance": 4639.17, "basic_fund_cumulative_balance": 38628.52,
+        "employee_enrollees": 37948.34, "employee_active_enrollees": 27490.84, "employee_retiree_enrollees": 10457.5, "resident_enrollees": 94713.73,
+        "employee_fund_income": 23732.47, "employee_fund_expenditure": 19102.54, "employee_pool_income": 17342.45, "employee_pool_expenditure": 13222.71, "employee_account_income": 6390.01, "employee_account_expenditure": 5879.83,
+        "resident_fund_income": 11180.91, "resident_fund_expenditure": 10661.49, "resident_fund_current_balance": 519.42, "resident_fund_cumulative_balance": 8183.02,
+        "employee_benefit_visits": 53.08, "employee_outpatient_visits": 26.33, "employee_chronic_outpatient_visits": 3.22, "employee_inpatient_visits": 0.82, "employee_pharmacy_visits": 22.72, "employee_avg_inpatient_cost": 11707, "employee_avg_length_of_stay": 8.7, "employee_medical_expenses": 20587.46, "employee_institution_expenses": 18366.57, "employee_pharmacy_expenses": 2220.89, "employee_catalog_payment_ratio": 84.8,
+        "resident_benefit_visits": 30.35, "resident_outpatient_visits": 23.78, "resident_chronic_outpatient_visits": 4.16, "resident_inpatient_visits": 2.06, "resident_pharmacy_visits": 0.35, "resident_avg_inpatient_cost": 7408, "resident_avg_length_of_stay": 8.5, "resident_medical_expenses": 20312.16, "resident_institution_expenses": 20098.31, "resident_pharmacy_expenses": 213.84, "resident_catalog_payment_ratio": 68.6,
+        "maternity_enrollees": 25299.52, "maternity_benefit_visits": 3690.8, "maternity_fund_expenditure": 1402.93,
+        "medical_assistance_expenditure": 792.32, "medical_assistance_subsidized_enrollees": 7915.67, "medical_assistance_visits": 18090.61, "medical_assistance_inpatient_avg": 1254, "medical_assistance_outpatient_avg": 92,
+        "catalog_drugs": 3159, "catalog_new_drugs": 91, "negotiated_drug_reimbursements": 2.8,
+        "out_of_area_visits": 3.97, "out_of_area_expenses": 7867.74, "recovered_funds": 275,
+        "long_term_care_enrollees": 18786.34, "long_term_care_beneficiaries": 146.25, "long_term_care_fund_income": 279.6, "long_term_care_fund_expenditure": 131.08, "long_term_care_institutions": 8837, "long_term_care_workers": 29.28, "personal_account_mutual_aid_usage": 512
+      },
+      "metric_notes": {
+        "maternity_benefit_visits": "2023年起待遇享受人次口径增加产前检查、计划生育人次。",
+        "medical_assistance_subsidized_enrollees": "不含其他部门资助参保人数。",
+        "long_term_care_enrollees": "49个试点城市口径。"
+      }
+    },
+    {
+      "year": 2025,
+      "source_url": "https://www.nhsa.gov.cn/art/2026/7/16/art_7_21451.html",
+      "metrics": {
+        "basic_insurance_enrollees": 133069.39, "basic_insurance_coverage_rate": 95, "basic_fund_income": 35921.32, "basic_fund_expenditure": 30055.19, "basic_fund_current_balance": 5257.72,
+        "employee_enrollees": 38856.12, "employee_active_enrollees": 28062.32, "employee_retiree_enrollees": 10793.8, "resident_enrollees": 94213.27,
+        "employee_fund_income": 24683.6, "employee_fund_expenditure": 19376.55, "employee_pool_income": 18292.91, "employee_pool_expenditure": 13594.28, "employee_account_income": 6390.69, "employee_account_expenditure": 5782.28,
+        "resident_fund_income": 11237.72, "resident_fund_expenditure": 10678.63,
+        "employee_benefit_visits": 54.86, "employee_outpatient_visits": 27.9, "employee_chronic_outpatient_visits": 3.62, "employee_inpatient_visits": 0.83, "employee_pharmacy_visits": 22.51, "employee_avg_inpatient_cost": 11522, "employee_avg_length_of_stay": 8.6, "employee_medical_expenses": 20620.69, "employee_institution_expenses": 18462.7, "employee_pharmacy_expenses": 2157.99, "employee_catalog_payment_ratio": 84.1,
+        "resident_benefit_visits": 32.68, "resident_outpatient_visits": 25.3, "resident_chronic_outpatient_visits": 4.92, "resident_inpatient_visits": 1.96, "resident_pharmacy_visits": 0.5, "resident_avg_inpatient_cost": 7339, "resident_avg_length_of_stay": 8.6, "resident_medical_expenses": 19782.35, "resident_institution_expenses": 19485.66, "resident_pharmacy_expenses": 296.69, "resident_catalog_payment_ratio": 66,
+        "maternity_enrollees": 25958.05, "maternity_benefit_visits": 3573.81, "maternity_fund_expenditure": 1393.81,
+        "medical_assistance_expenditure": 794.24, "medical_assistance_subsidized_enrollees": 7666.47, "medical_assistance_visits": 19915.6, "medical_assistance_inpatient_avg": 1273, "medical_assistance_outpatient_avg": 86,
+        "catalog_drugs": 3253, "catalog_new_drugs": 114, "negotiated_drug_reimbursements": 2.48,
+        "out_of_area_visits": 4.73, "out_of_area_expenses": 8162.1, "recovered_funds": 342.19,
+        "long_term_care_enrollees": 30854.76, "long_term_care_beneficiaries": 192.91, "long_term_care_fund_income": 369.62, "long_term_care_fund_expenditure": 186.44, "long_term_care_institutions": 13000, "long_term_care_workers": 40.28, "cross_province_network_institutions": 65.58, "personal_account_mutual_aid_usage": 688
+      },
+      "metric_notes": {
+        "maternity_benefit_visits": "2023年起待遇享受人次口径增加产前检查、计划生育人次。",
+        "medical_assistance_subsidized_enrollees": "不含其他部门资助参保人数。",
+        "long_term_care_enrollees": "2025年起实施长期护理保险制度的地区均纳入统计范围。",
+        "long_term_care_institutions": "公报以“1.3万家”发布，已按13000家录入。"
+      }
+    }
+  ]
+}

@@ -38,6 +38,77 @@ const subprovStatMetricDefinitions = {
   local_public_budget_expenditure: { category: "财政", subcategory: "财政收支", indicator: "地方一般公共预算支出", compare_key: "地方一般公共预算支出", unit: "亿元" },
 };
 
+const nationalMedicalInsuranceMetricDefinitions = {
+  basic_insurance_enrollees: { subcategory: "参保规模", indicator: "基本医疗保险参保人数", unit: "万人" },
+  basic_insurance_coverage_rate: { subcategory: "参保规模", indicator: "基本医疗保险参保率", unit: "%" },
+  basic_fund_income: { subcategory: "基金收支", indicator: "基本医疗保险基金总收入（含生育保险）", unit: "亿元" },
+  basic_fund_expenditure: { subcategory: "基金收支", indicator: "基本医疗保险基金总支出（含生育保险）", unit: "亿元" },
+  basic_fund_current_balance: { subcategory: "基金收支", indicator: "基本医疗保险统筹基金当期结存", unit: "亿元" },
+  basic_fund_cumulative_balance: { subcategory: "基金收支", indicator: "基本医疗保险统筹基金累计结存", unit: "亿元" },
+  employee_enrollees: { subcategory: "参保规模", indicator: "职工基本医疗保险参保人数", unit: "万人" },
+  employee_active_enrollees: { subcategory: "参保规模", indicator: "职工医保在职职工参保人数", unit: "万人" },
+  employee_retiree_enrollees: { subcategory: "参保规模", indicator: "职工医保退休人员参保人数", unit: "万人" },
+  resident_enrollees: { subcategory: "参保规模", indicator: "城乡居民基本医疗保险参保人数", unit: "万人" },
+  employee_fund_income: { subcategory: "基金收支", indicator: "职工医保基金收入（含生育保险）", unit: "亿元" },
+  employee_fund_expenditure: { subcategory: "基金收支", indicator: "职工医保基金支出（含生育保险）", unit: "亿元" },
+  employee_pool_income: { subcategory: "基金收支", indicator: "职工医保统筹基金收入（含生育保险）", unit: "亿元" },
+  employee_pool_expenditure: { subcategory: "基金收支", indicator: "职工医保统筹基金支出（含生育保险）", unit: "亿元" },
+  employee_account_income: { subcategory: "基金收支", indicator: "职工医保个人账户收入", unit: "亿元" },
+  employee_account_expenditure: { subcategory: "基金收支", indicator: "职工医保个人账户支出", unit: "亿元" },
+  resident_fund_income: { subcategory: "基金收支", indicator: "居民医保基金收入", unit: "亿元" },
+  resident_fund_expenditure: { subcategory: "基金收支", indicator: "居民医保基金支出", unit: "亿元" },
+  resident_fund_current_balance: { subcategory: "基金收支", indicator: "居民医保基金当期结存", unit: "亿元" },
+  resident_fund_cumulative_balance: { subcategory: "基金收支", indicator: "居民医保基金累计结存", unit: "亿元" },
+  employee_benefit_visits: { subcategory: "待遇人次", indicator: "职工医保待遇享受人次", unit: "亿人次" },
+  employee_outpatient_visits: { subcategory: "待遇人次", indicator: "职工医保普通门急诊人次", unit: "亿人次" },
+  employee_chronic_outpatient_visits: { subcategory: "待遇人次", indicator: "职工医保门诊慢特病人次", unit: "亿人次" },
+  employee_inpatient_visits: { subcategory: "待遇人次", indicator: "职工医保住院人次", unit: "亿人次" },
+  employee_pharmacy_visits: { subcategory: "待遇人次", indicator: "职工医保药店购药人次", unit: "亿人次" },
+  employee_avg_inpatient_cost: { subcategory: "待遇费用", indicator: "职工医保次均住院费用", unit: "元" },
+  employee_avg_length_of_stay: { subcategory: "待遇费用", indicator: "职工医保次均住院床日", unit: "天" },
+  employee_medical_expenses: { subcategory: "待遇费用", indicator: "职工医保参保人员医药总费用", unit: "亿元" },
+  employee_institution_expenses: { subcategory: "待遇费用", indicator: "职工医保医疗机构费用", unit: "亿元" },
+  employee_pharmacy_expenses: { subcategory: "待遇费用", indicator: "职工医保药店费用", unit: "亿元" },
+  employee_catalog_payment_ratio: { subcategory: "待遇费用", indicator: "职工医保住院目录内基金支付比例", unit: "%" },
+  resident_benefit_visits: { subcategory: "待遇人次", indicator: "居民医保待遇享受人次", unit: "亿人次" },
+  resident_outpatient_visits: { subcategory: "待遇人次", indicator: "居民医保普通门急诊人次", unit: "亿人次" },
+  resident_chronic_outpatient_visits: { subcategory: "待遇人次", indicator: "居民医保门诊慢特病人次", unit: "亿人次" },
+  resident_inpatient_visits: { subcategory: "待遇人次", indicator: "居民医保住院人次", unit: "亿人次" },
+  resident_pharmacy_visits: { subcategory: "待遇人次", indicator: "居民医保药店购药人次", unit: "亿人次" },
+  resident_avg_inpatient_cost: { subcategory: "待遇费用", indicator: "居民医保次均住院费用", unit: "元" },
+  resident_avg_length_of_stay: { subcategory: "待遇费用", indicator: "居民医保次均住院床日", unit: "天" },
+  resident_medical_expenses: { subcategory: "待遇费用", indicator: "居民医保参保人员医药费用", unit: "亿元" },
+  resident_institution_expenses: { subcategory: "待遇费用", indicator: "居民医保医疗机构费用", unit: "亿元" },
+  resident_pharmacy_expenses: { subcategory: "待遇费用", indicator: "居民医保药店购药费用", unit: "亿元" },
+  resident_catalog_payment_ratio: { subcategory: "待遇费用", indicator: "居民医保住院目录内基金支付比例", unit: "%" },
+  maternity_enrollees: { subcategory: "生育保险", indicator: "生育保险参保人数", unit: "万人" },
+  maternity_benefit_visits: { subcategory: "生育保险", indicator: "生育保险待遇享受人次", unit: "万人次" },
+  maternity_fund_expenditure: { subcategory: "生育保险", indicator: "生育保险基金支出", unit: "亿元" },
+  medical_assistance_expenditure: { subcategory: "医疗救助", indicator: "医疗救助支出", unit: "亿元" },
+  medical_assistance_subsidized_enrollees: { subcategory: "医疗救助", indicator: "医疗救助资助参保人数", unit: "万人" },
+  medical_assistance_visits: { subcategory: "医疗救助", indicator: "医疗救助门诊和住院救助人次", unit: "万人次" },
+  medical_assistance_inpatient_avg: { subcategory: "医疗救助", indicator: "次均住院救助金额", unit: "元" },
+  medical_assistance_outpatient_avg: { subcategory: "医疗救助", indicator: "次均门诊救助金额", unit: "元" },
+  catalog_drugs: { subcategory: "药品目录与采购", indicator: "国家医保药品目录西药和中成药数量", unit: "种" },
+  catalog_new_drugs: { subcategory: "药品目录与采购", indicator: "国家医保药品目录新纳入药品数量", unit: "种" },
+  negotiated_drug_reimbursements: { subcategory: "药品目录与采购", indicator: "谈判药报销人次", unit: "亿人次" },
+  out_of_area_visits: { subcategory: "异地就医", indicator: "异地就医就诊人次", unit: "亿人次" },
+  out_of_area_expenses: { subcategory: "异地就医", indicator: "异地就医费用", unit: "亿元" },
+  recovered_funds: { subcategory: "基金监管", indicator: "追回医保基金", unit: "亿元" },
+  long_term_care_enrollees: { subcategory: "长期护理保险", indicator: "长期护理保险参保人数", unit: "万人" },
+  long_term_care_beneficiaries: { subcategory: "长期护理保险", indicator: "长期护理保险待遇享受人数", unit: "万人" },
+  long_term_care_fund_income: { subcategory: "长期护理保险", indicator: "长期护理保险基金收入", unit: "亿元" },
+  long_term_care_fund_expenditure: { subcategory: "长期护理保险", indicator: "长期护理保险基金支出", unit: "亿元" },
+  long_term_care_institutions: { subcategory: "长期护理保险", indicator: "长期护理保险定点服务机构数", unit: "家" },
+  long_term_care_workers: { subcategory: "长期护理保险", indicator: "长期护理保险护理服务人员数", unit: "万人" },
+  cross_province_network_institutions: { subcategory: "异地就医", indicator: "跨省联网定点医药机构数", unit: "万家" },
+  cross_province_inpatient_visits: { subcategory: "异地就医", indicator: "住院费用跨省直接结算人次", unit: "万人次" },
+  cross_province_inpatient_payment: { subcategory: "异地就医", indicator: "住院费用跨省直接结算基金支付", unit: "亿元" },
+  cross_province_outpatient_visits: { subcategory: "异地就医", indicator: "门诊费用跨省直接结算人次", unit: "亿人次" },
+  cross_province_outpatient_payment: { subcategory: "异地就医", indicator: "门诊费用跨省直接结算基金支付", unit: "亿元" },
+  personal_account_mutual_aid_usage: { subcategory: "经办服务", indicator: "职工医保个人账户共济使用金额", unit: "亿元" },
+};
+
 async function assertFileExists(filePath) {
   try {
     await fs.access(filePath);
@@ -152,6 +223,35 @@ function expandNationalCrossDomainSeries(payload) {
     })));
 }
 
+function expandNationalMedicalInsuranceSeries(payload) {
+  return payload.years.flatMap((entry) => Object.entries(entry.metrics).map(([metricKey, value]) => {
+    const definition = nationalMedicalInsuranceMetricDefinitions[metricKey];
+    if (!definition) throw new Error(`Unknown national medical insurance metric: ${metricKey}`);
+    const label = payload.series_label || "年度统计公报";
+    return normalizeRecord({
+      region_code: "000000",
+      region: "全国",
+      level: "国家",
+      year: entry.year,
+      category: "医疗保障",
+      subcategory: definition.subcategory,
+      indicator: `${definition.indicator}（${label}）`,
+      nature: "实际值",
+      value,
+      unit: definition.unit,
+      yoy: entry.yoy?.[metricKey] || "",
+      deadline: "",
+      responsible: "国家医疗保障局",
+      source: `${entry.year}年${payload.source_title || "全国医疗保障事业发展统计公报"}`,
+      doc_no: `—（国家医疗保障局${label}）`,
+      source_url: entry.source_url,
+      note: [payload.note, entry.note, entry.metric_notes?.[metricKey]].filter(Boolean).join("；"),
+      compare_key: `${definition.indicator}（${label}）`,
+      region_tier: "1·全国",
+    });
+  }));
+}
+
 function sortRecord(a, b) {
   const tier = String(a.region_tier).localeCompare(String(b.region_tier), "zh-Hans");
   if (tier) return tier;
@@ -201,6 +301,8 @@ async function loadAdditions() {
         additions.push(...expandSubprovStatBulletinSeries(payload));
       } else if (payload.kind === "national-cross-domain-series-v1") {
         additions.push(...expandNationalCrossDomainSeries(payload));
+      } else if (payload.kind === "national-medical-insurance-series-v1") {
+        additions.push(...expandNationalMedicalInsuranceSeries(payload));
       } else {
         throw new Error(`Unsupported additions payload in ${file}`);
       }

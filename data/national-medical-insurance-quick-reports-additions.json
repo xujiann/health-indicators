@@ -1,0 +1,45 @@
+{
+  "kind": "national-medical-insurance-series-v1",
+  "series_label": "统计快报",
+  "source_title": "医疗保障事业发展统计快报",
+  "note": "国家医保局统计快报初步口径；2025年同口径核心指标已在 national-official-2025-health-insurance-additions.json 中维护。",
+  "years": [
+    {
+      "year": 2023,
+      "source_url": "https://www.nhsa.gov.cn/art/2024/4/11/art_7_12348.html",
+      "metrics": {
+        "basic_insurance_enrollees": 133386.9, "employee_enrollees": 37093.88, "resident_enrollees": 96293.02,
+        "basic_fund_income": 33355.16, "basic_fund_expenditure": 28140.33,
+        "employee_fund_income": 22880.57, "employee_fund_expenditure": 17717.8, "employee_pool_income": 16636.07, "employee_pool_expenditure": 11620.58,
+        "resident_fund_income": 10474.59, "resident_fund_expenditure": 10422.53,
+        "maternity_enrollees": 24907.06, "maternity_fund_expenditure": 1069.1,
+        "medical_assistance_subsidized_enrollees": 7308.2,
+        "cross_province_network_institutions": 55.04, "cross_province_inpatient_visits": 1125.48, "cross_province_inpatient_payment": 1351.26, "cross_province_outpatient_visits": 1.18, "cross_province_outpatient_payment": 185.48,
+        "catalog_drugs": 3088, "catalog_new_drugs": 126, "negotiated_drug_reimbursements": 2.4
+      },
+      "metric_notes": {
+        "medical_assistance_subsidized_enrollees": "原承担医保脱贫攻坚任务的25个省份通过医疗救助资助参保人数。"
+      }
+    },
+    {
+      "year": 2024,
+      "source_url": "https://www.nhsa.gov.cn/art/2025/3/21/art_7_16054.html",
+      "metrics": {
+        "basic_insurance_enrollees": 132637.83, "basic_insurance_coverage_rate": 95,
+        "basic_fund_income": 34809.95, "basic_fund_expenditure": 29675.92,
+        "employee_fund_income": 23671.59, "employee_fund_expenditure": 19056.55, "employee_pool_income": 17368.93, "employee_pool_expenditure": 13205.04,
+        "resident_fund_income": 11138.36, "resident_fund_expenditure": 10619.38,
+        "employee_outpatient_visits": 35.29, "resident_outpatient_visits": 31.6, "employee_inpatient_visits": 0.865223, "resident_inpatient_visits": 2.053003,
+        "employee_avg_inpatient_cost": 11169.11, "resident_avg_inpatient_cost": 7295,
+        "maternity_enrollees": 25297.51, "maternity_fund_expenditure": 1431.78,
+        "cross_province_network_institutions": 64.4, "cross_province_inpatient_visits": 1433.56, "cross_province_inpatient_payment": 1586.73, "cross_province_outpatient_visits": 2.24, "cross_province_outpatient_payment": 360.51,
+        "catalog_drugs": 3159, "catalog_new_drugs": 91, "negotiated_drug_reimbursements": 2.8,
+        "recovered_funds": 275, "personal_account_mutual_aid_usage": 512
+      },
+      "metric_notes": {
+        "employee_outpatient_visits": "快报“职工享受门诊待遇总人次”，与年度公报的普通门急诊口径不同。",
+        "resident_outpatient_visits": "快报“居民享受门诊待遇总人次”，与年度公报的普通门急诊口径不同。"
+      }
+    }
+  ]
+}

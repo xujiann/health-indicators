@@ -21,6 +21,13 @@
     "coverage": "2025 参保、基金和待遇指标已入库"
   },
   {
+    "id": "nhsa-annual-statistics-bulletin",
+    "agency": "国家医疗保障局",
+    "topic": "全国医疗保障事业发展统计公报",
+    "url": "https://www.nhsa.gov.cn/art/2026/7/16/art_7_21451.html",
+    "coverage": "2023-2025 年度最终口径已入库"
+  },
+  {
     "id": "ndcpa-disease-control",
     "agency": "国家疾病预防控制局",
     "topic": "疾病控制公开统计栏目",
