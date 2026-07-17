@@ -1045,8 +1045,9 @@ function card(key,recs,inf){
   const source=bestSource(recs);
   const sourceBtn=source?'<a class="sourcebtn" title="打开来源" target="_blank" rel="noopener" href="'+esc(source.source_url)+'">↗</a>':'';
   const detailBtn='<button class="detailbtn" type="button" title="查看明细记录">明细</button>';
+  const workbenchBtns=typeof window.workbenchButtons==='function'?window.workbenchButtons(key,recs):'';
   el.innerHTML='<div class="chead"><div><div class="ctitle">'+esc(key)+'</div><div class="ccat">'+esc(cat)+(unit?' · 单位 '+esc(unit):'')+'</div></div>'+
-    '<div class="cright">'+sourceStatusHtml(recs)+badge+detailBtn+sourceBtn+'<button class="copybtn" title="复制为材料文字">⧉</button></div></div>'+
+    '<div class="cright">'+sourceStatusHtml(recs)+badge+workbenchBtns+detailBtn+sourceBtn+'<button class="copybtn" title="复制为材料文字">⧉</button></div></div>'+
     '<div class="cbody">'+body+gap+'</div>';
   el.querySelector('.detailbtn').onclick=()=>openIndicatorDetail(key,recs);
   el.querySelector('.copybtn').onclick=()=>copyText(copytext);
@@ -1679,4 +1680,5 @@ setMode(state.mode);
 syncControls();
 render();
 </script>
+<script src="analysis-workbench.js"></script>
 </body></html>
