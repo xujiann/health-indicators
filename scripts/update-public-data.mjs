@@ -10,6 +10,24 @@ const additionsDir = path.join(repoRoot, "data");
 const publicWorkbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
 const privateWorkbookPath = path.join(privateRoot, "核心指标数据库.xlsx");
 
+const subprovOfficialSourceIndexes = new Map([
+  ["大连市", "https://www.dl.gov.cn/"],
+  ["成都市", "https://www.chengdu.gov.cn/"],
+  ["广州市", "https://wjw.gz.gov.cn/"],
+  ["哈尔滨市", "https://www.harbin.gov.cn/"],
+  ["杭州市", "https://wsjkw.hangzhou.gov.cn/"],
+  ["济南市", "https://jnmhc.jinan.gov.cn/"],
+  ["南京市", "https://wjw.nanjing.gov.cn/"],
+  ["宁波市", "https://www.ningbo.gov.cn/col/col1229106609/index.html"],
+  ["青岛市", "https://wsjkw.qingdao.gov.cn/"],
+  ["厦门市", "https://hfpc.xm.gov.cn/"],
+  ["深圳市", "https://wjw.sz.gov.cn/"],
+  ["沈阳市", "https://wjw.shenyang.gov.cn/"],
+  ["武汉市", "https://wjw.wuhan.gov.cn/"],
+  ["西安市", "https://xawjw.xa.gov.cn/"],
+  ["长春市", "https://zwgk.changchun.gov.cn/zcbm/swjw_3974/wjwxxgkml/"],
+]);
+
 const nationalHealthMetricDefinitions = {
   total_institutions: { subcategory: "卫生资源", indicator: "医疗卫生机构总数", compare_key: "医疗卫生机构总数", unit: "个" },
   hospitals: { subcategory: "卫生资源", indicator: "医院数", compare_key: "医院数", unit: "个" },
@@ -118,6 +136,15 @@ async function assertFileExists(filePath) {
   return filePath;
 }
 
+async function fileExists(filePath) {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function readWorkbookRows(xlsxPath) {
   const input = await FileBlob.load(xlsxPath);
   const workbook = await SpreadsheetFile.importXlsx(input);
@@ -218,7 +245,7 @@ function expandNationalCrossDomainSeries(payload) {
       doc_no: payload.doc_no || "—（公开补录）",
       source_url: payload.source_url || "",
       note: [payload.note, series.note].filter(Boolean).join("；"),
-      compare_key: series.compare_key || series.indicator,
+      compare_key: (series.compare_key || series.indicator).replace("图片长序列", "医保数智库长序列"),
       region_tier: "1·全国",
     })));
 }
@@ -277,12 +304,45 @@ function isGeneratedNationalHealth(record) {
     && String(record.source || "").includes("我国卫生健康事业发展统计公报");
 }
 
+function isGeneratedCrossDomainSeries(record) {
+  const text = `${record.source || ""} ${record.doc_no || ""} ${record.compare_key || ""}`;
+  return String(record.region_code || "") === "000000"
+    && /用户提供图片表|图片长序列|医保数智库长序列|1998年-2025年全国经济人口卫生医保相关数据/.test(text);
+}
+
 function publicizeSubprov(record) {
   const next = { ...record };
   const restrictionText = `${next.doc_no || ""} ${next.source_url || ""}`;
   if (/内部资料|仅限内部使用|内部文件|注意保存/.test(restrictionText)) {
     next.doc_no = "—（经确认可公开）";
     next.source_url = "";
+  }
+  if (!next.source_url && subprovOfficialSourceIndexes.has(next.region)) {
+    next.source_url = subprovOfficialSourceIndexes.get(next.region);
+    next.note = [
+      next.note,
+      "公开来源索引（非单条原文）；具体指标仍以该地区正式公开材料为准",
+    ].filter(Boolean).join("；");
+  }
+  const conversions = {
+    "卫生技术人员数|人": { divisor: 10000, unit: "万人" },
+    "卫生人员总数|人": { divisor: 10000, unit: "万人" },
+    "乡镇卫生院床位数|张": { divisor: 10000, unit: "万张" },
+    "医疗卫生机构实有床位数|张": { divisor: 10000, unit: "万张" },
+    "执业(助理)医师数|人": { divisor: 10000, unit: "万人" },
+    "注册护士数|人": { divisor: 10000, unit: "万人" },
+    "总诊疗人次|万人次": { divisor: 10000, unit: "亿人次" },
+  };
+  const conversion = conversions[`${next.compare_key}|${next.unit}`];
+  const numericValue = Number(next.value);
+  if (conversion && Number.isFinite(numericValue)) {
+    const originalUnit = next.unit;
+    next.value = Number((numericValue / conversion.divisor).toFixed(6));
+    next.unit = conversion.unit;
+    next.note = [
+      next.note,
+      `跨层级对比统一换算：原始单位${originalUnit}，发布单位${conversion.unit}`,
+    ].filter(Boolean).join("；");
   }
   return next;
 }
@@ -329,10 +389,11 @@ async function buildWorkbook(headers, records, outputPath) {
   const note = workbook.worksheets.add("说明");
   note.getRange("A1").values = [["国家·辽宁·大连 公开指标数据库"]];
   note.getRange("A3").values = [[`本表仅含公开发布及经确认可公开的指标数据，共${records.length}条，不含未公开规划文件。`]];
-  note.getRange("A4").values = [["本版纳入全国近十年卫生健康统计公报核心序列、2022-2024年公报扩展分类指标及15个副省级城市公开对标数据；引用请以原始公报或正式来源为准。"]];
+  note.getRange("A4").values = [["本版纳入2010-2024年全国卫生健康统计公报核心序列、2022-2024年公报扩展分类指标、2016-2025年全国人口老龄化长序列及15个副省级城市公开对标数据；来源索引不是单条原文，引用请以原始公报或正式来源为准。"]];
   note.getRange("A1:A4").format = { font: { name: "Microsoft YaHei" }, wrapText: true };
   note.getRange("A1").format = { font: { bold: true, size: 14, color: "#1F4E79" } };
   note.getRange("A:A").format.columnWidth = 88;
+  note.getRange("A3:A4").format.autofitRows();
   note.showGridLines = false;
 
   const dataSheet = workbook.worksheets.add("公开指标数据");
@@ -364,17 +425,21 @@ async function buildWorkbook(headers, records, outputPath) {
 
 async function main() {
   const publicXlsx = await assertFileExists(publicWorkbookPath);
-  const privateXlsx = await assertFileExists(privateWorkbookPath);
+  const hasPrivateWorkbook = await fileExists(privateWorkbookPath);
   const publicRows = await readWorkbookRows(publicXlsx);
-  const privateRows = await readWorkbookRows(privateXlsx);
+  const privateRows = hasPrivateWorkbook ? await readWorkbookRows(privateWorkbookPath) : publicRows;
   const headers = publicRows[0];
   const publicRecords = rowObjects(publicRows).map(normalizeRecord);
   const privateRecords = rowObjects(privateRows).map(normalizeRecord);
-  const basePublic = publicRecords.filter((record) => !String(record.region_tier || "").startsWith("3") && !isGeneratedNationalHealth(record));
+  const basePublic = publicRecords.filter((record) => !String(record.region_tier || "").startsWith("3")
+    && !isGeneratedNationalHealth(record)
+    && !isGeneratedCrossDomainSeries(record));
   const subprov = privateRecords.filter(isPublishableSubprov).map(publicizeSubprov);
-  const additions = await loadAdditions();
+  const additions = (await loadAdditions()).map((record) => (
+    String(record.region_tier || "").startsWith("3") ? publicizeSubprov(record) : record
+  ));
   const mergedMap = new Map();
-  [...basePublic, ...subprov, ...additions].map(normalizeRecord).forEach((record) => {
+  [...basePublic, ...subprov, ...additions].map(normalizeRecord).map(publicizeSubprov).forEach((record) => {
     mergedMap.set(recordKey(record), record);
   });
   const merged = [...mergedMap.values()].sort(sortRecord);
@@ -397,7 +462,7 @@ async function main() {
     subprovCities: cityCount,
     mergedRows: merged.length,
     publicXlsx,
-    privateXlsx,
+    subprovSource: hasPrivateWorkbook ? privateWorkbookPath : `${publicXlsx}（公开工作簿回退）`,
   }, null, 2));
 }
 

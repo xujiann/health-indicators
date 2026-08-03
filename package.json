@@ -1,0 +1,15 @@
+{
+  "name": "health-indicators-public",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate:data": "node scripts/validate-public-data.mjs",
+    "validate:release": "node scripts/validate-release-config.mjs",
+    "test:browser": "playwright test",
+    "test": "npm run validate:data && npm run validate:release && npm run test:browser"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1"
+  }
+}

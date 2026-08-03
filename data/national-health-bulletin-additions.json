@@ -1,7 +1,105 @@
 {
   "kind": "national-health-series-v1",
-  "note": "国家卫健委统计公报补录；2015-2024年核心卫生健康序列",
+  "note": "国家卫健委统计公报补录；2010-2024年核心卫生健康序列",
   "years": [
+    {
+      "year": 2010,
+      "source_url": "https://www.nhc.gov.cn/mohwsbwstjxxzx/s7967/201104/8949864e83014a46bddcdc6af105c08f.shtml",
+      "metrics": {
+        "hospitals": 20918,
+        "beds": 478.7,
+        "beds_per_1000": 3.56,
+        "health_workers": 820.8,
+        "health_technicians": 587.6,
+        "physicians_assistants": 241.3,
+        "registered_nurses": 204.8,
+        "physicians_per_1000": 1.79,
+        "nurses_per_1000": 1.52,
+        "total_visits": 58.4,
+        "admissions": 14174,
+        "total_health_expenditure": 19603,
+        "health_expenditure_per_capita": 1440.3
+      }
+    },
+    {
+      "year": 2011,
+      "source_url": "https://www.nhc.gov.cn/zwgkzt/wsbysj/201204/0c63fcfaa2434b97aeb65d84c993b7e7.shtml",
+      "metrics": {
+        "total_institutions": 954389,
+        "hospitals": 21979,
+        "beds": 516.0,
+        "beds_per_1000": 3.81,
+        "health_workers": 861.6,
+        "health_technicians": 620.3,
+        "physicians_assistants": 246.6,
+        "registered_nurses": 224.4,
+        "physicians_per_1000": 1.82,
+        "nurses_per_1000": 1.66,
+        "total_visits": 62.7,
+        "admissions": 15298,
+        "total_health_expenditure": 22496,
+        "health_expenditure_per_capita": 1643.2
+      }
+    },
+    {
+      "year": 2012,
+      "source_url": "https://www.nhc.gov.cn/mohwsbwstjxxzx/s7967/201306/ae0cd153b35d41378964963bf78a017b.shtml",
+      "metrics": {
+        "total_institutions": 950297,
+        "hospitals": 23170,
+        "beds": 572.5,
+        "beds_per_1000": 4.23,
+        "health_workers": 911.9,
+        "health_technicians": 667.9,
+        "physicians_assistants": 261.6,
+        "registered_nurses": 249.7,
+        "total_visits": 68.9,
+        "admissions": 17812,
+        "total_health_expenditure": 28914.4,
+        "health_expenditure_per_capita": 2135.8
+      }
+    },
+    {
+      "year": 2013,
+      "source_url": "https://www.nhc.gov.cn/mohwsbwstjxxzx/s7967/201405/1eefdf0862514e86a87ceec304d5c239.shtml",
+      "metrics": {
+        "total_institutions": 974398,
+        "hospitals": 24709,
+        "beds": 618.2,
+        "beds_per_1000": 4.55,
+        "health_workers": 979.0,
+        "health_technicians": 721.1,
+        "physicians_assistants": 279.5,
+        "registered_nurses": 278.3,
+        "physicians_per_1000": 2.06,
+        "nurses_per_1000": 2.05,
+        "general_practitioners_per_10000": 1.07,
+        "total_visits": 73.1,
+        "admissions": 19215,
+        "total_health_expenditure": 31661.5,
+        "health_expenditure_per_capita": 2326.8
+      }
+    },
+    {
+      "year": 2014,
+      "source_url": "https://www.nhc.gov.cn/guihuaxxs/c100132/201511/e8c1638492e84da68cda31a39002a54c.shtml",
+      "metrics": {
+        "total_institutions": 981432,
+        "hospitals": 25860,
+        "beds": 660.1,
+        "beds_per_1000": 4.84,
+        "health_workers": 1023.4,
+        "health_technicians": 759.0,
+        "physicians_assistants": 289.3,
+        "registered_nurses": 300.4,
+        "physicians_per_1000": 2.12,
+        "nurses_per_1000": 2.20,
+        "total_visits": 76.0,
+        "admissions": 20441,
+        "total_health_expenditure": 35378.9,
+        "health_expenditure_per_capita": 2586.5
+      }
+    },
     {
       "year": 2015,
       "source_url": "https://www.nhc.gov.cn/guihuaxxs/c100136/201607/6acaf0ef0cfe4f21b0b6bc7934a94af6.shtml",
