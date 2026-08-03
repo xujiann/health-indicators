@@ -1,11 +1,15 @@
 import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const html = fs.readFileSync("index.html", "utf8");
-const match = html.match(/const DATA=(\[[\s\S]*?\]);\n/);
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const html = fs.readFileSync(path.join(repoRoot, "index.html"), "utf8");
+const match = html.match(/const DATA=(\[[\s\S]*?\]);\r?\n/);
 if (!match) throw new Error("DATA block not found in index.html");
 
 const data = JSON.parse(match[1]);
-const rawFiles = fs.readdirSync("data")
+const dataDir = path.join(repoRoot, "data");
+const rawFiles = fs.readdirSync(dataDir)
   .filter((file) => file.endsWith(".json"))
   .sort();
 
@@ -35,7 +39,7 @@ function expandRawRecord(record, defaults = {}) {
 }
 
 function expandRawFile(file) {
-  const parsed = JSON.parse(fs.readFileSync(`data/${file}`, "utf8"));
+  const parsed = JSON.parse(fs.readFileSync(path.join(dataDir, file), "utf8"));
   if (Array.isArray(parsed)) return parsed;
   const defaults = {
     source: parsed.source || parsed.kind || file,
