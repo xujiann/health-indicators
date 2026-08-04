@@ -19,12 +19,14 @@
 
   function mount() {
     if (host) return;
+    const searchRow = document.querySelector(".srow");
     const actions = document.querySelector(".view-actions");
-    if (actions) {
+    if (searchRow || actions) {
       const button = document.createElement("button");
-      button.className = "actionbtn"; button.type = "button"; button.textContent = "分析"; button.title = "分析工作台";
+      button.className = searchRow ? "filter-toggle" : "actionbtn"; button.type = "button"; button.textContent = "分析"; button.title = "分析工作台";
       button.onclick = () => open("insights");
-      actions.insertBefore(button, actions.firstChild);
+      if (searchRow) searchRow.insertBefore(button, document.querySelector("#filterToggle"));
+      else actions.insertBefore(button, actions.firstChild);
     }
     host = document.createElement("section");
     host.className = "workbench"; host.id = "workbench"; host.setAttribute("aria-hidden", "true");
