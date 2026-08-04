@@ -19,6 +19,8 @@ const checks = [
   ["Pages 制品复制核心逻辑脚本", /cp\s+app-core\.js\s+_site\//.test(pages)],
   ["Pages 制品复制分析工作台脚本", /cp\s+analysis-workbench\.js\s+_site\//.test(pages)],
   ["Pages 部署依赖质量门禁", /deploy:\s*\r?\n\s+needs:\s*quality/.test(pages)],
+  ["Pull Request 触发质量门禁", /pull_request:\s*\r?\n\s+branches:\s*\[main\]/.test(pages)],
+  ["Pull Request 不执行生产部署", /if:\s*github\.event_name\s*!=\s*['"]pull_request['"]/.test(pages)],
   ["质量门禁运行完整测试", /run:\s*npm test/.test(pages)],
   ["来源巡检基线覆盖全部登记来源", JSON.stringify(registryIds) === JSON.stringify(baselineIds)],
   ["来源巡检具备 Issue 写权限", /issues:\s*write/.test(sourceWatch)],
