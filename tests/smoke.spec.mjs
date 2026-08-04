@@ -77,3 +77,24 @@ test("移动端核心控件不产生水平溢出", async ({ page }) => {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
   expect(overflow).toBeFalsy();
 });
+
+test("覆盖维护页可筛选缺口并下载标准台账", async ({ page, request }) => {
+  const pageErrors = [];
+  page.on("pageerror", (error) => pageErrors.push(error.message));
+  await page.goto("/coverage.html");
+  await expect(page).toHaveTitle(/数据覆盖维护/);
+  await expect(page.locator("tbody tr")).toHaveCount(15);
+  const coverage = await request.get("/data/coverage-report.json");
+  expect(coverage.ok()).toBeTruthy();
+  const report = await coverage.json();
+  await expect(page.locator("#gapKpi")).toHaveText(String(report.summary.matrix_gaps));
+
+  await page.locator("#cityFilter").selectOption("大连市");
+  await expect(page.locator("#gapCount")).toContainText("当前筛选");
+  await expect(page.locator("#gapList .gap").first()).toContainText("大连市");
+
+  const backlog = await request.get("/data/subprov-core-matrix-backlog.csv");
+  expect(backlog.ok()).toBeTruthy();
+  expect(await backlog.text()).toContain("metric_key");
+  expect(pageErrors).toEqual([]);
+});
