@@ -4,10 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:data": "node scripts/update-public-data.mjs && node scripts/build-coverage-report.mjs",
+    "build:workbook": "node scripts/update-public-data.mjs --workbook",
+    "watch:sources": "node scripts/check-official-sources.mjs",
+    "watch:update-baseline": "node scripts/check-official-sources.mjs --update-baseline",
+    "verify:generated": "node scripts/update-public-data.mjs --check && node scripts/build-coverage-report.mjs --check",
     "validate:data": "node scripts/validate-public-data.mjs",
     "validate:release": "node scripts/validate-release-config.mjs",
+    "test:unit": "node --test tests/unit/*.test.mjs",
     "test:browser": "playwright test",
-    "test": "npm run validate:data && npm run validate:release && npm run test:browser"
+    "test": "npm run verify:generated && npm run validate:data && npm run validate:release && npm run test:unit && npm run test:browser"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1"

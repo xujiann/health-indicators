@@ -1,0 +1,3387 @@
+{
+  "schema_version": 1,
+  "definition": {
+    "cities": [
+      "大连市",
+      "成都市",
+      "广州市",
+      "哈尔滨市",
+      "杭州市",
+      "济南市",
+      "南京市",
+      "宁波市",
+      "青岛市",
+      "厦门市",
+      "深圳市",
+      "沈阳市",
+      "武汉市",
+      "西安市",
+      "长春市"
+    ],
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "core_metrics": [
+      "GDP",
+      "人均GDP",
+      "年末常住人口",
+      "年末户籍人口",
+      "城镇化率(常住)",
+      "地方一般公共预算收入",
+      "地方一般公共预算支出"
+    ]
+  },
+  "summary": {
+    "rows": 2701,
+    "matrix_covered": 101,
+    "matrix_expected": 630,
+    "matrix_completeness": 16,
+    "direct_source_rows": 2386,
+    "source_index_rows": 315
+  },
+  "cities": [
+    {
+      "city": "大连市",
+      "covered": 14,
+      "expected": 42,
+      "completeness": 33.3,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 1,
+        "2023": 2,
+        "2024": 6,
+        "2025": 5
+      },
+      "records": 100,
+      "direct_source_rows": 23,
+      "source_index_rows": 77
+    },
+    {
+      "city": "成都市",
+      "covered": 1,
+      "expected": 42,
+      "completeness": 2.4,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 1
+      },
+      "records": 17,
+      "direct_source_rows": 0,
+      "source_index_rows": 17
+    },
+    {
+      "city": "广州市",
+      "covered": 13,
+      "expected": 42,
+      "completeness": 31,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 5,
+        "2024": 7,
+        "2025": 1
+      },
+      "records": 29,
+      "direct_source_rows": 12,
+      "source_index_rows": 17
+    },
+    {
+      "city": "哈尔滨市",
+      "covered": 1,
+      "expected": 42,
+      "completeness": 2.4,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 1
+      },
+      "records": 17,
+      "direct_source_rows": 0,
+      "source_index_rows": 17
+    },
+    {
+      "city": "杭州市",
+      "covered": 1,
+      "expected": 42,
+      "completeness": 2.4,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 1
+      },
+      "records": 17,
+      "direct_source_rows": 0,
+      "source_index_rows": 17
+    },
+    {
+      "city": "济南市",
+      "covered": 11,
+      "expected": 42,
+      "completeness": 26.2,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 6,
+        "2024": 4,
+        "2025": 1
+      },
+      "records": 27,
+      "direct_source_rows": 10,
+      "source_index_rows": 17
+    },
+    {
+      "city": "南京市",
+      "covered": 12,
+      "expected": 42,
+      "completeness": 28.6,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 5,
+        "2024": 6,
+        "2025": 1
+      },
+      "records": 28,
+      "direct_source_rows": 11,
+      "source_index_rows": 17
+    },
+    {
+      "city": "宁波市",
+      "covered": 1,
+      "expected": 42,
+      "completeness": 2.4,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 1
+      },
+      "records": 17,
+      "direct_source_rows": 0,
+      "source_index_rows": 17
+    },
+    {
+      "city": "青岛市",
+      "covered": 1,
+      "expected": 42,
+      "completeness": 2.4,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 1
+      },
+      "records": 17,
+      "direct_source_rows": 0,
+      "source_index_rows": 17
+    },
+    {
+      "city": "厦门市",
+      "covered": 1,
+      "expected": 42,
+      "completeness": 2.4,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 1
+      },
+      "records": 17,
+      "direct_source_rows": 0,
+      "source_index_rows": 17
+    },
+    {
+      "city": "深圳市",
+      "covered": 11,
+      "expected": 42,
+      "completeness": 26.2,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 6,
+        "2024": 4,
+        "2025": 1
+      },
+      "records": 27,
+      "direct_source_rows": 10,
+      "source_index_rows": 17
+    },
+    {
+      "city": "沈阳市",
+      "covered": 20,
+      "expected": 42,
+      "completeness": 47.6,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 7,
+        "2024": 6,
+        "2025": 7
+      },
+      "records": 47,
+      "direct_source_rows": 30,
+      "source_index_rows": 17
+    },
+    {
+      "city": "武汉市",
+      "covered": 12,
+      "expected": 42,
+      "completeness": 28.6,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 6,
+        "2024": 5,
+        "2025": 1
+      },
+      "records": 28,
+      "direct_source_rows": 11,
+      "source_index_rows": 17
+    },
+    {
+      "city": "西安市",
+      "covered": 1,
+      "expected": 42,
+      "completeness": 2.4,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 1
+      },
+      "records": 17,
+      "direct_source_rows": 0,
+      "source_index_rows": 17
+    },
+    {
+      "city": "长春市",
+      "covered": 1,
+      "expected": 42,
+      "completeness": 2.4,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 1
+      },
+      "records": 17,
+      "direct_source_rows": 0,
+      "source_index_rows": 17
+    }
+  ],
+  "gaps": [
+    {
+      "city": "大连市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "大连市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "大连市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "大连市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "大连市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "大连市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "大连市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "大连市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "大连市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "大连市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "大连市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "大连市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "大连市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "大连市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "大连市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "大连市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "大连市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "大连市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "大连市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "大连市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "大连市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "大连市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "大连市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "大连市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "大连市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "大连市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "大连市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "大连市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "成都市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "成都市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "成都市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "成都市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "成都市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "成都市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "成都市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "成都市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "成都市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "成都市",
+      "year": 2023,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2023,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "成都市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "成都市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "成都市",
+      "year": 2024,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2024,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "成都市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "成都市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "成都市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "成都市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "成都市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "成都市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "成都市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "广州市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "广州市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "广州市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "广州市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "广州市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "广州市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "广州市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "广州市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "广州市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "广州市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "广州市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "广州市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "广州市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "广州市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "广州市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "广州市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "广州市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "广州市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "广州市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "广州市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "广州市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "广州市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "广州市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "广州市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "广州市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "广州市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "广州市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "广州市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "广州市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2023,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2023,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2024,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2024,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "哈尔滨市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "杭州市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "杭州市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "杭州市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "杭州市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "杭州市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "杭州市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "杭州市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "杭州市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "杭州市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "杭州市",
+      "year": 2023,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2023,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "杭州市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "杭州市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "杭州市",
+      "year": 2024,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2024,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "杭州市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "杭州市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "杭州市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "杭州市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "杭州市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "杭州市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "杭州市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "济南市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "济南市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "济南市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "济南市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "济南市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "济南市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "济南市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "济南市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "济南市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "济南市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "济南市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "济南市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "济南市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "济南市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "济南市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "济南市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "济南市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "济南市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "济南市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "济南市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "济南市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "济南市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "南京市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "南京市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "南京市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "南京市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "南京市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "南京市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "南京市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "南京市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "南京市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "南京市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "南京市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "南京市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "南京市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "南京市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "南京市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "南京市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "南京市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "南京市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "南京市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "南京市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "南京市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "南京市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "宁波市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "宁波市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "宁波市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "宁波市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "宁波市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "宁波市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "宁波市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "宁波市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "宁波市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "宁波市",
+      "year": 2023,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2023,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "宁波市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "宁波市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "宁波市",
+      "year": 2024,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2024,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "宁波市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "宁波市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "宁波市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "宁波市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "宁波市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "宁波市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "宁波市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "青岛市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "青岛市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "青岛市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "青岛市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "青岛市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "青岛市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "青岛市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "青岛市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "青岛市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "青岛市",
+      "year": 2023,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2023,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "青岛市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "青岛市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "青岛市",
+      "year": 2024,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2024,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "青岛市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "青岛市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "青岛市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "青岛市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "青岛市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "青岛市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "青岛市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "厦门市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "厦门市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "厦门市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "厦门市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "厦门市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "厦门市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "厦门市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "厦门市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "厦门市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "厦门市",
+      "year": 2023,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2023,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "厦门市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "厦门市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "厦门市",
+      "year": 2024,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2024,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "厦门市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "厦门市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "厦门市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "厦门市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "厦门市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "厦门市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "厦门市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "深圳市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "深圳市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "深圳市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "深圳市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "深圳市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "深圳市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "深圳市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "深圳市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "深圳市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "深圳市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "深圳市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "深圳市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "深圳市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "深圳市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "深圳市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "深圳市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "深圳市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "深圳市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "深圳市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "深圳市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "深圳市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "深圳市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "深圳市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "深圳市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "深圳市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "深圳市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "深圳市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "深圳市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "深圳市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "深圳市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "深圳市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "沈阳市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "武汉市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "武汉市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "武汉市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "武汉市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "武汉市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "武汉市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "武汉市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "武汉市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "武汉市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "武汉市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "武汉市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "武汉市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "武汉市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "武汉市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "武汉市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "武汉市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "武汉市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "武汉市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "武汉市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "武汉市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "武汉市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "武汉市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "武汉市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "武汉市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "武汉市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "武汉市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "武汉市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "武汉市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "武汉市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "武汉市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "西安市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "西安市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "西安市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "西安市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "西安市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "西安市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "西安市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "西安市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "西安市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "西安市",
+      "year": 2023,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2023,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "西安市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "西安市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "西安市",
+      "year": 2024,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2024,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "西安市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "西安市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "西安市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "西安市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "西安市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "西安市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "西安市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "长春市",
+      "year": 2020,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2020,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2020,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2020,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2020,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "长春市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "长春市",
+      "year": 2020,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "长春市",
+      "year": 2021,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2021,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2021,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2021,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2021,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "长春市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "长春市",
+      "year": 2021,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "长春市",
+      "year": 2022,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2022,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2022,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2022,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2022,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "长春市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "长春市",
+      "year": 2022,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "长春市",
+      "year": 2023,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2023,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2023,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2023,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2023,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "长春市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "长春市",
+      "year": 2023,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "长春市",
+      "year": 2024,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2024,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2024,
+      "compare_key": "年末常住人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2024,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2024,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "长春市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "长春市",
+      "year": 2024,
+      "compare_key": "地方一般公共预算支出"
+    },
+    {
+      "city": "长春市",
+      "year": 2025,
+      "compare_key": "GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2025,
+      "compare_key": "人均GDP"
+    },
+    {
+      "city": "长春市",
+      "year": 2025,
+      "compare_key": "年末户籍人口"
+    },
+    {
+      "city": "长春市",
+      "year": 2025,
+      "compare_key": "城镇化率(常住)"
+    },
+    {
+      "city": "长春市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算收入"
+    },
+    {
+      "city": "长春市",
+      "year": 2025,
+      "compare_key": "地方一般公共预算支出"
+    }
+  ],
+  "source_index_groups": [
+    {
+      "region": "大连市",
+      "source_url": "https://www.dl.gov.cn/",
+      "rows": 77,
+      "years": [
+        2024,
+        2025
+      ],
+      "compare_keys": [
+        "出院人次",
+        "出院者平均住院日",
+        "次均门诊费用",
+        "次均门诊药费",
+        "次均住院费用",
+        "次均住院药费",
+        "村卫生室数",
+        "二级以上公立医院参与同级检查结果互认比例",
+        "二级以上公立医院开展预约诊疗比例",
+        "二级以上公立医院开展远程医疗服务比例",
+        "公立医院病床使用率",
+        "疾病预防控制中心数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口政府办医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口执业医师数",
+        "每千人口注册护士数",
+        "每万人口全科医生数",
+        "年末常住人口",
+        "全科医生数",
+        "人均预期寿命",
+        "日均住院费用",
+        "入院人次",
+        "三级医院数",
+        "社区卫生服务中心(站)数",
+        "社区卫生服务中心数",
+        "卫生技术人员数",
+        "卫生人员总数",
+        "县级(含县级市)医院数",
+        "乡镇卫生院床位数",
+        "乡镇卫生院数",
+        "医疗卫生机构病床使用率",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数(含村卫生室)",
+        "医师日均担负诊疗人次",
+        "医院数",
+        "执业(助理)医师数",
+        "中医类医疗卫生机构实有床位数",
+        "中医类医疗卫生机构总诊疗量",
+        "中医类医院数",
+        "中医类诊疗量占医疗服务总量(不含村卫生室)比例",
+        "中医药卫生人员总数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "成都市",
+      "source_url": "https://www.chengdu.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "广州市",
+      "source_url": "https://wjw.gz.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "哈尔滨市",
+      "source_url": "https://www.harbin.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "杭州市",
+      "source_url": "https://wsjkw.hangzhou.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "济南市",
+      "source_url": "https://jnmhc.jinan.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "南京市",
+      "source_url": "https://wjw.nanjing.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "宁波市",
+      "source_url": "https://www.ningbo.gov.cn/col/col1229106609/index.html",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "青岛市",
+      "source_url": "https://wsjkw.qingdao.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "厦门市",
+      "source_url": "https://hfpc.xm.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "深圳市",
+      "source_url": "https://wjw.sz.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "沈阳市",
+      "source_url": "https://wjw.shenyang.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "武汉市",
+      "source_url": "https://wjw.wuhan.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "西安市",
+      "source_url": "https://xawjw.xa.gov.cn/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    },
+    {
+      "region": "长春市",
+      "source_url": "https://zwgk.changchun.gov.cn/zcbm/swjw_3974/wjwxxgkml/",
+      "rows": 17,
+      "years": [
+        2025
+      ],
+      "compare_keys": [
+        "出院人数",
+        "公立医院数",
+        "基层医疗卫生机构数",
+        "每千人口卫生技术人员数",
+        "每千人口医疗卫生机构床位数",
+        "每千人口执业(助理)医师数",
+        "每千人口注册护士数",
+        "年末常住人口",
+        "三级医院数",
+        "三甲医院数",
+        "卫生技术人员数",
+        "医疗卫生机构实有床位数",
+        "医疗卫生机构总数",
+        "医院数",
+        "执业(助理)医师数",
+        "注册护士数",
+        "总诊疗人次"
+      ]
+    }
+  ]
+}

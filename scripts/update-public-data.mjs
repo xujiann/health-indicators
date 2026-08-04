@@ -1,14 +1,23 @@
 import fs from "node:fs/promises";
+import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { FileBlob, SpreadsheetFile, Workbook } from "@oai/artifact-tool";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
-const privateRoot = path.resolve(repoRoot, "..", "health-indicators-private");
 const additionsDir = path.join(repoRoot, "data");
+const baseRecordsPath = path.join(additionsDir, "base-public-records.json");
 const publicWorkbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
-const privateWorkbookPath = path.join(privateRoot, "核心指标数据库.xlsx");
+const publicDataScriptPath = path.join(repoRoot, "public-data.js");
+const dataManifestPath = path.join(additionsDir, "public-data-manifest.json");
+const htmlPath = path.join(repoRoot, "index.html");
+
+const headers = [
+  "region_code", "region", "level", "year", "category", "subcategory",
+  "indicator", "nature", "value", "unit", "yoy", "deadline",
+  "responsible", "source", "doc_no", "source_url", "note", "compare_key",
+  "region_tier",
+];
 
 const subprovOfficialSourceIndexes = new Map([
   ["大连市", "https://www.dl.gov.cn/"],
@@ -126,43 +135,6 @@ const nationalMedicalInsuranceMetricDefinitions = {
   cross_province_outpatient_payment: { subcategory: "异地就医", indicator: "门诊费用跨省直接结算基金支付", unit: "亿元" },
   personal_account_mutual_aid_usage: { subcategory: "经办服务", indicator: "职工医保个人账户共济使用金额", unit: "亿元" },
 };
-
-async function assertFileExists(filePath) {
-  try {
-    await fs.access(filePath);
-  } catch {
-    throw new Error(`Required workbook not found: ${filePath}`);
-  }
-  return filePath;
-}
-
-async function fileExists(filePath) {
-  try {
-    await fs.access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function readWorkbookRows(xlsxPath) {
-  const input = await FileBlob.load(xlsxPath);
-  const workbook = await SpreadsheetFile.importXlsx(input);
-  const sheetInfos = (await workbook.inspect({
-    kind: "sheet",
-    include: "name",
-    maxChars: 4000,
-  })).ndjson.trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
-  const preferred = sheetInfos.find((s) => /指标数据|公开指标数据/.test(s.name)) || sheetInfos[sheetInfos.length - 1];
-  const sheet = workbook.worksheets.getItem(preferred.name);
-  const used = sheet.getUsedRange(true);
-  return used.values.filter((row) => row.some((cell) => cell !== null && cell !== ""));
-}
-
-function rowObjects(matrix) {
-  const headers = matrix[0];
-  return matrix.slice(1).map((row) => Object.fromEntries(headers.map((h, i) => [h, row[i] ?? ""])));
-}
 
 function normalizeRecord(record) {
   return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value == null ? "" : value]));
@@ -291,26 +263,7 @@ function sortRecord(a, b) {
   return Number(a.year || 0) - Number(b.year || 0);
 }
 
-function isPublishableSubprov(record) {
-  const text = `${record.category || ""} ${record.source || ""} ${record.indicator || ""}`;
-  if (/医药卫生体制改革|重点工作任务|征求意见稿|十五五规划|疾控规划|卫健规划/.test(text)) return false;
-  return String(record.region_tier || "").startsWith("3");
-}
-
-function isGeneratedNationalHealth(record) {
-  return String(record.region_code || "") === "000000"
-    && String(record.category || "") === "卫生健康"
-    && String(record.responsible || "") === "国家卫生健康委"
-    && String(record.source || "").includes("我国卫生健康事业发展统计公报");
-}
-
-function isGeneratedCrossDomainSeries(record) {
-  const text = `${record.source || ""} ${record.doc_no || ""} ${record.compare_key || ""}`;
-  return String(record.region_code || "") === "000000"
-    && /用户提供图片表|图片长序列|医保数智库长序列|1998年-2025年全国经济人口卫生医保相关数据/.test(text);
-}
-
-function publicizeSubprov(record) {
+export function publicizeSubprov(record) {
   const next = { ...record };
   const restrictionText = `${next.doc_no || ""} ${next.source_url || ""}`;
   if (/内部资料|仅限内部使用|内部文件|注意保存/.test(restrictionText)) {
@@ -347,7 +300,7 @@ function publicizeSubprov(record) {
   return next;
 }
 
-async function loadAdditions() {
+export async function loadAdditions() {
   try {
     const files = (await fs.readdir(additionsDir)).filter((name) => name.endsWith("-additions.json")).sort();
     const additions = [];
@@ -374,7 +327,7 @@ async function loadAdditions() {
   }
 }
 
-function recordKey(record) {
+export function recordKey(record) {
   return [
     record.region_code,
     record.year,
@@ -385,6 +338,7 @@ function recordKey(record) {
 }
 
 async function buildWorkbook(headers, records, outputPath) {
+  const { SpreadsheetFile, Workbook } = await import("@oai/artifact-tool");
   const workbook = Workbook.create();
   const note = workbook.worksheets.add("说明");
   note.getRange("A1").values = [["国家·辽宁·大连 公开指标数据库"]];
@@ -406,14 +360,62 @@ async function buildWorkbook(headers, records, outputPath) {
     wrapText: false,
   };
   dataSheet.getRangeByIndexes(0, 0, values.length, headers.length).format.borders = {
-    preset: "inside",
-    style: "thin",
-    color: "#DDE3EC",
+    insideHorizontal: { style: "thin", color: "#E6EBF1" },
   };
   dataSheet.freezePanes.freezeRows(1);
   dataSheet.getRange("A:S").format.autofitColumns();
   dataSheet.getRange("I:I").format.numberFormat = "#,##0.00";
   dataSheet.showGridLines = false;
+
+  const coverage = workbook.worksheets.add("覆盖概览");
+  const regions = [...new Set(records.map((record) => record.region))].sort((a, b) => a.localeCompare(b, "zh-Hans"));
+  const categories = [...new Set(records.map((record) => record.category))].sort((a, b) => a.localeCompare(b, "zh-Hans"));
+  coverage.getRange("A1:B1").values = [["公开指标数据覆盖概览", ""]];
+  coverage.getRange("A1:B1").format = {
+    fill: "#1F4E79",
+    font: { name: "Microsoft YaHei", bold: true, color: "#FFFFFF", size: 14 },
+  };
+  coverage.getRange("A3:B7").values = [
+    ["指标", "值"],
+    ["总记录数", null],
+    ["最早年度", null],
+    ["最新年度", null],
+    ["来源索引记录", null],
+  ];
+  coverage.getRange("B4").formulas = [[`=COUNTA('公开指标数据'!$A$2:$A$${records.length + 1})`]];
+  coverage.getRange("B5").formulas = [[`=MIN('公开指标数据'!$D$2:$D$${records.length + 1})`]];
+  coverage.getRange("B6").formulas = [[`=MAX('公开指标数据'!$D$2:$D$${records.length + 1})`]];
+  const sourceIndexRecords = records.filter((record) => String(record.note || "").includes("公开来源索引（非单条原文）"));
+  coverage.getRange("D1").values = [["来源索引记录键"]];
+  coverage.getRangeByIndexes(1, 3, sourceIndexRecords.length, 1).values = sourceIndexRecords.map((record) => [
+    `${record.region}|${record.year}|${record.compare_key}`,
+  ]);
+  coverage.getRange("B7").formulas = [[`=COUNTA(D2:D${sourceIndexRecords.length + 1})`]];
+  coverage.getRange("A9:B9").values = [["地区", "记录数"]];
+  coverage.getRangeByIndexes(9, 0, regions.length, 1).values = regions.map((region) => [region]);
+  coverage.getRange("B10").formulas = [[`=COUNTIF('公开指标数据'!$B$2:$B$${records.length + 1},A10)`]];
+  coverage.getRange(`B10:B${regions.length + 9}`).fillDown();
+  const categoryStart = regions.length + 12;
+  coverage.getRange(`A${categoryStart}:B${categoryStart}`).values = [["类别", "记录数"]];
+  coverage.getRangeByIndexes(categoryStart, 0, categories.length, 1).values = categories.map((category) => [category]);
+  coverage.getRange(`B${categoryStart + 1}`).formulas = [[`=COUNTIF('公开指标数据'!$E$2:$E$${records.length + 1},A${categoryStart + 1})`]];
+  coverage.getRange(`B${categoryStart + 1}:B${categoryStart + categories.length}`).fillDown();
+  for (const headerRow of [3, 9, categoryStart]) {
+    coverage.getRange(`A${headerRow}:B${headerRow}`).format = {
+      fill: "#DCE6F1",
+      font: { name: "Microsoft YaHei", bold: true, color: "#1F2937" },
+      borders: { preset: "outside", style: "thin", color: "#B8C4D4" },
+    };
+  }
+  coverage.getRange(`A3:B${categoryStart + categories.length}`).format.font = { name: "Microsoft YaHei", size: 10 };
+  coverage.getRange("B4").format.numberFormat = "#,##0";
+  coverage.getRange("B5:B6").format.numberFormat = "0";
+  coverage.getRange("B7").format.numberFormat = "#,##0";
+  coverage.getRange(`B10:B${regions.length + 9}`).format.numberFormat = "#,##0";
+  coverage.getRange(`B${categoryStart + 1}:B${categoryStart + categories.length}`).format.numberFormat = "#,##0";
+  coverage.getRange("A:B").format.autofitColumns();
+  coverage.freezePanes.freezeRows(1);
+  coverage.showGridLines = false;
 
   const preview = await workbook.render({ sheetName: "公开指标数据", range: "A1:S18", scale: 1, format: "png" });
   const tmpDir = path.join(repoRoot, "tmp");
@@ -423,50 +425,89 @@ async function buildWorkbook(headers, records, outputPath) {
   await output.save(outputPath);
 }
 
+async function writeOrCheck(filePath, content, checkOnly) {
+  let current = "";
+  try {
+    current = await fs.readFile(filePath, "utf8");
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  if (current === content) return false;
+  if (checkOnly) throw new Error(`Generated file is stale: ${path.relative(repoRoot, filePath)}`);
+  await fs.writeFile(filePath, content, "utf8");
+  return true;
+}
+
 async function main() {
-  const publicXlsx = await assertFileExists(publicWorkbookPath);
-  const hasPrivateWorkbook = await fileExists(privateWorkbookPath);
-  const publicRows = await readWorkbookRows(publicXlsx);
-  const privateRows = hasPrivateWorkbook ? await readWorkbookRows(privateWorkbookPath) : publicRows;
-  const headers = publicRows[0];
-  const publicRecords = rowObjects(publicRows).map(normalizeRecord);
-  const privateRecords = rowObjects(privateRows).map(normalizeRecord);
-  const basePublic = publicRecords.filter((record) => !String(record.region_tier || "").startsWith("3")
-    && !isGeneratedNationalHealth(record)
-    && !isGeneratedCrossDomainSeries(record));
-  const subprov = privateRecords.filter(isPublishableSubprov).map(publicizeSubprov);
+  const checkOnly = process.argv.includes("--check");
+  const shouldBuildWorkbook = process.argv.includes("--workbook");
+  const basePublic = JSON.parse(await fs.readFile(baseRecordsPath, "utf8")).map(normalizeRecord);
   const additions = (await loadAdditions()).map((record) => (
     String(record.region_tier || "").startsWith("3") ? publicizeSubprov(record) : record
   ));
   const mergedMap = new Map();
-  [...basePublic, ...subprov, ...additions].map(normalizeRecord).map(publicizeSubprov).forEach((record) => {
+  [...basePublic, ...additions].map(normalizeRecord).map(publicizeSubprov).forEach((record) => {
     mergedMap.set(recordKey(record), record);
   });
   const merged = [...mergedMap.values()].sort(sortRecord);
 
-  await buildWorkbook(headers, merged, publicXlsx);
-
-  const htmlPath = path.join(repoRoot, "index.html");
-  const html = await fs.readFile(htmlPath, "utf8");
   const dataLiteral = JSON.stringify(merged);
-  const dataPattern = /const DATA=\[.*?\];\s*const \$=/s;
-  if (!dataPattern.test(html)) throw new Error("DATA block not found");
-  const nextHtml = html.replace(dataPattern, `const DATA=${dataLiteral};\nconst $=`);
-  if (nextHtml !== html) await fs.writeFile(htmlPath, nextHtml, "utf8");
+  const checksum = crypto.createHash("sha256").update(dataLiteral).digest("hex");
+  const dataScript = `globalThis.HEALTH_INDICATOR_DATA=${dataLiteral};\n`;
+  const manifest = `${JSON.stringify({
+    schema_version: 1,
+    rows: merged.length,
+    fields: headers,
+    sha256: checksum,
+    source_files: ["data/base-public-records.json", "data/*-additions.json"],
+  }, null, 2)}\n`;
+  await writeOrCheck(publicDataScriptPath, dataScript, checkOnly);
+  await writeOrCheck(dataManifestPath, manifest, checkOnly);
 
-  const cityCount = new Set(subprov.map((record) => record.region)).size;
+  const html = await fs.readFile(htmlPath, "utf8");
+  let nextHtml = html.replace(
+    /const DATA=\[[\s\S]*?\];\s*const \$=/,
+    "const DATA=globalThis.HEALTH_INDICATOR_DATA||[];\nconst $=",
+  );
+  if (!nextHtml.includes('<script src="public-data.js"></script>')) {
+    nextHtml = nextHtml.replace(
+      "<script>\nconst DATA=",
+      '<script src="public-data.js"></script>\n<script src="app-core.js"></script>\n<script>\nconst DATA=',
+    );
+  }
+  nextHtml = nextHtml
+    .replace(
+      '<div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div>',
+      '<div class="tabs" aria-label="数据视图"><button type="button" class="tab on" data-m="compare" aria-pressed="true">对比视图</button><button type="button" class="tab" data-m="list" aria-pressed="false">明细列表</button></div>',
+    )
+    .replace(
+      '<input id="q" placeholder="搜索指标、来源、地区、年份或单位，如 床位 2024、GDP、国家医保局…"><span class="count" id="count"></span>',
+      '<input id="q" aria-label="搜索指标" placeholder="搜索指标、来源、地区、年份或单位，如 床位 2024、GDP、国家医保局…"><span class="count" id="count" aria-live="polite"></span>',
+    )
+    .replace(
+      "document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.m===mode));",
+      "document.querySelectorAll('.tab').forEach(x=>{const active=x.dataset.m===mode;x.classList.toggle('on',active);x.setAttribute('aria-pressed',String(active));});",
+    );
+  await writeOrCheck(htmlPath, nextHtml, checkOnly);
+  if (shouldBuildWorkbook && !checkOnly) {
+    await buildWorkbook(headers, merged, publicWorkbookPath);
+  }
+
+  const cityCount = new Set(merged.filter((record) => String(record.region_tier).startsWith("3")).map((record) => record.region)).size;
   console.log(JSON.stringify({
     publicBaseRows: basePublic.length,
-    subprovRows: subprov.length,
     additions: additions.length,
     subprovCities: cityCount,
     mergedRows: merged.length,
-    publicXlsx,
-    subprovSource: hasPrivateWorkbook ? privateWorkbookPath : `${publicXlsx}（公开工作簿回退）`,
+    checksum,
+    workbookBuilt: shouldBuildWorkbook && !checkOnly,
+    checked: checkOnly,
   }, null, 2));
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

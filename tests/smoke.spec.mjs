@@ -38,4 +38,42 @@ test("列表视图与公开工作簿下载入口可达", async ({ page, request 
   const workbook = await request.get("/公开指标数据库.xlsx");
   expect(workbook.ok()).toBeTruthy();
   expect(workbook.headers()["content-type"]).toContain("spreadsheetml");
+
+  const generatedData = await request.get("/public-data.js");
+  expect(generatedData.ok()).toBeTruthy();
+  expect(await generatedData.text()).toContain("HEALTH_INDICATOR_DATA");
+});
+
+test("专题链接可恢复筛选状态并导出当前数据", async ({ page }) => {
+  await page.goto("/index.html#p=insurance");
+  await expect(page.locator("#fCat .chip.on")).toContainText("医疗保障");
+  await expect(page.locator("#fTier .chip.on")).toHaveCount(1);
+  await expect(page.locator("#count")).not.toContainText(/^0 /);
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "导出CSV", exact: true }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/health-indicators-view-.*\.csv$/);
+});
+
+test("键盘可切换视图并关闭分析对话框", async ({ page }) => {
+  await page.goto("/index.html");
+  const listTab = page.getByRole("button", { name: "明细列表", exact: true });
+  await listTab.focus();
+  await page.keyboard.press("Enter");
+  await expect(listTab).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#listView")).toBeVisible();
+
+  await page.getByRole("button", { name: "分析", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "数据分析工作台" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".workbench")).not.toHaveClass(/open/);
+});
+
+test("移动端核心控件不产生水平溢出", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/index.html");
+  await expect(page.getByLabel("搜索指标")).toBeVisible();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
+  expect(overflow).toBeFalsy();
 });

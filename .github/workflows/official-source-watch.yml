@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   check:
@@ -18,10 +19,33 @@ jobs:
       - name: Check official source pages
         run: node scripts/check-official-sources.mjs
 
+      - name: Create or update review issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if [ ! -f tmp/official-source-watch.json ]; then
+            exit 0
+          fi
+          changed=$(node -e "const r=require('./tmp/official-source-watch.json'); process.stdout.write(String(r.summary.changed))")
+          if [ "$changed" -eq 0 ]; then
+            exit 0
+          fi
+          gh label create data-source-watch --color 0E8A16 --description "官方数据源巡检待复核" --force
+          issue=$(gh issue list --state open --label data-source-watch --json number --jq '.[0].number // empty')
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --body-file tmp/official-source-changes.md
+          else
+            gh issue create --title "官方数据源巡检发现变化" --label data-source-watch --body-file tmp/official-source-changes.md
+          fi
+
       - name: Upload watch result
         if: always()
         uses: actions/upload-artifact@v6
         with:
           name: official-source-watch
-          path: tmp/official-source-watch.json
+          path: |
+            tmp/official-source-watch.json
+            tmp/official-source-changes.md
           if-no-files-found: error

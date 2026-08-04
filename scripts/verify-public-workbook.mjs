@@ -5,7 +5,7 @@ import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const workbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
-const htmlPath = path.join(repoRoot, "index.html");
+const dataScriptPath = path.join(repoRoot, "public-data.js");
 const tmpDir = path.join(repoRoot, "tmp");
 const outputDir = path.join(repoRoot, "outputs", "closeout-20260803");
 
@@ -16,19 +16,19 @@ const workbook = await SpreadsheetFile.importXlsx(await FileBlob.load(workbookPa
 const sheetResult = await workbook.inspect({ kind: "sheet", include: "name", maxChars: 4000 });
 const sheets = sheetResult.ndjson.trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
 const sheetNames = sheets.map((sheet) => sheet.name);
-if (!sheetNames.includes("说明") || !sheetNames.includes("公开指标数据")) {
+if (!sheetNames.includes("说明") || !sheetNames.includes("覆盖概览") || !sheetNames.includes("公开指标数据")) {
   throw new Error(`Unexpected worksheet set: ${sheetNames.join(", ")}`);
 }
 
 const dataSheet = workbook.worksheets.getItem("公开指标数据");
 const dataValues = dataSheet.getUsedRange(true).values;
-const html = await fs.readFile(htmlPath, "utf8");
-const match = html.match(/const DATA=(\[[\s\S]*?\]);\r?\n/);
-if (!match) throw new Error("DATA block not found in index.html");
-const htmlRows = JSON.parse(match[1]).length;
+const dataScript = await fs.readFile(dataScriptPath, "utf8");
+const match = dataScript.match(/^globalThis\.HEALTH_INDICATOR_DATA=(\[[\s\S]*\]);\s*$/);
+if (!match) throw new Error("Data block not found in public-data.js");
+const generatedRows = JSON.parse(match[1]).length;
 const workbookRows = dataValues.length - 1;
-if (workbookRows !== htmlRows) {
-  throw new Error(`Workbook/HTML row mismatch: ${workbookRows} vs ${htmlRows}`);
+if (workbookRows !== generatedRows) {
+  throw new Error(`Workbook/generated-data row mismatch: ${workbookRows} vs ${generatedRows}`);
 }
 
 const errorTokens = new Set(["#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"]);
@@ -39,6 +39,7 @@ if (formulaErrors.length) throw new Error(`Formula errors found: ${JSON.stringif
 
 for (const [sheetName, range, fileName] of [
   ["说明", "A1:A4", "workbook-notes-preview.png"],
+  ["覆盖概览", "A1:B36", "workbook-coverage-preview.png"],
   ["公开指标数据", "A1:S18", "workbook-data-preview.png"],
 ]) {
   const preview = await workbook.render({ sheetName, range, scale: 1, format: "png" });
@@ -51,7 +52,7 @@ await (await SpreadsheetFile.exportXlsx(workbook)).save(verifiedOutput);
 console.log(JSON.stringify({
   sheets: sheetNames,
   workbookRows,
-  htmlRows,
+  generatedRows,
   formulaErrors: formulaErrors.length,
   verifiedOutput,
 }, null, 2));

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "mca-aging-development-bulletin",
+      "agency": "民政部、全国老龄办",
+      "topic": "国家老龄事业发展公报",
+      "url": "https://www.mca.gov.cn/n152/n165/c1662004999980012234/attr/456802.pdf",
+      "status": "available",
+      "http_status": 200,
+      "title": "",
+      "content_sha256": "10db7d64da5b01e73f385c9c8f21670eaf411cc4e71d265c37b46a30235a9684",
+      "checked_at": "2026-08-04T03:33:15.018Z"
+    },
+    {
+      "id": "nhc-health-statistics",
+      "agency": "国家卫生健康委",
+      "topic": "卫生健康事业发展统计公报",
+      "url": "https://www.nhc.gov.cn/guihuaxxs/c100133/new_list.shtml",
+      "status": "available",
+      "http_status": 200,
+      "title": "政策文件",
+      "content_sha256": "e3bcabc4c2d77f325d9f35ed907992de7c18c1737778b66c5244415bd19719a4",
+      "checked_at": "2026-08-04T03:33:15.088Z"
+    },
+    {
+      "id": "nhsa-cross-domain-data-vault",
+      "agency": "国家医疗保障局",
+      "topic": "医保数智库全国经济人口卫生医保长序列",
+      "url": "https://www.nhsa.gov.cn/art/2026/7/6/art_257_21309.html",
+      "status": "available",
+      "http_status": 200,
+      "title": "国家医疗保障局 医保数智库 1998年-2025年全国经济人口卫生医保相关数据",
+      "content_sha256": "2d9ec3af180458c19656686bad1ca8f3ae77a3e7c4acf5c4631435615bec3f0b",
+      "checked_at": "2026-08-04T03:33:15.090Z"
+    },
+    {
+      "id": "nbs-national-bulletin",
+      "agency": "国家统计局",
+      "topic": "国民经济和社会发展统计公报",
+      "url": "https://www.stats.gov.cn/sj/zxfb/202602/t20260228_1962662.html",
+      "status": "available",
+      "http_status": 200,
+      "title": "中华人民共和国2025年国民经济和社会发展统计公报 - 国家统计局",
+      "content_sha256": "8278912beb1351d69d11ad32e0b058a55177c54afb004c3bcbc847dd4ced0f0a",
+      "checked_at": "2026-08-04T03:33:15.091Z"
+    },
+    {
+      "id": "nhsa-statistics-express",
+      "agency": "国家医疗保障局",
+      "topic": "医疗保障事业发展统计快报",
+      "url": "https://www.nhsa.gov.cn/art/2026/3/16/art_7_19918.html",
+      "status": "available",
+      "http_status": 200,
+      "title": "国家医疗保障局 统计数据 2025年医疗保障事业发展统计快报",
+      "content_sha256": "3d4c5b024fd57fcd39ef3b34859d8564b0a5e066547fe8c693999bc549a4008c",
+      "checked_at": "2026-08-04T03:33:15.092Z"
+    },
+    {
+      "id": "nhsa-annual-statistics-bulletin",
+      "agency": "国家医疗保障局",
+      "topic": "全国医疗保障事业发展统计公报",
+      "url": "https://www.nhsa.gov.cn/art/2026/7/16/art_7_21451.html",
+      "status": "available",
+      "http_status": 200,
+      "title": "国家医疗保障局 统计数据 2025年全国医疗保障事业发展统计公报",
+      "content_sha256": "14af03ac1c573e5856df81b4b9d91c7e582f4ab4429f6ef5d70718f0c54541ce",
+      "checked_at": "2026-08-04T03:33:15.093Z"
+    },
+    {
+      "id": "ndcpa-disease-control",
+      "agency": "国家疾病预防控制局",
+      "topic": "疾病控制公开统计栏目",
+      "url": "https://www.ndcpa.gov.cn/jbkzzx/c100016/common/list.html",
+      "status": "available",
+      "http_status": 200,
+      "title": "疫情信息",
+      "content_sha256": "633b80b3e341b6197390a2b3f981819becd28da3a2f9dc2bf9fcf8d39fa196a1",
+      "checked_at": "2026-08-04T03:33:15.095Z"
+    }
+  ]
+}

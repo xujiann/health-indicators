@@ -3,14 +3,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const html = fs.readFileSync(path.join(repoRoot, "index.html"), "utf8");
-const match = html.match(/const DATA=(\[[\s\S]*?\]);\r?\n/);
-if (!match) throw new Error("DATA block not found in index.html");
+const dataScript = fs.readFileSync(path.join(repoRoot, "public-data.js"), "utf8");
+const match = dataScript.match(/^globalThis\.HEALTH_INDICATOR_DATA=(\[[\s\S]*\]);\s*$/);
+if (!match) throw new Error("Data block not found in public-data.js");
 
 const data = JSON.parse(match[1]);
 const dataDir = path.join(repoRoot, "data");
 const rawFiles = fs.readdirSync(dataDir)
-  .filter((file) => file.endsWith(".json"))
+  .filter((file) => file === "base-public-records.json" || file.endsWith("-additions.json"))
   .sort();
 
 function expandRawRecord(record, defaults = {}) {

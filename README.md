@@ -20,7 +20,11 @@ GitHub Pages 发布后访问：
 
 ## 数据内容
 
-- `index.html`：可直接托管到 GitHub Pages 的静态查询分析系统，数据已内嵌，离线也可打开。
+- `index.html`、`app-core.js`、`analysis-workbench.js`：可直接托管到 GitHub Pages 的静态查询分析系统；核心计算已经从页面拆出，便于单元测试和复用。
+- `public-data.js`：由版本化原始数据确定性生成的数据脚本。使用脚本形式而不是网络请求，确保通过 `file://` 直接打开时仍可离线查询。
+- `data/base-public-records.json` 与 `data/*-additions.json`：公开数据的唯一事实源；页面数据和 Excel 工作簿均为生成物，不再反向作为更新输入。
+- `data/public-data-manifest.json`：生成数据的行数、字段和 SHA-256 校验信息。
+- `data/coverage-report.json`、`docs/数据覆盖率报告.md`：15 个副省级城市 2020—2025 年核心经济、人口和财政指标覆盖矩阵。
 - `公开指标数据库.xlsx`：结构化公开数据，共 2701 条、19 个字段，包含 2010-2024 年全国卫生健康统计公报核心序列、2022-2024 年公报扩展分类指标、2016-2025 年全国人口老龄化长序列、1998-2025 年国家医保局医保数智库跨领域长序列、2023-2025 年国家医保局年度统计公报与快报专题、2025 年国家统计局卫生资源年度公报快报及 15 个副省级城市对标数据。
 - `data/national-aging-population-additions.json`：民政部、全国老龄办《2025年度国家老龄事业发展公报》图表中的 2016-2025 年全国老龄人口数量、占比和抚养比长序列，归入“人口—人口规模与结构”。
 - `data/national-economy-pop-health-insurance-additions.json`：国家医保局医保数智库公开的 1998-2025 年全国经济、人口、卫生、医保相关长序列数据；空白单元未录入，2025 年按官方说明标记为初步数据。
@@ -53,10 +57,22 @@ GitHub Pages 发布后访问：
 
 ```powershell
 npm ci
+npm run build:data
 npm test
 ```
 
-`npm test` 会先校验内嵌公开数据，再用 Chromium 检查搜索、列表、分析工作台、数据质量筛选和工作簿下载。GitHub Pages 部署必须通过这组门禁；更新数据时还应运行 `node scripts/update-public-data.mjs` 和 `node scripts/verify-public-workbook.mjs`，确认页面与工作簿行数一致并完成逐表渲染检查。
+常用命令：
+
+- `npm run build:data`：从基础数据和补录数据生成 `public-data.js`、清单和覆盖率报告。
+- `npm run verify:generated`：确认已提交生成物与事实源一致；CI 会阻止生成物漂移。
+- `npm run build:workbook`：使用 Codex 工作区提供的 `@oai/artifact-tool` 重建公开工作簿。
+- `node scripts/verify-public-workbook.mjs`：核对工作簿与生成数据行数，并渲染“说明”“覆盖概览”“公开指标数据”三个工作表。
+- `npm run watch:sources`：将当前官方来源与已确认基线比较。
+- `npm run watch:update-baseline`：人工复核后接受当前来源状态为新基线。
+
+`npm test` 会执行生成物校验、数据门禁、发布配置校验、核心逻辑单元测试和 Chromium 端到端测试。浏览器测试覆盖搜索、列表、专题 URL 恢复、CSV 导出、分析工作台键盘关闭、移动端溢出和工作簿下载。GitHub Pages 部署必须通过完整门禁。
+
+工作簿生成使用 Codex 工作区提供的电子表格运行时；普通干净克隆只需 `npm ci && npm run build:data && npm test` 即可完成数据、页面和发布门禁的可复现验证。
 
 ## 重要边界
 
