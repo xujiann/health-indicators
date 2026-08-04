@@ -122,7 +122,7 @@ const backlogHeaders = [
 const backlog = `\uFEFF${[
   backlogHeaders,
   ...gaps.map((gap) => backlogHeaders.map((header) => gap[header] ?? "")),
-].map((row) => row.map(csvCell).join(",")).join("\r\n")}\r\n`;
+].map((row) => row.map(csvCell).join(",")).join("\n")}\n`;
 
 const tableRows = cityRows.map((row) => (
   `| ${row.city} | ${years.map((year) => row.by_year[year]).join(" | ")} | ${row.covered}/${row.expected} | ${row.completeness}% | ${row.direct_source_rows} | ${row.source_index_rows} |`
