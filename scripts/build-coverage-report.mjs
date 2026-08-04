@@ -12,6 +12,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const dataScriptPath = path.join(repoRoot, "public-data.js");
 const jsonPath = path.join(repoRoot, "data", "coverage-report.json");
 const csvPath = path.join(repoRoot, "data", "subprov-core-matrix-backlog.csv");
+const sourceBacklogPath = path.join(repoRoot, "data", "source-index-backlog.csv");
 const markdownPath = path.join(repoRoot, "docs", "数据覆盖率报告.md");
 const htmlPath = path.join(repoRoot, "coverage.html");
 const checkOnly = process.argv.includes("--check");
@@ -53,7 +54,8 @@ const cityRows = cities.map((city) => {
 
 const totalExpected = cities.length * years.length * coreMetrics.length;
 const totalCovered = cityRows.reduce((sum, row) => sum + row.covered, 0);
-const sourceIndexRows = records.filter((record) => String(record.note || "").includes(SOURCE_INDEX_NOTE)).length;
+const sourceIndexRecords = records.filter((record) => String(record.note || "").includes(SOURCE_INDEX_NOTE));
+const sourceIndexRows = sourceIndexRecords.length;
 const gaps = cities.flatMap((city) => years.flatMap((year) => coreMetrics
   .filter((metric) => !recordIds.has(`${city}|${year}|${metric}`))
   .map((compareKey) => {
@@ -67,9 +69,7 @@ const gaps = cities.flatMap((city) => years.flatMap((year) => coreMetrics
       unit: metric.unit,
     };
   })));
-const sourceIndexGroups = Object.values(records
-  .filter((record) => String(record.note || "").includes(SOURCE_INDEX_NOTE))
-  .reduce((groups, record) => {
+const sourceIndexGroups = Object.values(sourceIndexRecords.reduce((groups, record) => {
     const key = `${record.region}|${record.source_url}`;
     const group = groups[key] || {
       region: record.region,
@@ -123,6 +123,31 @@ const backlog = `\uFEFF${[
   backlogHeaders,
   ...gaps.map((gap) => backlogHeaders.map((header) => gap[header] ?? "")),
 ].map((row) => row.map(csvCell).join(",")).join("\n")}\n`;
+const sourceBacklogHeaders = [
+  "record_key", "region", "year", "compare_key", "current_source_url",
+  "source_url", "source", "responsible", "doc_no", "note",
+];
+const sourceBacklog = `\uFEFF${[
+  sourceBacklogHeaders,
+  ...sourceIndexRecords
+    .map((record) => ({
+      record_key: [
+        record.region_code,
+        record.year,
+        record.compare_key,
+        record.nature,
+        record.region_tier,
+      ].join("|"),
+      region: record.region,
+      year: record.year,
+      compare_key: record.compare_key,
+      current_source_url: record.source_url,
+    }))
+    .sort((a, b) => a.region.localeCompare(b.region, "zh-Hans")
+      || Number(b.year) - Number(a.year)
+      || a.compare_key.localeCompare(b.compare_key, "zh-Hans"))
+    .map((row) => sourceBacklogHeaders.map((header) => row[header] ?? "")),
+].map((row) => row.map(csvCell).join(",")).join("\n")}\n`;
 
 const tableRows = cityRows.map((row) => (
   `| ${row.city} | ${years.map((year) => row.by_year[year]).join(" | ")} | ${row.covered}/${row.expected} | ${row.completeness}% | ${row.direct_source_rows} | ${row.source_index_rows} |`
@@ -151,6 +176,8 @@ ${tableRows}
 2. 运行 \`npm run import:subprov -- <补录文件.csv>\` 进行只读预检。
 3. 复核通过后运行 \`npm run import:subprov -- <补录文件.csv> --write\` 写入事实源，再执行 \`npm run build:data && npm test\`。
 4. 完整规则见 \`docs/城市核心指标补录工作流.md\`，可视化维护页见 \`coverage.html\`。
+
+来源索引原文替换使用 \`data/source-index-backlog.csv\` 和 \`npm run import:provenance\`，完整规则见 \`docs/来源索引原文替换工作流.md\`。
 
 ## 维护规则
 
@@ -200,7 +227,7 @@ const coverageHtml = `<!DOCTYPE html>
     <div class="kpi"><b>${totalCovered}/${totalExpected}</b><span>核心矩阵覆盖</span></div>
     <div class="kpi"><b>${report.summary.matrix_completeness}%</b><span>矩阵完整率</span></div>
     <div class="kpi"><b id="gapKpi">${gaps.length}</b><span>待补录单元</span></div>
-    <div class="kpi"><b>${sourceIndexRows}</b><span>仅来源索引记录</span></div>
+    <div class="kpi"><b id="sourceIndexKpi">${sourceIndexRows}</b><span>仅来源索引记录</span></div>
   </section>
   <section class="panel"><h2>城市 × 年度覆盖矩阵</h2><div class="scroll"><table><thead><tr><th>城市</th>${years.map((year) => `<th>${year}</th>`).join("")}<th>合计</th><th>完整率</th></tr></thead><tbody>${cityTableHtml}</tbody></table></div><p class="muted">单元格为该城市该年度已收录核心指标数，满格为 7/7。</p></section>
   <section class="panel">
@@ -213,7 +240,7 @@ const coverageHtml = `<!DOCTYPE html>
     <div class="toolbar"><span id="gapCount" aria-live="polite"></span><a href="docs/城市核心指标补录工作流.md">查看补录工作流</a></div>
     <div class="gap-list" id="gapList"></div>
   </section>
-  <section class="panel"><h2>待替换的来源索引</h2><p class="muted">这些记录指向官方栏目入口，不是单条统计原文；应优先找到并替换为对应公报原文。</p><div class="source-list" id="sourceList"></div></section>
+  <section class="panel"><div class="toolbar"><h2>待替换的来源索引</h2><a class="button" href="data/source-index-backlog.csv" download>下载原文替换台账</a></div><p class="muted">这些记录指向官方栏目入口，不是单条统计原文；应优先找到并替换为对应公报原文。<a href="docs/来源索引原文替换工作流.md">查看替换工作流</a></p><div class="source-list" id="sourceList"></div></section>
 </main>
 <script type="application/json" id="coverageData">${reportJson}</script>
 <script>
@@ -249,6 +276,7 @@ async function writeOrCheck(filePath, content) {
 
 await writeOrCheck(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
 await writeOrCheck(csvPath, backlog);
+await writeOrCheck(sourceBacklogPath, sourceBacklog);
 await writeOrCheck(markdownPath, markdown);
 await writeOrCheck(htmlPath, coverageHtml);
 console.log(JSON.stringify(report.summary, null, 2));

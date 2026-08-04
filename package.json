@@ -7,6 +7,7 @@
     "build:data": "node scripts/update-public-data.mjs && node scripts/build-coverage-report.mjs",
     "build:workbook": "node scripts/update-public-data.mjs --workbook",
     "import:subprov": "node scripts/import-subprov-core-data.mjs",
+    "import:provenance": "node scripts/import-source-provenance.mjs",
     "watch:sources": "node scripts/check-official-sources.mjs",
     "watch:update-baseline": "node scripts/check-official-sources.mjs --update-baseline",
     "verify:generated": "node scripts/update-public-data.mjs --check && node scripts/build-coverage-report.mjs --check",

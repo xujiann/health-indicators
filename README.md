@@ -27,6 +27,7 @@ GitHub Pages 发布后访问：
 - `data/public-data-manifest.json`：生成数据的行数、字段和 SHA-256 校验信息。
 - `coverage.html`、`data/coverage-report.json`、`docs/数据覆盖率报告.md`：15 个副省级城市 2020—2025 年核心经济、人口和财政指标覆盖矩阵及维护页。
 - `data/subprov-core-matrix-backlog.csv`、`docs/城市核心指标补录工作流.md`：可填写的缺口台账和经过严格预检后写入事实源的补录流程。
+- `data/source-index-backlog.csv`、`data/source-provenance-overrides.json`、`docs/来源索引原文替换工作流.md`：来源索引替换台账、独立证据覆盖层和安全替换流程。
 - `公开指标数据库.xlsx`：结构化公开数据，共 2701 条、19 个字段，包含 2010-2024 年全国卫生健康统计公报核心序列、2022-2024 年公报扩展分类指标、2016-2025 年全国人口老龄化长序列、1998-2025 年国家医保局医保数智库跨领域长序列、2023-2025 年国家医保局年度统计公报与快报专题、2025 年国家统计局卫生资源年度公报快报及 15 个副省级城市对标数据。
 - `data/national-aging-population-additions.json`：民政部、全国老龄办《2025年度国家老龄事业发展公报》图表中的 2016-2025 年全国老龄人口数量、占比和抚养比长序列，归入“人口—人口规模与结构”。
 - `data/national-economy-pop-health-insurance-additions.json`：国家医保局医保数智库公开的 1998-2025 年全国经济、人口、卫生、医保相关长序列数据；空白单元未录入，2025 年按官方说明标记为初步数据。
@@ -67,6 +68,7 @@ npm test
 
 - `npm run build:data`：从基础数据和补录数据生成 `public-data.js`、清单和覆盖率报告。
 - `npm run import:subprov -- <补录.csv>`：只读预检副省级城市核心指标补录；人工复核后追加 `--write` 写入事实源。
+- `npm run import:provenance -- <原文替换.csv>`：只读预检来源索引替换；人工复核后追加 `--write` 写入来源证据覆盖层。
 - `npm run verify:generated`：确认已提交生成物与事实源一致；CI 会阻止生成物漂移。
 - `npm run build:workbook`：使用 Codex 工作区提供的 `@oai/artifact-tool` 重建公开工作簿。
 - `node scripts/verify-public-workbook.mjs`：核对工作簿与生成数据行数，并渲染“说明”“覆盖概览”“公开指标数据”三个工作表。

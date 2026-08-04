@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { SOURCE_INDEX_NOTE } from "./lib/subprov-core.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
@@ -10,6 +11,7 @@ const baseRecordsPath = path.join(additionsDir, "base-public-records.json");
 const publicWorkbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
 const publicDataScriptPath = path.join(repoRoot, "public-data.js");
 const dataManifestPath = path.join(additionsDir, "public-data-manifest.json");
+const sourceOverridesPath = path.join(additionsDir, "source-provenance-overrides.json");
 const htmlPath = path.join(repoRoot, "index.html");
 
 const headers = [
@@ -425,6 +427,22 @@ async function buildWorkbook(headers, records, outputPath) {
   await output.save(outputPath);
 }
 
+export function applySourceOverride(record, override) {
+  if (!override) return record;
+  const originalNote = String(record.note || "")
+    .split("；")
+    .filter((part) => part && !part.includes(SOURCE_INDEX_NOTE) && !part.includes("具体指标仍以该地区正式公开材料为准"))
+    .join("；");
+  return normalizeRecord({
+    ...record,
+    source_url: override.source_url,
+    source: override.source,
+    responsible: override.responsible,
+    doc_no: override.doc_no,
+    note: [originalNote, override.note].filter(Boolean).join("；"),
+  });
+}
+
 async function writeOrCheck(filePath, content, checkOnly) {
   let current = "";
   try {
@@ -442,11 +460,48 @@ async function main() {
   const checkOnly = process.argv.includes("--check");
   const shouldBuildWorkbook = process.argv.includes("--workbook");
   const basePublic = JSON.parse(await fs.readFile(baseRecordsPath, "utf8")).map(normalizeRecord);
-  const additions = (await loadAdditions()).map((record) => (
-    String(record.region_tier || "").startsWith("3") ? publicizeSubprov(record) : record
-  ));
+  const additions = (await loadAdditions()).map(normalizeRecord);
+  const sourceOverrides = JSON.parse(await fs.readFile(sourceOverridesPath, "utf8"));
+  if (sourceOverrides.schema_version !== 1 || !Array.isArray(sourceOverrides.overrides)) {
+    throw new Error("Unsupported source provenance overrides");
+  }
+  const rawRecords = [...basePublic, ...additions];
+  const rawByKey = new Map(rawRecords.map((record) => [recordKey(record), record]));
+  const overrideByKey = new Map();
+  for (const override of sourceOverrides.overrides) {
+    if (!override.record_key || overrideByKey.has(override.record_key)) {
+      throw new Error(`Duplicate or missing source override key: ${override.record_key || "—"}`);
+    }
+    const target = rawByKey.get(override.record_key);
+    if (!target) throw new Error(`Source override target not found: ${override.record_key}`);
+    const publishedTarget = publicizeSubprov(target);
+    if (!String(publishedTarget.note || "").includes(SOURCE_INDEX_NOTE)) {
+      throw new Error(`Source override target is not an index record: ${override.record_key}`);
+    }
+    let url;
+    try {
+      url = new URL(override.source_url);
+    } catch {
+      throw new Error(`Invalid source override URL: ${override.record_key}`);
+    }
+    if (
+      !["http:", "https:"].includes(url.protocol)
+      || !(url.hostname === "gov.cn" || url.hostname.endsWith(".gov.cn"))
+      || url.pathname === "/"
+      || /\/(?:index\.html?)?$/i.test(url.pathname)
+      || override.source_url === publishedTarget.source_url
+      || !override.source
+      || !override.responsible
+    ) {
+      throw new Error(`Incomplete source override evidence: ${override.record_key}`);
+    }
+    overrideByKey.set(override.record_key, override);
+  }
   const mergedMap = new Map();
-  [...basePublic, ...additions].map(normalizeRecord).map(publicizeSubprov).forEach((record) => {
+  rawRecords
+    .map((record) => applySourceOverride(record, overrideByKey.get(recordKey(record))))
+    .map(publicizeSubprov)
+    .forEach((record) => {
     mergedMap.set(recordKey(record), record);
   });
   const merged = [...mergedMap.values()].sort(sortRecord);
@@ -459,7 +514,11 @@ async function main() {
     rows: merged.length,
     fields: headers,
     sha256: checksum,
-    source_files: ["data/base-public-records.json", "data/*-additions.json"],
+    source_files: [
+      "data/base-public-records.json",
+      "data/*-additions.json",
+      "data/source-provenance-overrides.json",
+    ],
   }, null, 2)}\n`;
   await writeOrCheck(publicDataScriptPath, dataScript, checkOnly);
   await writeOrCheck(dataManifestPath, manifest, checkOnly);

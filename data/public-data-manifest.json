@@ -25,6 +25,7 @@
   "sha256": "ee1ad69616e15dab5d751a08d401c28f1e89bea9f7d56b13798c27f89b4c1680",
   "source_files": [
     "data/base-public-records.json",
-    "data/*-additions.json"
+    "data/*-additions.json",
+    "data/source-provenance-overrides.json"
   ]
 }

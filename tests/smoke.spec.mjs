@@ -96,5 +96,8 @@ test("覆盖维护页可筛选缺口并下载标准台账", async ({ page, reque
   const backlog = await request.get("/data/subprov-core-matrix-backlog.csv");
   expect(backlog.ok()).toBeTruthy();
   expect(await backlog.text()).toContain("metric_key");
+  const provenanceBacklog = await request.get("/data/source-index-backlog.csv");
+  expect(provenanceBacklog.ok()).toBeTruthy();
+  expect(await provenanceBacklog.text()).toContain("record_key");
   expect(pageErrors).toEqual([]);
 });
