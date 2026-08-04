@@ -365,7 +365,15 @@ async function buildWorkbook(headers, records, outputPath) {
     insideHorizontal: { style: "thin", color: "#E6EBF1" },
   };
   dataSheet.freezePanes.freezeRows(1);
+  dataSheet.freezePanes.freezeColumns(2);
   dataSheet.getRange("A:S").format.autofitColumns();
+  const columnWidths = {
+    A: 12, B: 12, C: 10, D: 8, E: 10, F: 14, G: 34, H: 10, I: 12, J: 10,
+    K: 10, L: 12, M: 18, N: 38, O: 18, P: 52, Q: 54, R: 32, S: 12,
+  };
+  for (const [column, width] of Object.entries(columnWidths)) {
+    dataSheet.getRange(`${column}:${column}`).format.columnWidth = width;
+  }
   dataSheet.getRange("I:I").format.numberFormat = "#,##0.00";
   dataSheet.showGridLines = false;
 

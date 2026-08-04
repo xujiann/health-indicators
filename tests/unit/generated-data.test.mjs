@@ -16,9 +16,23 @@ test("生成数据保持19字段和唯一键", async () => {
     "responsible", "source", "doc_no", "source_url", "note", "compare_key",
     "region_tier",
   ];
-  assert.equal(records.length, 2701);
+  assert.equal(records.length, 2853);
   assert.deepEqual(Object.keys(records[0]), expectedFields);
   assert.equal(new Set(records.map(recordKey)).size, records.length);
+});
+
+test("2023—2025年副省级城市核心矩阵覆盖率不低于80%", async () => {
+  const report = JSON.parse(await fs.readFile(
+    new URL("../../data/coverage-report.json", import.meta.url),
+    "utf8",
+  ));
+  const covered = report.cities.reduce((total, city) => (
+    total + [2023, 2024, 2025].reduce((sum, year) => sum + (city.by_year[year] || 0), 0)
+  ), 0);
+  const expected = 15 * 3 * 7;
+  assert.equal(covered, 252);
+  assert.equal(expected, 315);
+  assert.ok(covered / expected >= 0.8);
 });
 
 test("所有发布记录均有来源且不存在内部标记", () => {

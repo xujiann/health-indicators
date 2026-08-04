@@ -8,9 +8,11 @@ const coverageHtml = fs.readFileSync(path.join(repoRoot, "coverage.html"), "utf8
 const pages = fs.readFileSync(path.join(repoRoot, ".github", "workflows", "pages.yml"), "utf8");
 const sourceWatch = fs.readFileSync(path.join(repoRoot, ".github", "workflows", "official-source-watch.yml"), "utf8");
 const sourceRegistry = JSON.parse(fs.readFileSync(path.join(repoRoot, "docs", "official-source-registry.json"), "utf8"));
+const citySourceRegistry = JSON.parse(fs.readFileSync(path.join(repoRoot, "docs", "subprov-official-source-registry.json"), "utf8"));
 const sourceBaseline = JSON.parse(fs.readFileSync(path.join(repoRoot, "docs", "official-source-baseline.json"), "utf8"));
-const registryIds = sourceRegistry.map((entry) => entry.id).sort();
+const registryIds = [...sourceRegistry, ...citySourceRegistry].map((entry) => entry.id).sort();
 const baselineIds = sourceBaseline.sources.map((entry) => entry.id).sort();
+const cityChannelKeys = new Set(citySourceRegistry.map((entry) => `${entry.region_code}|${entry.channel}`));
 
 const checks = [
   ["主页加载生成数据脚本", /<script\s+src=["']public-data\.js["']><\/script>/.test(html)],
@@ -22,6 +24,8 @@ const checks = [
   ["Pages 制品复制覆盖维护页", /cp\s+coverage\.html\s+_site\//.test(pages)],
   ["覆盖维护页提供标准补录台账", /data\/subprov-core-matrix-backlog\.csv/.test(coverageHtml)],
   ["覆盖维护页提供来源原文替换台账", /data\/source-index-backlog\.csv/.test(coverageHtml)],
+  ["城市来源登记覆盖 15 城 × 3 渠道", citySourceRegistry.length === 45 && cityChannelKeys.size === 45],
+  ["覆盖维护页提供任务批次台账", /data\/subprov-task-batches\.json/.test(coverageHtml)],
   ["Pages 部署依赖质量门禁", /deploy:\s*\r?\n\s+needs:\s*quality/.test(pages)],
   ["Pull Request 触发质量门禁", /pull_request:\s*\r?\n\s+branches:\s*\[main\]/.test(pages)],
   ["Pull Request 不执行生产部署", /if:\s*github\.event_name\s*!=\s*['"]pull_request['"]/.test(pages)],

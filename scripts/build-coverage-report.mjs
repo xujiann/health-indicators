@@ -7,12 +7,19 @@ import {
   SUBPROV_CORE_METRICS,
   SUBPROV_YEARS,
 } from "./lib/subprov-core.mjs";
+import {
+  buildTaskBatches,
+  validateTaskStatuses,
+} from "./lib/subprov-task-batches.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dataScriptPath = path.join(repoRoot, "public-data.js");
 const jsonPath = path.join(repoRoot, "data", "coverage-report.json");
 const csvPath = path.join(repoRoot, "data", "subprov-core-matrix-backlog.csv");
 const sourceBacklogPath = path.join(repoRoot, "data", "source-index-backlog.csv");
+const taskBatchesPath = path.join(repoRoot, "data", "subprov-task-batches.json");
+const taskStatusPath = path.join(repoRoot, "data", "subprov-task-status.json");
+const citySourceRegistryPath = path.join(repoRoot, "docs", "subprov-official-source-registry.json");
 const markdownPath = path.join(repoRoot, "docs", "数据覆盖率报告.md");
 const htmlPath = path.join(repoRoot, "coverage.html");
 const checkOnly = process.argv.includes("--check");
@@ -21,6 +28,8 @@ const script = await fs.readFile(dataScriptPath, "utf8");
 const match = script.match(/^globalThis\.HEALTH_INDICATOR_DATA=(\[[\s\S]*\]);\s*$/);
 if (!match) throw new Error("Unable to parse public-data.js");
 const records = JSON.parse(match[1]);
+const taskStatus = JSON.parse(await fs.readFile(taskStatusPath, "utf8"));
+const citySourceRegistry = JSON.parse(await fs.readFile(citySourceRegistryPath, "utf8"));
 
 const cities = SUBPROV_CITIES.map((city) => city.name);
 const years = SUBPROV_YEARS;
@@ -92,9 +101,12 @@ const sourceIndexGroups = Object.values(sourceIndexRecords.reduce((groups, recor
     compare_keys: [...group.compare_keys].sort((a, b) => a.localeCompare(b, "zh-Hans")),
   }))
   .sort((a, b) => b.rows - a.rows || a.region.localeCompare(b.region, "zh-Hans"));
+const taskBatches = buildTaskBatches(gaps, taskStatus, citySourceRegistry);
+const taskStatusErrors = validateTaskStatuses(taskStatus, taskBatches);
+if (taskStatusErrors.length) throw new Error(taskStatusErrors.join("\n"));
 
 const report = {
-  schema_version: 2,
+  schema_version: 3,
   definition: { cities, years, core_metrics: coreMetrics },
   summary: {
     rows: records.length,
@@ -107,7 +119,21 @@ const report = {
   },
   cities: cityRows,
   gaps,
+  task_batches: taskBatches,
   source_index_groups: sourceIndexGroups,
+};
+const taskBatchPayload = {
+  schema_version: 1,
+  generated_at: null,
+  summary: {
+    batches: taskBatches.length,
+    missing_cells: gaps.length,
+    by_status: Object.fromEntries(["pending", "found", "reviewed", "imported"].map((status) => [
+      status,
+      taskBatches.filter((task) => task.status === status).length,
+    ])),
+  },
+  tasks: taskBatches,
 };
 
 function csvCell(value) {
@@ -148,6 +174,7 @@ const sourceBacklog = `\uFEFF${[
       || a.compare_key.localeCompare(b.compare_key, "zh-Hans"))
     .map((row) => sourceBacklogHeaders.map((header) => row[header] ?? "")),
 ].map((row) => row.map(csvCell).join(",")).join("\n")}\n`;
+const taskBatchJson = `${JSON.stringify(taskBatchPayload, null, 2)}\n`;
 
 const tableRows = cityRows.map((row) => (
   `| ${row.city} | ${years.map((year) => row.by_year[year]).join(" | ")} | ${row.covered}/${row.expected} | ${row.completeness}% | ${row.direct_source_rows} | ${row.source_index_rows} |`
@@ -174,8 +201,9 @@ ${tableRows}
 
 1. 在 \`data/subprov-core-matrix-backlog.csv\` 中填写待补录行的 \`value\`、\`source_url\` 和 \`responsible\`；可按需填写来源标题、文号和备注。
 2. 运行 \`npm run import:subprov -- <补录文件.csv>\` 进行只读预检。
-3. 复核通过后运行 \`npm run import:subprov -- <补录文件.csv> --write\` 写入事实源，再执行 \`npm run build:data && npm test\`。
-4. 完整规则见 \`docs/城市核心指标补录工作流.md\`，可视化维护页见 \`coverage.html\`。
+3. 复核通过后运行 \`npm run import:subprov -- <补录文件.csv> --apply\`，以事务方式写入事实源、重建并执行全量测试；任一步失败都会自动回滚。
+4. 缺口已按城市、年度和推荐公报聚合到 \`data/subprov-task-batches.json\`，可在 \`coverage.html\` 按优先级和状态维护。
+5. 完整规则见 \`docs/城市核心指标补录工作流.md\`。
 
 来源索引原文替换使用 \`data/source-index-backlog.csv\` 和 \`npm run import:provenance\`，完整规则见 \`docs/来源索引原文替换工作流.md\`。
 
@@ -240,6 +268,16 @@ const coverageHtml = `<!DOCTYPE html>
     <div class="toolbar"><span id="gapCount" aria-live="polite"></span><a href="docs/城市核心指标补录工作流.md">查看补录工作流</a></div>
     <div class="gap-list" id="gapList"></div>
   </section>
+  <section class="panel">
+    <div class="toolbar"><h2>城市 × 年度任务批次</h2><a class="button" href="data/subprov-task-batches.json" download>下载任务批次</a></div>
+    <p class="muted">每个批次对应同一城市、同一年度和一份优先统计公报；状态由 <code>data/subprov-task-status.json</code> 维护。</p>
+    <div class="filters">
+      <label>任务状态<select id="taskStatusFilter"><option value="">全部状态</option><option value="pending">待查找</option><option value="found">已找到</option><option value="reviewed">已复核</option><option value="imported">已入库</option></select></label>
+      <label>任务优先级<select id="taskPriorityFilter"><option value="">全部优先级</option><option>P0</option><option>P1</option><option>P2</option></select></label>
+    </div>
+    <div class="toolbar"><span id="taskCount" aria-live="polite"></span></div>
+    <div class="gap-list" id="taskList"></div>
+  </section>
   <section class="panel"><div class="toolbar"><h2>待替换的来源索引</h2><a class="button" href="data/source-index-backlog.csv" download>下载原文替换台账</a></div><p class="muted">这些记录指向官方栏目入口，不是单条统计原文；应优先找到并替换为对应公报原文。<a href="docs/来源索引原文替换工作流.md">查看替换工作流</a></p><div class="source-list" id="sourceList"></div></section>
 </main>
 <script type="application/json" id="coverageData">${reportJson}</script>
@@ -256,6 +294,14 @@ function drawGaps(){
 }
 [city,year,metric].forEach(control=>control.addEventListener("change",drawGaps));
 document.querySelector("#sourceList").innerHTML=report.source_index_groups.length?report.source_index_groups.map(group=>'<div class="source"><b>'+esc(group.region)+' · '+group.rows+' 条</b><div class="muted">'+group.years.join("、")+' · '+group.compare_keys.map(esc).join("、")+'</div><a target="_blank" rel="noopener" href="'+esc(group.source_url)+'">'+esc(group.source_url)+'</a></div>').join(""):'<div class="empty">没有待替换的来源索引</div>';
+const taskStatusFilter=document.querySelector("#taskStatusFilter"),taskPriorityFilter=document.querySelector("#taskPriorityFilter"),taskList=document.querySelector("#taskList"),taskCount=document.querySelector("#taskCount");
+function drawTasks(){
+  const rows=report.task_batches.filter(row=>(!taskStatusFilter.value||row.status===taskStatusFilter.value)&&(!taskPriorityFilter.value||row.priority===taskPriorityFilter.value));
+  taskCount.textContent="当前 "+rows.length+" 个批次";
+  taskList.innerHTML=rows.length?rows.map(row=>'<div class="gap"><b>'+esc(row.priority)+' · '+esc(row.city)+' · '+row.year+'</b><span>'+esc(row.status)+' · 缺 '+row.expected_impact+' 项 · '+row.missing_metrics.map(item=>esc(item.compare_key)).join("、")+'</span></div>').join(""):'<div class="empty">当前条件下没有任务</div>';
+}
+[taskStatusFilter,taskPriorityFilter].forEach(control=>control.addEventListener("change",drawTasks));
+drawTasks();
 drawGaps();
 </script>
 </body>
@@ -277,6 +323,7 @@ async function writeOrCheck(filePath, content) {
 await writeOrCheck(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
 await writeOrCheck(csvPath, backlog);
 await writeOrCheck(sourceBacklogPath, sourceBacklog);
+await writeOrCheck(taskBatchesPath, taskBatchJson);
 await writeOrCheck(markdownPath, markdown);
 await writeOrCheck(htmlPath, coverageHtml);
 console.log(JSON.stringify(report.summary, null, 2));

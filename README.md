@@ -67,13 +67,16 @@ npm test
 常用命令：
 
 - `npm run build:data`：从基础数据和补录数据生成 `public-data.js`、清单和覆盖率报告。
-- `npm run import:subprov -- <补录.csv>`：只读预检副省级城市核心指标补录；人工复核后追加 `--write` 写入事实源。
-- `npm run import:provenance -- <原文替换.csv>`：只读预检来源索引替换；人工复核后追加 `--write` 写入来源证据覆盖层。
+- `npm run import:subprov -- <补录.csv>`：只读预检副省级城市核心指标补录；复核后追加 `--apply`，以事务方式写入事实源、重建并执行全量测试，失败时自动回滚。
+- `npm run import:provenance -- <原文替换.csv>`：只读预检来源索引替换；复核后追加 `--apply`，以同样的事务方式写入来源证据覆盖层。`--write` 仅保留为兼容别名。
 - `npm run verify:generated`：确认已提交生成物与事实源一致；CI 会阻止生成物漂移。
 - `npm run build:workbook`：使用 Codex 工作区提供的 `@oai/artifact-tool` 重建公开工作簿。
 - `node scripts/verify-public-workbook.mjs`：核对工作簿与生成数据行数，并渲染“说明”“覆盖概览”“公开指标数据”三个工作表。
-- `npm run watch:sources`：将当前官方来源与已确认基线比较。
+- `npm run watch:sources`：巡检国家级及 15 城统计、财政、卫生共 52 个官方来源，将当前状态与已确认基线比较；站点不可达会记录到巡检报告，但不阻断普通构建。
+- `node scripts/check-official-sources.mjs --strict`：严格巡检；任一来源不可达即返回失败，适用于网络条件稳定的定时任务。
 - `npm run watch:update-baseline`：人工复核后接受当前来源状态为新基线。
+
+`coverage.html` 同时提供“城市 × 年度”任务批次台账，可按优先级和 `pending / found / reviewed / imported` 状态筛选；状态保存在 `data/subprov-task-status.json`，任务来源入口来自 `docs/subprov-official-source-registry.json`。
 
 `npm test` 会执行生成物校验、数据门禁、发布配置校验、核心逻辑单元测试和 Chromium 端到端测试。浏览器测试覆盖搜索、列表、专题 URL 恢复、CSV 导出、分析工作台键盘关闭、移动端溢出和工作簿下载。GitHub Pages 部署必须通过完整门禁。
 

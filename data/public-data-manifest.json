@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rows": 2701,
+  "rows": 2853,
   "fields": [
     "region_code",
     "region",
@@ -22,7 +22,7 @@
     "compare_key",
     "region_tier"
   ],
-  "sha256": "ee1ad69616e15dab5d751a08d401c28f1e89bea9f7d56b13798c27f89b4c1680",
+  "sha256": "945c946991677dcd2ff4a014c13837c92a7071020f11d820740bb6ffbe201b0c",
   "source_files": [
     "data/base-public-records.json",
     "data/*-additions.json",

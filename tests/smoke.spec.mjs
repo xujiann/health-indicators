@@ -99,5 +99,14 @@ test("覆盖维护页可筛选缺口并下载标准台账", async ({ page, reque
   const provenanceBacklog = await request.get("/data/source-index-backlog.csv");
   expect(provenanceBacklog.ok()).toBeTruthy();
   expect(await provenanceBacklog.text()).toContain("record_key");
+  const taskBatches = await request.get("/data/subprov-task-batches.json");
+  expect(taskBatches.ok()).toBeTruthy();
+  const taskPayload = await taskBatches.json();
+  const tasks = taskPayload.tasks || taskPayload;
+  await expect(page.locator("#taskCount")).toHaveText(`当前 ${tasks.length} 个批次`);
+  await page.locator("#taskPriorityFilter").selectOption("P0");
+  await expect(page.locator("#taskCount")).toHaveText(`当前 ${tasks.filter((task) => task.priority === "P0").length} 个批次`);
+  await page.locator("#taskStatusFilter").selectOption("found");
+  await expect(page.locator("#taskList")).toContainText("当前条件下没有任务");
   expect(pageErrors).toEqual([]);
 });

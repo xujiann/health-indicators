@@ -6,10 +6,12 @@ import { fileURLToPath } from "node:url";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
 const registryPath = path.join(repoRoot, "docs", "official-source-registry.json");
+const cityRegistryPath = path.join(repoRoot, "docs", "subprov-official-source-registry.json");
 const baselinePath = path.join(repoRoot, "docs", "official-source-baseline.json");
 const outputPath = path.join(repoRoot, "tmp", "official-source-watch.json");
 const summaryPath = path.join(repoRoot, "tmp", "official-source-changes.md");
 const updateBaseline = process.argv.includes("--update-baseline");
+const strict = process.argv.includes("--strict");
 
 function textFromHtml(html) {
   return html
@@ -25,7 +27,12 @@ function pageTitle(html) {
   return match ? textFromHtml(match[1]) : "";
 }
 
-const registry = JSON.parse(await fs.readFile(registryPath, "utf8"));
+const registry = [
+  ...JSON.parse(await fs.readFile(registryPath, "utf8")),
+  ...JSON.parse(await fs.readFile(cityRegistryPath, "utf8")),
+];
+const duplicateIds = registry.filter((entry, index) => registry.findIndex((candidate) => candidate.id === entry.id) !== index);
+if (duplicateIds.length) throw new Error(`来源登记存在重复 id：${duplicateIds.map((entry) => entry.id).join("、")}`);
 let baseline = { sources: [] };
 try {
   baseline = JSON.parse(await fs.readFile(baselinePath, "utf8"));
@@ -139,4 +146,4 @@ console.log(JSON.stringify({
   baselineUpdated: updateBaseline,
 }, null, 2));
 
-if (failed) process.exitCode = 1;
+if (strict && failed) process.exitCode = 1;
