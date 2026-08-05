@@ -28,7 +28,7 @@ jobs:
           if [ ! -f tmp/official-source-watch.json ]; then
             exit 0
           fi
-          changed=$(node -e "const r=require('./tmp/official-source-watch.json'); process.stdout.write(String(r.summary.changed))")
+          changed=$(node -e "const r=require('./tmp/official-source-watch.json'); process.stdout.write(String(r.summary.actionable_changed))")
           if [ "$changed" -eq 0 ]; then
             exit 0
           fi

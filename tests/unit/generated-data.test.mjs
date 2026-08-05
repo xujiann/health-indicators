@@ -30,8 +30,12 @@ test("2023—2025年副省级城市核心矩阵覆盖率不低于80%", async () 
     total + [2023, 2024, 2025].reduce((sum, year) => sum + (city.by_year[year] || 0), 0)
   ), 0);
   const expected = 15 * 3 * 7;
+  assert.equal(report.schema_version, 4);
   assert.equal(covered, 252);
   assert.equal(expected, 315);
+  assert.equal(report.summary.recent_matrix_covered, covered);
+  assert.equal(report.summary.recent_matrix_expected, expected);
+  assert.equal(report.summary.recent_matrix_completeness, 80);
   assert.ok(covered / expected >= 0.8);
 });
 

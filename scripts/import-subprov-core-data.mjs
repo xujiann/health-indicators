@@ -8,10 +8,15 @@ import {
   validateIntakeRows,
 } from "./lib/subprov-core-import.mjs";
 import { applyFileTransaction } from "./lib/file-transaction.mjs";
-import { summarizeBatchImpact } from "./lib/subprov-task-batches.mjs";
+import {
+  findCompletedTaskIds,
+  summarizeBatchImpact,
+  updateTaskStatusPayload,
+} from "./lib/subprov-task-batches.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const destination = path.join(repoRoot, "data", "subprov-core-matrix-additions.json");
+const taskStatusPath = path.join(repoRoot, "data", "subprov-task-status.json");
 
 function usage() {
   console.log("用法：node scripts/import-subprov-core-data.mjs <补录.csv|补录.json> [--apply|--write]");
@@ -57,18 +62,22 @@ async function main() {
   }
   const payload = mergeIntoPayload(await readExisting(), result.accepted);
   let taskBatches = [];
+  let coverageBatches = [];
   try {
     const coverage = JSON.parse(await fs.readFile(path.join(repoRoot, "data", "coverage-report.json"), "utf8"));
-    taskBatches = summarizeBatchImpact(result.accepted, coverage.task_batches || []);
+    coverageBatches = coverage.task_batches || [];
+    taskBatches = summarizeBatchImpact(result.accepted, coverageBatches);
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
   }
+  const completedTaskIds = findCompletedTaskIds(result.accepted, coverageBatches);
   const preview = {
     input_rows: rows.length,
     accepted_rows: result.accepted.length,
     blank_backlog_rows: result.blank,
     projected_matrix_delta: result.accepted.length,
     impacted_task_batches: taskBatches,
+    auto_imported_task_batches: completedTaskIds,
     mode: apply ? "transaction-apply" : "preview",
     destination: path.relative(repoRoot, destination),
   };
@@ -84,10 +93,30 @@ async function main() {
       "docs/数据覆盖率报告.md",
       "coverage.html",
     ].map((relative) => path.join(repoRoot, relative));
+    const writes = [{
+      filePath: destination,
+      content: `${JSON.stringify(payload, null, 2)}\n`,
+    }];
+    if (completedTaskIds.length) {
+      let nextStatus = JSON.parse(await fs.readFile(taskStatusPath, "utf8"));
+      const now = new Date().toISOString();
+      for (const taskId of completedTaskIds) {
+        nextStatus = updateTaskStatusPayload(nextStatus, coverageBatches, {
+          taskId,
+          status: "imported",
+          force: true,
+          now,
+          note: "补录事务完成后自动归档",
+        }).payload;
+      }
+      writes.push({
+        filePath: taskStatusPath,
+        content: `${JSON.stringify(nextStatus, null, 2)}\n`,
+      });
+    }
     await applyFileTransaction({
       repoRoot,
-      destination,
-      content: `${JSON.stringify(payload, null, 2)}\n`,
+      writes,
       generatedPaths,
     });
     console.log(JSON.stringify({ applied: true, rolled_back: false }, null, 2));

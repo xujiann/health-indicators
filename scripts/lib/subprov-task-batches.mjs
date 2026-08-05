@@ -1,4 +1,6 @@
-const VALID_STATUSES = new Set(["pending", "found", "reviewed", "imported"]);
+export const TASK_STATUSES = ["pending", "found", "reviewed", "imported"];
+const VALID_STATUSES = new Set(TASK_STATUSES);
+const STATUS_INDEX = new Map(TASK_STATUSES.map((status, index) => [status, index]));
 
 export function makeTaskId(regionCode, year) {
   return `${regionCode}-${year}`;
@@ -63,6 +65,48 @@ export function validateTaskStatuses(statusPayload, batches) {
   return errors;
 }
 
+export function updateTaskStatusPayload(statusPayload, batches, {
+  taskId,
+  status,
+  assignee = "",
+  note = "",
+  force = false,
+  now = new Date().toISOString(),
+}) {
+  if (!VALID_STATUSES.has(status)) throw new Error(`无效任务状态：${status}`);
+  const task = batches.find((entry) => entry.id === taskId);
+  const existing = statusPayload.tasks?.[taskId];
+  if (!task && !existing) throw new Error(`任务不存在：${taskId}`);
+  const previousStatus = existing?.status || "pending";
+  if (!VALID_STATUSES.has(previousStatus)) throw new Error(`任务 ${taskId} 的现有状态无效：${previousStatus}`);
+  const delta = STATUS_INDEX.get(status) - STATUS_INDEX.get(previousStatus);
+  if (!force && (delta < 0 || delta > 1)) {
+    throw new Error(`不允许从 ${previousStatus} 直接变更为 ${status}；按顺序推进，或使用 --force`);
+  }
+  const next = {
+    schema_version: 1,
+    updated_at: now,
+    tasks: { ...(statusPayload.tasks || {}) },
+  };
+  next.tasks[taskId] = {
+    status,
+    ...(assignee.trim() ? { assignee: assignee.trim() } : existing?.assignee ? { assignee: existing.assignee } : {}),
+    ...(note.trim() ? { note: note.trim() } : existing?.note ? { note: existing.note } : {}),
+    updated_at: now,
+  };
+  return {
+    payload: next,
+    change: {
+      id: taskId,
+      city: task?.city || null,
+      year: task?.year || null,
+      previous_status: previousStatus,
+      next_status: status,
+      forced: force,
+    },
+  };
+}
+
 export function summarizeBatchImpact(acceptedRows, batches) {
   const accepted = new Set(acceptedRows.map((row) => `${row.region_code}-${row.year}`));
   return batches
@@ -74,4 +118,10 @@ export function summarizeBatchImpact(acceptedRows, batches) {
       current_missing: batch.expected_impact,
       accepted_rows: acceptedRows.filter((row) => `${row.region_code}-${row.year}` === batch.id).length,
     }));
+}
+
+export function findCompletedTaskIds(acceptedRows, batches) {
+  return summarizeBatchImpact(acceptedRows, batches)
+    .filter((batch) => batch.accepted_rows === batch.current_missing)
+    .map((batch) => batch.id);
 }

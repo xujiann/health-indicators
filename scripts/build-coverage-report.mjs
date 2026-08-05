@@ -33,6 +33,7 @@ const citySourceRegistry = JSON.parse(await fs.readFile(citySourceRegistryPath, 
 
 const cities = SUBPROV_CITIES.map((city) => city.name);
 const years = SUBPROV_YEARS;
+const recentYears = years.filter((year) => year >= 2023);
 const metricEntries = Object.entries(SUBPROV_CORE_METRICS);
 const coreMetrics = metricEntries.map(([, metric]) => metric.compare_key);
 const metricByCompareKey = new Map(metricEntries.map(([key, metric]) => [metric.compare_key, { key, ...metric }]));
@@ -49,11 +50,16 @@ const cityRows = cities.map((city) => {
   }
   const cityRecords = records.filter((record) => record.region === city);
   const sourceIndexRows = cityRecords.filter((record) => String(record.note || "").includes(SOURCE_INDEX_NOTE)).length;
+  const recentCovered = recentYears.reduce((sum, year) => sum + byYear[year], 0);
+  const recentExpected = recentYears.length * coreMetrics.length;
   return {
     city,
     covered,
     expected: years.length * coreMetrics.length,
     completeness: Number((covered / (years.length * coreMetrics.length) * 100).toFixed(1)),
+    recent_covered: recentCovered,
+    recent_expected: recentExpected,
+    recent_completeness: Number((recentCovered / recentExpected * 100).toFixed(1)),
     by_year: byYear,
     records: cityRecords.length,
     direct_source_rows: cityRecords.length - sourceIndexRows,
@@ -63,6 +69,8 @@ const cityRows = cities.map((city) => {
 
 const totalExpected = cities.length * years.length * coreMetrics.length;
 const totalCovered = cityRows.reduce((sum, row) => sum + row.covered, 0);
+const recentExpected = cities.length * recentYears.length * coreMetrics.length;
+const recentCovered = cityRows.reduce((sum, row) => sum + row.recent_covered, 0);
 const sourceIndexRecords = records.filter((record) => String(record.note || "").includes(SOURCE_INDEX_NOTE));
 const sourceIndexRows = sourceIndexRecords.length;
 const gaps = cities.flatMap((city) => years.flatMap((year) => coreMetrics
@@ -106,14 +114,18 @@ const taskStatusErrors = validateTaskStatuses(taskStatus, taskBatches);
 if (taskStatusErrors.length) throw new Error(taskStatusErrors.join("\n"));
 
 const report = {
-  schema_version: 3,
-  definition: { cities, years, core_metrics: coreMetrics },
+  schema_version: 4,
+  definition: { cities, years, recent_years: recentYears, core_metrics: coreMetrics },
   summary: {
     rows: records.length,
     matrix_covered: totalCovered,
     matrix_expected: totalExpected,
     matrix_gaps: gaps.length,
     matrix_completeness: Number((totalCovered / totalExpected * 100).toFixed(1)),
+    recent_matrix_covered: recentCovered,
+    recent_matrix_expected: recentExpected,
+    recent_matrix_gaps: recentExpected - recentCovered,
+    recent_matrix_completeness: Number((recentCovered / recentExpected * 100).toFixed(1)),
     direct_source_rows: records.length - sourceIndexRows,
     source_index_rows: sourceIndexRows,
   },
@@ -177,7 +189,7 @@ const sourceBacklog = `\uFEFF${[
 const taskBatchJson = `${JSON.stringify(taskBatchPayload, null, 2)}\n`;
 
 const tableRows = cityRows.map((row) => (
-  `| ${row.city} | ${years.map((year) => row.by_year[year]).join(" | ")} | ${row.covered}/${row.expected} | ${row.completeness}% | ${row.direct_source_rows} | ${row.source_index_rows} |`
+  `| ${row.city} | ${years.map((year) => row.by_year[year]).join(" | ")} | ${row.recent_covered}/${row.recent_expected} | ${row.covered}/${row.expected} | ${row.completeness}% | ${row.direct_source_rows} | ${row.source_index_rows} |`
 )).join("\n");
 const markdown = `# 数据覆盖率报告
 
@@ -187,14 +199,15 @@ const markdown = `# 数据覆盖率报告
 
 - 当前公开记录：${records.length} 条
 - 核心矩阵覆盖：${totalCovered}/${totalExpected}，完整率 ${report.summary.matrix_completeness}%
+- 近期核心矩阵（${recentYears[0]}—${recentYears.at(-1)}）：${recentCovered}/${recentExpected}，完整率 ${report.summary.recent_matrix_completeness}%
 - 待补录单元：${gaps.length} 个
 - 单条或明确原文记录：${report.summary.direct_source_rows} 条
 - 仅来源索引记录：${sourceIndexRows} 条
 
 ## 城市覆盖
 
-| 城市 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 合计 | 完整率 | 原文记录 | 来源索引 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 城市 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 近期 | 合计 | 完整率 | 原文记录 | 来源索引 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 ${tableRows}
 
 ## 补录入口
@@ -226,6 +239,7 @@ function escapeHtml(value) {
 const cityTableHtml = cityRows.map((row) => `<tr>
   <th scope="row">${escapeHtml(row.city)}</th>
   ${years.map((year) => `<td data-count="${row.by_year[year]}">${row.by_year[year]}/7</td>`).join("")}
+  <td><strong>${row.recent_covered}/${row.recent_expected}</strong></td>
   <td><strong>${row.covered}/${row.expected}</strong></td>
   <td>${row.completeness}%</td>
 </tr>`).join("\n");
@@ -240,11 +254,11 @@ const coverageHtml = `<!DOCTYPE html>
 :root{--ink:#17202e;--muted:#667085;--line:#dce3ec;--bg:#f4f6f9;--panel:#fff;--brand:#1f4e79;--soft:#eaf1f7;--warn:#a85c00}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei","PingFang SC",sans-serif;line-height:1.55}
 .wrap{width:min(1180px,100%);margin:auto;padding:18px}.nav{display:flex;gap:8px;justify-content:flex-end;margin-bottom:14px}.nav a,.button{display:inline-flex;align-items:center;min-height:38px;padding:0 13px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--brand);font-weight:700;text-decoration:none}
-.hero,.panel,.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(20,40,70,.05)}.hero{padding:24px}.hero h1{margin:4px 0 7px;font-size:29px}.hero p,.muted{color:var(--muted)}.hero p{margin:0}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.kpi{padding:16px}.kpi b{display:block;font-size:27px;color:var(--brand)}.kpi span{font-size:13px;color:var(--muted)}
+.hero,.panel,.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(20,40,70,.05)}.hero{padding:24px}.hero h1{margin:4px 0 7px;font-size:29px}.hero p,.muted{color:var(--muted)}.hero p{margin:0}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0}.kpi{padding:16px}.kpi b{display:block;font-size:27px;color:var(--brand)}.kpi span{font-size:13px;color:var(--muted)}
 .panel{padding:18px;margin-top:12px}.panel h2{font-size:18px;margin:0 0 12px}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}th,td{text-align:left;border-bottom:1px solid #e8edf3;padding:9px}thead th{background:#f6f8fb;color:#475467}td[data-count="0"]{color:#b42318;background:#fff4f2}td[data-count="7"]{color:#067647;background:#ecfdf3}
 .filters{display:grid;grid-template-columns:repeat(3,minmax(160px,1fr));gap:9px;margin-bottom:12px}label{font-size:12px;color:var(--muted)}select,input{display:block;width:100%;margin-top:4px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:9px;font:14px inherit;color:var(--ink)}
 .gap-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}.gap{border:1px solid var(--line);border-radius:7px;padding:10px;background:#fff}.gap b{display:block;font-size:13px}.gap span{font-size:12px;color:var(--muted)}.toolbar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}.source-list{display:grid;gap:8px}.source{border-left:3px solid var(--warn);padding:8px 11px;background:#fffaf3}.source a{color:var(--brand);word-break:break-all}.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:7px}
-@media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr}.hero h1{font-size:24px}.nav{justify-content:flex-start;overflow:auto}.wrap{padding:12px}}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:760px){.filters{grid-template-columns:1fr}.hero h1{font-size:24px}.nav{justify-content:flex-start;overflow:auto}.wrap{padding:12px}}
 </style>
 </head>
 <body>
@@ -254,10 +268,11 @@ const coverageHtml = `<!DOCTYPE html>
   <section class="kpis" aria-label="覆盖概览">
     <div class="kpi"><b>${totalCovered}/${totalExpected}</b><span>核心矩阵覆盖</span></div>
     <div class="kpi"><b>${report.summary.matrix_completeness}%</b><span>矩阵完整率</span></div>
+    <div class="kpi"><b id="recentKpi">${report.summary.recent_matrix_completeness}%</b><span>${recentYears[0]}—${recentYears.at(-1)} 近期完整率</span></div>
     <div class="kpi"><b id="gapKpi">${gaps.length}</b><span>待补录单元</span></div>
     <div class="kpi"><b id="sourceIndexKpi">${sourceIndexRows}</b><span>仅来源索引记录</span></div>
   </section>
-  <section class="panel"><h2>城市 × 年度覆盖矩阵</h2><div class="scroll"><table><thead><tr><th>城市</th>${years.map((year) => `<th>${year}</th>`).join("")}<th>合计</th><th>完整率</th></tr></thead><tbody>${cityTableHtml}</tbody></table></div><p class="muted">单元格为该城市该年度已收录核心指标数，满格为 7/7。</p></section>
+  <section class="panel"><h2>城市 × 年度覆盖矩阵</h2><div class="scroll"><table><thead><tr><th>城市</th>${years.map((year) => `<th>${year}</th>`).join("")}<th>近期</th><th>合计</th><th>完整率</th></tr></thead><tbody>${cityTableHtml}</tbody></table></div><p class="muted">单元格为该城市该年度已收录核心指标数，满格为 7/7；“近期”为 ${recentYears[0]}—${recentYears.at(-1)} 合计。</p></section>
   <section class="panel">
     <div class="toolbar"><h2>待补录单元</h2><a class="button" href="data/subprov-core-matrix-backlog.csv" download>下载标准补录台账</a></div>
     <div class="filters">
@@ -270,7 +285,7 @@ const coverageHtml = `<!DOCTYPE html>
   </section>
   <section class="panel">
     <div class="toolbar"><h2>城市 × 年度任务批次</h2><a class="button" href="data/subprov-task-batches.json" download>下载任务批次</a></div>
-    <p class="muted">每个批次对应同一城市、同一年度和一份优先统计公报；状态由 <code>data/subprov-task-status.json</code> 维护。</p>
+    <p class="muted">每个批次对应同一城市、同一年度和一份优先统计公报；使用 <code>npm run task:status</code> 安全更新状态，完整说明见补录工作流。</p>
     <div class="filters">
       <label>任务状态<select id="taskStatusFilter"><option value="">全部状态</option><option value="pending">待查找</option><option value="found">已找到</option><option value="reviewed">已复核</option><option value="imported">已入库</option></select></label>
       <label>任务优先级<select id="taskPriorityFilter"><option value="">全部优先级</option><option>P0</option><option>P1</option><option>P2</option></select></label>
@@ -298,7 +313,7 @@ const taskStatusFilter=document.querySelector("#taskStatusFilter"),taskPriorityF
 function drawTasks(){
   const rows=report.task_batches.filter(row=>(!taskStatusFilter.value||row.status===taskStatusFilter.value)&&(!taskPriorityFilter.value||row.priority===taskPriorityFilter.value));
   taskCount.textContent="当前 "+rows.length+" 个批次";
-  taskList.innerHTML=rows.length?rows.map(row=>'<div class="gap"><b>'+esc(row.priority)+' · '+esc(row.city)+' · '+row.year+'</b><span>'+esc(row.status)+' · 缺 '+row.expected_impact+' 项 · '+row.missing_metrics.map(item=>esc(item.compare_key)).join("、")+'</span></div>').join(""):'<div class="empty">当前条件下没有任务</div>';
+  taskList.innerHTML=rows.length?rows.map(row=>'<div class="gap"><b>'+esc(row.priority)+' · '+esc(row.city)+' · '+row.year+'</b><span>'+esc(row.id)+' · '+esc(row.status)+' · 缺 '+row.expected_impact+' 项 · '+row.missing_metrics.map(item=>esc(item.compare_key)).join("、")+(row.assignee?' · '+esc(row.assignee):'')+'</span></div>').join(""):'<div class="empty">当前条件下没有任务</div>';
 }
 [taskStatusFilter,taskPriorityFilter].forEach(control=>control.addEventListener("change",drawTasks));
 drawTasks();

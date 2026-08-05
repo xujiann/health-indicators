@@ -2,6 +2,11 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  classifyFetchError,
+  classifyHttpResponse,
+  isActionableSourceChange,
+} from "./lib/official-source-watch.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
@@ -12,6 +17,7 @@ const outputPath = path.join(repoRoot, "tmp", "official-source-watch.json");
 const summaryPath = path.join(repoRoot, "tmp", "official-source-changes.md");
 const updateBaseline = process.argv.includes("--update-baseline");
 const strict = process.argv.includes("--strict");
+const strictNetwork = process.argv.includes("--strict-network");
 
 function textFromHtml(html) {
   return html
@@ -49,25 +55,28 @@ const results = await Promise.all(registry.map(async (entry) => {
     });
     const html = await response.text();
     const text = textFromHtml(html).slice(0, 12000);
-    const accessRestricted = [401, 403, 406, 412, 429].includes(response.status);
+    const classification = classifyHttpResponse(response.status, response.ok);
     return {
       ...entry,
       checked_at: checkedAt,
       http_status: response.status,
-      status: response.ok ? "available" : accessRestricted ? "restricted" : "unavailable",
+      status: classification.status,
+      error_kind: classification.error_kind,
       title: response.ok ? pageTitle(html) : "",
       content_sha256: response.ok ? crypto.createHash("sha256").update(text).digest("hex") : "",
-      error: response.ok ? "" : `HTTP ${response.status}${accessRestricted ? " (origin access restricted)" : ""}`,
+      error: response.ok ? "" : `HTTP ${response.status}${classification.status === "restricted" ? " (origin access restricted)" : ""}`,
     };
   } catch (error) {
+    const classification = classifyFetchError(error);
     return {
       ...entry,
       checked_at: checkedAt,
       http_status: 0,
-      status: "unavailable",
+      status: classification.status,
+      error_kind: classification.error_kind,
       title: "",
       content_sha256: "",
-      error: error instanceof Error ? error.message : String(error),
+      error: classification.error,
     };
   }
 }));
@@ -93,6 +102,7 @@ const changes = results.flatMap((current) => {
   }
   return itemChanges;
 });
+const actionableChanges = changes.filter(isActionableSourceChange);
 
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
 await fs.writeFile(outputPath, `${JSON.stringify({
@@ -100,8 +110,10 @@ await fs.writeFile(outputPath, `${JSON.stringify({
   summary: {
     checked: results.length,
     changed: changes.length,
+    actionable_changed: actionableChanges.length,
     unavailable: results.filter((item) => item.status === "unavailable").length,
     restricted: results.filter((item) => item.status === "restricted").length,
+    indeterminate: results.filter((item) => item.status === "indeterminate").length,
   },
   changes,
   sources: results,
@@ -112,6 +124,8 @@ const changeLines = changes.length
 await fs.writeFile(summaryPath, `# 官方数据源巡检差异
 
 巡检时间：${new Date().toISOString()}
+
+本次检查 ${results.length} 项：可用 ${results.filter((item) => item.status === "available").length}、受限 ${results.filter((item) => item.status === "restricted").length}、确认不可用 ${results.filter((item) => item.status === "unavailable").length}、网络状态不确定 ${results.filter((item) => item.status === "indeterminate").length}。“状态不确定”表示当前执行环境无法建立连接，不等同于来源失效。
 
 ${changeLines.join("\n")}
 
@@ -126,6 +140,7 @@ if (updateBaseline) {
       topic: item.topic,
       url: item.url,
       status: item.status,
+      error_kind: item.error_kind,
       http_status: item.http_status,
       title: item.title,
       content_sha256: item.content_sha256,
@@ -136,14 +151,17 @@ if (updateBaseline) {
 }
 const failed = results.filter((item) => item.status === "unavailable").length;
 const restricted = results.filter((item) => item.status === "restricted").length;
+const indeterminate = results.filter((item) => item.status === "indeterminate").length;
 console.log(JSON.stringify({
   output: outputPath,
   summary: summaryPath,
   checked: results.length,
   changed: changes.length,
+  actionableChanged: actionableChanges.length,
   failed,
   restricted,
+  indeterminate,
   baselineUpdated: updateBaseline,
 }, null, 2));
 
-if (strict && failed) process.exitCode = 1;
+if ((strict && failed) || (strictNetwork && (failed || indeterminate))) process.exitCode = 1;

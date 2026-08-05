@@ -26,12 +26,15 @@ const checks = [
   ["覆盖维护页提供来源原文替换台账", /data\/source-index-backlog\.csv/.test(coverageHtml)],
   ["城市来源登记覆盖 15 城 × 3 渠道", citySourceRegistry.length === 45 && cityChannelKeys.size === 45],
   ["覆盖维护页提供任务批次台账", /data\/subprov-task-batches\.json/.test(coverageHtml)],
+  ["覆盖维护页展示近期核心完整率", /id="recentKpi"/.test(coverageHtml)],
+  ["覆盖维护页说明任务状态命令", /npm run task:status/.test(coverageHtml)],
   ["Pages 部署依赖质量门禁", /deploy:\s*\r?\n\s+needs:\s*quality/.test(pages)],
   ["Pull Request 触发质量门禁", /pull_request:\s*\r?\n\s+branches:\s*\[main\]/.test(pages)],
   ["Pull Request 不执行生产部署", /if:\s*github\.event_name\s*!=\s*['"]pull_request['"]/.test(pages)],
   ["质量门禁运行完整测试", /run:\s*npm test/.test(pages)],
   ["来源巡检基线覆盖全部登记来源", JSON.stringify(registryIds) === JSON.stringify(baselineIds)],
   ["来源巡检具备 Issue 写权限", /issues:\s*write/.test(sourceWatch)],
+  ["来源巡检仅对可行动变化创建 Issue", /summary\.actionable_changed/.test(sourceWatch)],
   ["来源变化进入复核 Issue", /gh issue (?:create|comment)/.test(sourceWatch)],
 ];
 

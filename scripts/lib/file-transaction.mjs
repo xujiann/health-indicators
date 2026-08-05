@@ -44,14 +44,21 @@ export async function applyFileTransaction({
   repoRoot,
   destination,
   content,
+  writes,
   generatedPaths = [],
   verify = [["run", "build:data"], ["test"]],
 }) {
-  const tracked = [...new Set([destination, ...generatedPaths])];
+  const fileWrites = writes || [{ filePath: destination, content }];
+  if (!fileWrites.length || fileWrites.some((entry) => !entry.filePath)) {
+    throw new Error("事务至少需要一个有效写入目标");
+  }
+  const tracked = [...new Set([...fileWrites.map((entry) => entry.filePath), ...generatedPaths])];
   const before = await snapshot(tracked);
   try {
-    await fs.mkdir(path.dirname(destination), { recursive: true });
-    await fs.writeFile(destination, content, "utf8");
+    for (const entry of fileWrites) {
+      await fs.mkdir(path.dirname(entry.filePath), { recursive: true });
+      await fs.writeFile(entry.filePath, entry.content, "utf8");
+    }
     for (const args of verify) runNpm(repoRoot, args);
     return { applied: true, rolled_back: false };
   } catch (error) {

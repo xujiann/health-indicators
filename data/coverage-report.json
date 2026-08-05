@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "definition": {
     "cities": [
       "大连市",
@@ -26,6 +26,11 @@
       2024,
       2025
     ],
+    "recent_years": [
+      2023,
+      2024,
+      2025
+    ],
     "core_metrics": [
       "GDP",
       "人均GDP",
@@ -42,6 +47,10 @@
     "matrix_expected": 630,
     "matrix_gaps": 377,
     "matrix_completeness": 40.2,
+    "recent_matrix_covered": 252,
+    "recent_matrix_expected": 315,
+    "recent_matrix_gaps": 63,
+    "recent_matrix_completeness": 80,
     "direct_source_rows": 2538,
     "source_index_rows": 315
   },
@@ -51,6 +60,9 @@
       "covered": 19,
       "expected": 42,
       "completeness": 45.2,
+      "recent_covered": 18,
+      "recent_expected": 21,
+      "recent_completeness": 85.7,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -68,6 +80,9 @@
       "covered": 21,
       "expected": 42,
       "completeness": 50,
+      "recent_covered": 21,
+      "recent_expected": 21,
+      "recent_completeness": 100,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -85,6 +100,9 @@
       "covered": 21,
       "expected": 42,
       "completeness": 50,
+      "recent_covered": 21,
+      "recent_expected": 21,
+      "recent_completeness": 100,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -102,6 +120,9 @@
       "covered": 1,
       "expected": 42,
       "completeness": 2.4,
+      "recent_covered": 1,
+      "recent_expected": 21,
+      "recent_completeness": 4.8,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -119,6 +140,9 @@
       "covered": 21,
       "expected": 42,
       "completeness": 50,
+      "recent_covered": 21,
+      "recent_expected": 21,
+      "recent_completeness": 100,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -136,6 +160,9 @@
       "covered": 19,
       "expected": 42,
       "completeness": 45.2,
+      "recent_covered": 19,
+      "recent_expected": 21,
+      "recent_completeness": 90.5,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -153,6 +180,9 @@
       "covered": 20,
       "expected": 42,
       "completeness": 47.6,
+      "recent_covered": 20,
+      "recent_expected": 21,
+      "recent_completeness": 95.2,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -170,6 +200,9 @@
       "covered": 20,
       "expected": 42,
       "completeness": 47.6,
+      "recent_covered": 20,
+      "recent_expected": 21,
+      "recent_completeness": 95.2,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -187,6 +220,9 @@
       "covered": 15,
       "expected": 42,
       "completeness": 35.7,
+      "recent_covered": 15,
+      "recent_expected": 21,
+      "recent_completeness": 71.4,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -204,6 +240,9 @@
       "covered": 14,
       "expected": 42,
       "completeness": 33.3,
+      "recent_covered": 14,
+      "recent_expected": 21,
+      "recent_completeness": 66.7,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -221,6 +260,9 @@
       "covered": 18,
       "expected": 42,
       "completeness": 42.9,
+      "recent_covered": 18,
+      "recent_expected": 21,
+      "recent_completeness": 85.7,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -238,6 +280,9 @@
       "covered": 21,
       "expected": 42,
       "completeness": 50,
+      "recent_covered": 21,
+      "recent_expected": 21,
+      "recent_completeness": 100,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -255,6 +300,9 @@
       "covered": 17,
       "expected": 42,
       "completeness": 40.5,
+      "recent_covered": 17,
+      "recent_expected": 21,
+      "recent_completeness": 81,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -272,6 +320,9 @@
       "covered": 17,
       "expected": 42,
       "completeness": 40.5,
+      "recent_covered": 17,
+      "recent_expected": 21,
+      "recent_completeness": 81,
       "by_year": {
         "2020": 0,
         "2021": 0,
@@ -289,6 +340,9 @@
       "covered": 9,
       "expected": 42,
       "completeness": 21.4,
+      "recent_covered": 9,
+      "recent_expected": 21,
+      "recent_completeness": 42.9,
       "by_year": {
         "2020": 0,
         "2021": 0,

@@ -88,6 +88,7 @@ test("覆盖维护页可筛选缺口并下载标准台账", async ({ page, reque
   expect(coverage.ok()).toBeTruthy();
   const report = await coverage.json();
   await expect(page.locator("#gapKpi")).toHaveText(String(report.summary.matrix_gaps));
+  await expect(page.locator("#recentKpi")).toHaveText(`${report.summary.recent_matrix_completeness}%`);
 
   await page.locator("#cityFilter").selectOption("大连市");
   await expect(page.locator("#gapCount")).toContainText("当前筛选");
@@ -104,6 +105,7 @@ test("覆盖维护页可筛选缺口并下载标准台账", async ({ page, reque
   const taskPayload = await taskBatches.json();
   const tasks = taskPayload.tasks || taskPayload;
   await expect(page.locator("#taskCount")).toHaveText(`当前 ${tasks.length} 个批次`);
+  await expect(page.locator("#taskList .gap").first()).toContainText(tasks[0].id);
   await page.locator("#taskPriorityFilter").selectOption("P0");
   await expect(page.locator("#taskCount")).toHaveText(`当前 ${tasks.filter((task) => task.priority === "P0").length} 个批次`);
   await page.locator("#taskStatusFilter").selectOption("found");
