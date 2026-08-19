@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xujiann.github.io/health-indicators/data/public-record.schema.json",
+  "title": "公开指标记录",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["region_code", "region", "level", "year", "category", "subcategory", "indicator", "nature", "value", "unit", "yoy", "deadline", "responsible", "source", "doc_no", "source_url", "note", "compare_key", "region_tier"],
+  "properties": {
+    "region_code": { "type": "string", "pattern": "^[0-9]{6}$" },
+    "region": { "type": "string", "minLength": 1 },
+    "level": { "type": "string", "minLength": 1 },
+    "year": { "type": "integer", "minimum": 1949, "maximum": 2100 },
+    "category": { "type": "string", "minLength": 1 },
+    "subcategory": { "type": "string" },
+    "indicator": { "type": "string", "minLength": 1 },
+    "nature": { "type": "string", "minLength": 1 },
+    "value": { "type": ["number", "string"] },
+    "unit": { "type": "string", "minLength": 1 },
+    "yoy": { "type": ["number", "string"] },
+    "deadline": { "type": "string" },
+    "responsible": { "type": "string" },
+    "source": { "type": "string", "minLength": 1 },
+    "doc_no": { "type": "string" },
+    "source_url": { "type": "string", "format": "uri", "pattern": "^https?://" },
+    "note": { "type": "string" },
+    "compare_key": { "type": "string", "minLength": 1 },
+    "region_tier": { "type": "string", "minLength": 1 }
+  }
+}

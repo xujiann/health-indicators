@@ -3,14 +3,15 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const html = fs.readFileSync(path.join(repoRoot, "index.html"), "utf8");
-const match = html.match(/const DATA=(\[[\s\S]*?\]);\r?\n/);
-if (!match) throw new Error("DATA block not found in index.html");
+const dataScript = fs.readFileSync(path.join(repoRoot, "public-data.js"), "utf8");
+const match = dataScript.match(/^globalThis\.HEALTH_INDICATOR_DATA=(\[[\s\S]*\]);\s*$/);
+if (!match) throw new Error("Data block not found in public-data.js");
 
 const data = JSON.parse(match[1]);
+const quality = JSON.parse(fs.readFileSync(path.join(repoRoot, "data", "data-quality-report.json"), "utf8"));
 const dataDir = path.join(repoRoot, "data");
 const rawFiles = fs.readdirSync(dataDir)
-  .filter((file) => file.endsWith(".json"))
+  .filter((file) => file === "base-public-records.json" || file.endsWith("-additions.json"))
   .sort();
 
 function expandRawRecord(record, defaults = {}) {
@@ -105,6 +106,23 @@ function analyze(records) {
 
 const built = analyze(data);
 const raw = analyze(rawData);
+const missingSourceUrls = data.filter((record) => !String(record.source_url || "").trim());
+const reviewRecords = data.filter((record) => /用户提供图片表|待正式来源复核/.test(
+  `${record.source || ""} ${record.doc_no || ""} ${record.note || ""}`,
+));
+const restrictedRecords = data.filter((record) => /内部资料|仅限内部使用|内部文件|注意保存/.test(
+  `${record.doc_no || ""} ${record.source_url || ""}`,
+));
+const sourceIndexRows = data.filter((record) => String(record.note || "").includes("公开来源索引（非单条原文）"));
+const unitsByCompareKey = new Map();
+for (const record of data) {
+  const units = unitsByCompareKey.get(record.compare_key) || new Set();
+  units.add(record.unit);
+  unitsByCompareKey.set(record.compare_key, units);
+}
+const mixedComparisonUnits = [...unitsByCompareKey.entries()]
+  .filter(([, units]) => units.size > 1)
+  .map(([compareKey, units]) => ({ compareKey, units: [...units] }));
 
 const result = {
   rows: data.length,
@@ -118,6 +136,14 @@ const result = {
   rawBadYears: raw.badYears.length,
   rawBadValues: raw.badValues.length,
   rawPdfFragments: raw.pdfFragments.length,
+  missingSourceUrls: missingSourceUrls.length,
+  reviewRecords: reviewRecords.length,
+  restrictedRecords: restrictedRecords.length,
+  sourceIndexRows: sourceIndexRows.length,
+  mixedComparisonUnits: mixedComparisonUnits.length,
+  schemaErrors: quality.summary.schema_errors,
+  sourceComplete: quality.summary.source_complete,
+  conflicts: quality.summary.conflicts,
 };
 
 console.log(JSON.stringify(result, null, 2));
@@ -131,6 +157,13 @@ if (
   || raw.badYears.length
   || raw.badValues.length
   || raw.pdfFragments.length
+  || missingSourceUrls.length
+  || reviewRecords.length
+  || restrictedRecords.length
+  || mixedComparisonUnits.length
+  || quality.summary.schema_errors
+  || quality.summary.conflicts
+  || quality.summary.source_complete !== data.length
 ) {
   const sample = {
     duplicates: built.duplicates.slice(0, 3).map(([key, rows]) => ({ key, rows: rows.length })),
@@ -153,6 +186,10 @@ if (
       value: record.value,
       unit: record.unit,
     })),
+    missingSourceUrls: missingSourceUrls.slice(0, 5),
+    reviewRecords: reviewRecords.slice(0, 5),
+    restrictedRecords: restrictedRecords.slice(0, 5),
+    mixedComparisonUnits: mixedComparisonUnits.slice(0, 10),
   };
   console.error(JSON.stringify(sample, null, 2));
   process.exitCode = 1;

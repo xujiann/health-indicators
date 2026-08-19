@@ -1,0 +1,28 @@
+{
+  "name": "health-indicators-public",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:data": "node scripts/update-public-data.mjs && node scripts/build-coverage-report.mjs && node scripts/build-governance-and-packs.mjs",
+    "build:workbook": "node scripts/update-public-data.mjs --workbook",
+    "import:subprov": "node scripts/import-subprov-core-data.mjs",
+    "import:provenance": "node scripts/import-source-provenance.mjs",
+    "task:status": "node scripts/update-subprov-task-status.mjs",
+    "watch:sources": "node scripts/check-official-sources.mjs",
+    "watch:sources:strict": "node scripts/check-official-sources.mjs --strict",
+    "watch:sources:strict-network": "node scripts/check-official-sources.mjs --strict-network",
+    "watch:update-baseline": "node scripts/check-official-sources.mjs --update-baseline",
+    "tasks:issues": "node scripts/sync-task-issues.mjs",
+    "tasks:issues:apply": "node scripts/sync-task-issues.mjs --apply",
+    "verify:generated": "node scripts/update-public-data.mjs --check && node scripts/build-coverage-report.mjs --check && node scripts/build-governance-and-packs.mjs --check",
+    "validate:data": "node scripts/validate-public-data.mjs",
+    "validate:release": "node scripts/validate-release-config.mjs",
+    "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:browser": "playwright test",
+    "test": "npm run verify:generated && npm run validate:data && npm run validate:release && npm run test:unit && npm run test:browser"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1"
+  }
+}

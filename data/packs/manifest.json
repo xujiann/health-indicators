@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "dataset_sha256": "9d3992d964d7420f48405b682a7f36c9b066263228b8de17c8b58d17dd5c0054",
+  "generated_at": "2026-08-19T00:00:00+08:00",
+  "packs": {
+    "subprov-core": {
+      "path": "data/packs/subprov-core.json",
+      "rows": 282,
+      "bytes": 198528,
+      "sha256": "4a24c903102038204fae78576dd5ffc16aabfa339d979fb475875892340ed1b6"
+    },
+    "national-health": {
+      "path": "data/packs/national-health.json",
+      "rows": 1458,
+      "bytes": 1069832,
+      "sha256": "8e48287c32621b3dae4546832a3b647f62800ea2bbd64c3e366c6d28ddc06ad8"
+    },
+    "medical-insurance": {
+      "path": "data/packs/medical-insurance.json",
+      "rows": 672,
+      "bytes": 607670,
+      "sha256": "a1901aae2bd484a8d6df7637fa1d90b064bfe7c4d3d28025997978f0a9ff51ce"
+    }
+  }
+}

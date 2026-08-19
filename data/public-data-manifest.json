@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "rows": 2885,
+  "fields": [
+    "region_code",
+    "region",
+    "level",
+    "year",
+    "category",
+    "subcategory",
+    "indicator",
+    "nature",
+    "value",
+    "unit",
+    "yoy",
+    "deadline",
+    "responsible",
+    "source",
+    "doc_no",
+    "source_url",
+    "note",
+    "compare_key",
+    "region_tier"
+  ],
+  "sha256": "9d3992d964d7420f48405b682a7f36c9b066263228b8de17c8b58d17dd5c0054",
+  "source_files": [
+    "data/base-public-records.json",
+    "data/*-additions.json",
+    "data/source-provenance-overrides.json",
+    "data/source-provenance-bundles.json"
+  ]
+}

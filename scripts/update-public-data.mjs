@@ -1,14 +1,45 @@
 import fs from "node:fs/promises";
+import crypto from "node:crypto";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { FileBlob, SpreadsheetFile, Workbook } from "@oai/artifact-tool";
+import { createRequire } from "node:module";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { SOURCE_INDEX_NOTE } from "./lib/subprov-core.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
-const privateRoot = path.resolve(repoRoot, "..", "health-indicators-private");
 const additionsDir = path.join(repoRoot, "data");
+const baseRecordsPath = path.join(additionsDir, "base-public-records.json");
 const publicWorkbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
-const privateWorkbookPath = path.join(privateRoot, "核心指标数据库.xlsx");
+const publicDataScriptPath = path.join(repoRoot, "public-data.js");
+const dataManifestPath = path.join(additionsDir, "public-data-manifest.json");
+const sourceOverridesPath = path.join(additionsDir, "source-provenance-overrides.json");
+const sourceBundlesPath = path.join(additionsDir, "source-provenance-bundles.json");
+const htmlPath = path.join(repoRoot, "index.html");
+
+const headers = [
+  "region_code", "region", "level", "year", "category", "subcategory",
+  "indicator", "nature", "value", "unit", "yoy", "deadline",
+  "responsible", "source", "doc_no", "source_url", "note", "compare_key",
+  "region_tier",
+];
+
+const subprovOfficialSourceIndexes = new Map([
+  ["大连市", "https://www.dl.gov.cn/"],
+  ["成都市", "https://www.chengdu.gov.cn/"],
+  ["广州市", "https://wjw.gz.gov.cn/"],
+  ["哈尔滨市", "https://www.harbin.gov.cn/"],
+  ["杭州市", "https://wsjkw.hangzhou.gov.cn/"],
+  ["济南市", "https://jnmhc.jinan.gov.cn/"],
+  ["南京市", "https://wjw.nanjing.gov.cn/"],
+  ["宁波市", "https://www.ningbo.gov.cn/col/col1229106609/index.html"],
+  ["青岛市", "https://wsjkw.qingdao.gov.cn/"],
+  ["厦门市", "https://hfpc.xm.gov.cn/"],
+  ["深圳市", "https://wjw.sz.gov.cn/"],
+  ["沈阳市", "https://wjw.shenyang.gov.cn/"],
+  ["武汉市", "https://wjw.wuhan.gov.cn/"],
+  ["西安市", "https://xawjw.xa.gov.cn/"],
+  ["长春市", "https://zwgk.changchun.gov.cn/zcbm/swjw_3974/wjwxxgkml/"],
+]);
 
 const nationalHealthMetricDefinitions = {
   total_institutions: { subcategory: "卫生资源", indicator: "医疗卫生机构总数", compare_key: "医疗卫生机构总数", unit: "个" },
@@ -109,36 +140,18 @@ const nationalMedicalInsuranceMetricDefinitions = {
   personal_account_mutual_aid_usage: { subcategory: "经办服务", indicator: "职工医保个人账户共济使用金额", unit: "亿元" },
 };
 
-async function assertFileExists(filePath) {
-  try {
-    await fs.access(filePath);
-  } catch {
-    throw new Error(`Required workbook not found: ${filePath}`);
-  }
-  return filePath;
-}
-
-async function readWorkbookRows(xlsxPath) {
-  const input = await FileBlob.load(xlsxPath);
-  const workbook = await SpreadsheetFile.importXlsx(input);
-  const sheetInfos = (await workbook.inspect({
-    kind: "sheet",
-    include: "name",
-    maxChars: 4000,
-  })).ndjson.trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
-  const preferred = sheetInfos.find((s) => /指标数据|公开指标数据/.test(s.name)) || sheetInfos[sheetInfos.length - 1];
-  const sheet = workbook.worksheets.getItem(preferred.name);
-  const used = sheet.getUsedRange(true);
-  return used.values.filter((row) => row.some((cell) => cell !== null && cell !== ""));
-}
-
-function rowObjects(matrix) {
-  const headers = matrix[0];
-  return matrix.slice(1).map((row) => Object.fromEntries(headers.map((h, i) => [h, row[i] ?? ""])));
-}
-
 function normalizeRecord(record) {
   return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value == null ? "" : value]));
+}
+
+function ensureGovernanceFields(record) {
+  const key = String(record.compare_key || record.indicator || "");
+  const fallbackUnit = /增速|增长率|占比|城镇化率/.test(key) ? "%" : (/比/.test(key) ? "比值" : "无量纲");
+  return normalizeRecord({
+    ...record,
+    responsible: record.responsible || record.source,
+    unit: record.unit || fallbackUnit,
+  });
 }
 
 function expandNationalHealthSeries(payload) {
@@ -187,8 +200,8 @@ function expandSubprovStatBulletinSeries(payload) {
       yoy: entry.yoy?.[metricKey] || "",
       deadline: "",
       responsible: entry.responsible || "",
-      source: `${entry.year}年${entry.region}国民经济和社会发展统计公报`,
-      doc_no: "—（公开统计公报）",
+      source: entry.source || `${entry.year}年${entry.region}国民经济和社会发展统计公报`,
+      doc_no: entry.doc_no || "—（公开统计公报）",
       source_url: entry.source_url,
       note: [payload.note, entry.note, entry.metric_notes?.[metricKey]].filter(Boolean).join("；"),
       compare_key: definition.compare_key,
@@ -218,7 +231,7 @@ function expandNationalCrossDomainSeries(payload) {
       doc_no: payload.doc_no || "—（公开补录）",
       source_url: payload.source_url || "",
       note: [payload.note, series.note].filter(Boolean).join("；"),
-      compare_key: series.compare_key || series.indicator,
+      compare_key: (series.compare_key || series.indicator).replace("图片长序列", "医保数智库长序列"),
       region_tier: "1·全国",
     })));
 }
@@ -264,30 +277,44 @@ function sortRecord(a, b) {
   return Number(a.year || 0) - Number(b.year || 0);
 }
 
-function isPublishableSubprov(record) {
-  const text = `${record.category || ""} ${record.source || ""} ${record.indicator || ""}`;
-  if (/医药卫生体制改革|重点工作任务|征求意见稿|十五五规划|疾控规划|卫健规划/.test(text)) return false;
-  return String(record.region_tier || "").startsWith("3");
-}
-
-function isGeneratedNationalHealth(record) {
-  return String(record.region_code || "") === "000000"
-    && String(record.category || "") === "卫生健康"
-    && String(record.responsible || "") === "国家卫生健康委"
-    && String(record.source || "").includes("我国卫生健康事业发展统计公报");
-}
-
-function publicizeSubprov(record) {
+export function publicizeSubprov(record) {
   const next = { ...record };
   const restrictionText = `${next.doc_no || ""} ${next.source_url || ""}`;
   if (/内部资料|仅限内部使用|内部文件|注意保存/.test(restrictionText)) {
     next.doc_no = "—（经确认可公开）";
     next.source_url = "";
   }
+  if (!next.source_url && subprovOfficialSourceIndexes.has(next.region)) {
+    next.source_url = subprovOfficialSourceIndexes.get(next.region);
+    next.note = [
+      next.note,
+      "公开来源索引（非单条原文）；具体指标仍以该地区正式公开材料为准",
+    ].filter(Boolean).join("；");
+  }
+  const conversions = {
+    "卫生技术人员数|人": { divisor: 10000, unit: "万人" },
+    "卫生人员总数|人": { divisor: 10000, unit: "万人" },
+    "乡镇卫生院床位数|张": { divisor: 10000, unit: "万张" },
+    "医疗卫生机构实有床位数|张": { divisor: 10000, unit: "万张" },
+    "执业(助理)医师数|人": { divisor: 10000, unit: "万人" },
+    "注册护士数|人": { divisor: 10000, unit: "万人" },
+    "总诊疗人次|万人次": { divisor: 10000, unit: "亿人次" },
+  };
+  const conversion = conversions[`${next.compare_key}|${next.unit}`];
+  const numericValue = Number(next.value);
+  if (conversion && Number.isFinite(numericValue)) {
+    const originalUnit = next.unit;
+    next.value = Number((numericValue / conversion.divisor).toFixed(6));
+    next.unit = conversion.unit;
+    next.note = [
+      next.note,
+      `跨层级对比统一换算：原始单位${originalUnit}，发布单位${conversion.unit}`,
+    ].filter(Boolean).join("；");
+  }
   return next;
 }
 
-async function loadAdditions() {
+export async function loadAdditions() {
   try {
     const files = (await fs.readdir(additionsDir)).filter((name) => name.endsWith("-additions.json")).sort();
     const additions = [];
@@ -314,7 +341,7 @@ async function loadAdditions() {
   }
 }
 
-function recordKey(record) {
+export function recordKey(record) {
   return [
     record.region_code,
     record.year,
@@ -325,14 +352,19 @@ function recordKey(record) {
 }
 
 async function buildWorkbook(headers, records, outputPath) {
+  const artifactTool = process.env.DATA_WORKSPACE_NODE_MODULES
+    ? await import(pathToFileURL(createRequire(path.join(process.env.DATA_WORKSPACE_NODE_MODULES, "package.json")).resolve("@oai/artifact-tool")).href)
+    : await import("@oai/artifact-tool");
+  const { SpreadsheetFile, Workbook } = artifactTool;
   const workbook = Workbook.create();
   const note = workbook.worksheets.add("说明");
   note.getRange("A1").values = [["国家·辽宁·大连 公开指标数据库"]];
   note.getRange("A3").values = [[`本表仅含公开发布及经确认可公开的指标数据，共${records.length}条，不含未公开规划文件。`]];
-  note.getRange("A4").values = [["本版纳入全国近十年卫生健康统计公报核心序列、2022-2024年公报扩展分类指标及15个副省级城市公开对标数据；引用请以原始公报或正式来源为准。"]];
+  note.getRange("A4").values = [["本版纳入2010-2024年全国卫生健康统计公报核心序列、2022-2024年公报扩展分类指标、2016-2025年全国人口老龄化长序列及15个副省级城市公开对标数据；来源索引不是单条原文，引用请以原始公报或正式来源为准。"]];
   note.getRange("A1:A4").format = { font: { name: "Microsoft YaHei" }, wrapText: true };
   note.getRange("A1").format = { font: { bold: true, size: 14, color: "#1F4E79" } };
   note.getRange("A:A").format.columnWidth = 88;
+  note.getRange("A3:A4").format.autofitRows();
   note.showGridLines = false;
 
   const dataSheet = workbook.worksheets.add("公开指标数据");
@@ -345,14 +377,70 @@ async function buildWorkbook(headers, records, outputPath) {
     wrapText: false,
   };
   dataSheet.getRangeByIndexes(0, 0, values.length, headers.length).format.borders = {
-    preset: "inside",
-    style: "thin",
-    color: "#DDE3EC",
+    insideHorizontal: { style: "thin", color: "#E6EBF1" },
   };
   dataSheet.freezePanes.freezeRows(1);
+  dataSheet.freezePanes.freezeColumns(2);
   dataSheet.getRange("A:S").format.autofitColumns();
+  const columnWidths = {
+    A: 12, B: 12, C: 10, D: 8, E: 10, F: 14, G: 34, H: 10, I: 12, J: 10,
+    K: 10, L: 12, M: 18, N: 38, O: 18, P: 52, Q: 54, R: 32, S: 12,
+  };
+  for (const [column, width] of Object.entries(columnWidths)) {
+    dataSheet.getRange(`${column}:${column}`).format.columnWidth = width;
+  }
   dataSheet.getRange("I:I").format.numberFormat = "#,##0.00";
   dataSheet.showGridLines = false;
+
+  const coverage = workbook.worksheets.add("覆盖概览");
+  const regions = [...new Set(records.map((record) => record.region))].sort((a, b) => a.localeCompare(b, "zh-Hans"));
+  const categories = [...new Set(records.map((record) => record.category))].sort((a, b) => a.localeCompare(b, "zh-Hans"));
+  coverage.getRange("A1:B1").values = [["公开指标数据覆盖概览", ""]];
+  coverage.getRange("A1:B1").format = {
+    fill: "#1F4E79",
+    font: { name: "Microsoft YaHei", bold: true, color: "#FFFFFF", size: 14 },
+  };
+  coverage.getRange("A3:B7").values = [
+    ["指标", "值"],
+    ["总记录数", null],
+    ["最早年度", null],
+    ["最新年度", null],
+    ["来源索引记录", null],
+  ];
+  coverage.getRange("B4").formulas = [[`=COUNTA('公开指标数据'!$A$2:$A$${records.length + 1})`]];
+  coverage.getRange("B5").formulas = [[`=MIN('公开指标数据'!$D$2:$D$${records.length + 1})`]];
+  coverage.getRange("B6").formulas = [[`=MAX('公开指标数据'!$D$2:$D$${records.length + 1})`]];
+  const sourceIndexRecords = records.filter((record) => String(record.note || "").includes("公开来源索引（非单条原文）"));
+  coverage.getRange("D1").values = [["来源索引记录键"]];
+  coverage.getRangeByIndexes(1, 3, sourceIndexRecords.length, 1).values = sourceIndexRecords.map((record) => [
+    `${record.region}|${record.year}|${record.compare_key}`,
+  ]);
+  coverage.getRange("B7").formulas = [[`=COUNTA(D2:D${sourceIndexRecords.length + 1})`]];
+  coverage.getRange("A9:B9").values = [["地区", "记录数"]];
+  coverage.getRangeByIndexes(9, 0, regions.length, 1).values = regions.map((region) => [region]);
+  coverage.getRange("B10").formulas = [[`=COUNTIF('公开指标数据'!$B$2:$B$${records.length + 1},A10)`]];
+  coverage.getRange(`B10:B${regions.length + 9}`).fillDown();
+  const categoryStart = regions.length + 12;
+  coverage.getRange(`A${categoryStart}:B${categoryStart}`).values = [["类别", "记录数"]];
+  coverage.getRangeByIndexes(categoryStart, 0, categories.length, 1).values = categories.map((category) => [category]);
+  coverage.getRange(`B${categoryStart + 1}`).formulas = [[`=COUNTIF('公开指标数据'!$E$2:$E$${records.length + 1},A${categoryStart + 1})`]];
+  coverage.getRange(`B${categoryStart + 1}:B${categoryStart + categories.length}`).fillDown();
+  for (const headerRow of [3, 9, categoryStart]) {
+    coverage.getRange(`A${headerRow}:B${headerRow}`).format = {
+      fill: "#DCE6F1",
+      font: { name: "Microsoft YaHei", bold: true, color: "#1F2937" },
+      borders: { preset: "outside", style: "thin", color: "#B8C4D4" },
+    };
+  }
+  coverage.getRange(`A3:B${categoryStart + categories.length}`).format.font = { name: "Microsoft YaHei", size: 10 };
+  coverage.getRange("B4").format.numberFormat = "#,##0";
+  coverage.getRange("B5:B6").format.numberFormat = "0";
+  coverage.getRange("B7").format.numberFormat = "#,##0";
+  coverage.getRange(`B10:B${regions.length + 9}`).format.numberFormat = "#,##0";
+  coverage.getRange(`B${categoryStart + 1}:B${categoryStart + categories.length}`).format.numberFormat = "#,##0";
+  coverage.getRange("A:B").format.autofitColumns();
+  coverage.freezePanes.freezeRows(1);
+  coverage.showGridLines = false;
 
   const preview = await workbook.render({ sheetName: "公开指标数据", range: "A1:S18", scale: 1, format: "png" });
   const tmpDir = path.join(repoRoot, "tmp");
@@ -362,46 +450,158 @@ async function buildWorkbook(headers, records, outputPath) {
   await output.save(outputPath);
 }
 
+export function applySourceOverride(record, override) {
+  if (!override) return record;
+  const originalNote = String(record.note || "")
+    .split("；")
+    .filter((part) => part && !part.includes(SOURCE_INDEX_NOTE) && !part.includes("具体指标仍以该地区正式公开材料为准"))
+    .join("；");
+  return normalizeRecord({
+    ...record,
+    source_url: override.source_url,
+    source: override.source,
+    responsible: override.responsible,
+    doc_no: override.doc_no,
+    note: [originalNote, override.note].filter(Boolean).join("；"),
+  });
+}
+
+async function writeOrCheck(filePath, content, checkOnly) {
+  let current = "";
+  try {
+    current = await fs.readFile(filePath, "utf8");
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  if (current === content) return false;
+  if (checkOnly) throw new Error(`Generated file is stale: ${path.relative(repoRoot, filePath)}`);
+  await fs.writeFile(filePath, content, "utf8");
+  return true;
+}
+
 async function main() {
-  const publicXlsx = await assertFileExists(publicWorkbookPath);
-  const privateXlsx = await assertFileExists(privateWorkbookPath);
-  const publicRows = await readWorkbookRows(publicXlsx);
-  const privateRows = await readWorkbookRows(privateXlsx);
-  const headers = publicRows[0];
-  const publicRecords = rowObjects(publicRows).map(normalizeRecord);
-  const privateRecords = rowObjects(privateRows).map(normalizeRecord);
-  const basePublic = publicRecords.filter((record) => !String(record.region_tier || "").startsWith("3") && !isGeneratedNationalHealth(record));
-  const subprov = privateRecords.filter(isPublishableSubprov).map(publicizeSubprov);
-  const additions = await loadAdditions();
+  const checkOnly = process.argv.includes("--check");
+  const shouldBuildWorkbook = process.argv.includes("--workbook");
+  const basePublic = JSON.parse(await fs.readFile(baseRecordsPath, "utf8")).map(normalizeRecord);
+  const additions = (await loadAdditions()).map(normalizeRecord);
+  const sourceOverrides = JSON.parse(await fs.readFile(sourceOverridesPath, "utf8"));
+  const sourceBundles = JSON.parse(await fs.readFile(sourceBundlesPath, "utf8"));
+  if (sourceOverrides.schema_version !== 1 || !Array.isArray(sourceOverrides.overrides)) {
+    throw new Error("Unsupported source provenance overrides");
+  }
+  const rawRecords = [...basePublic, ...additions];
+  const rawByKey = new Map(rawRecords.map((record) => [recordKey(record), record]));
+  const overrideByKey = new Map();
+  if (sourceBundles.schema_version !== 1 || !Array.isArray(sourceBundles.bundles)) throw new Error("Unsupported source provenance bundles");
+  for (const bundle of sourceBundles.bundles) {
+    const targets = rawRecords.filter((record) => record.region === bundle.region && +record.year === +bundle.year && String(publicizeSubprov(record).note || "").includes(SOURCE_INDEX_NOTE));
+    if (!targets.length) throw new Error(`Source provenance bundle has no targets: ${bundle.region} ${bundle.year}`);
+    for (const target of targets) overrideByKey.set(recordKey(target), { ...bundle, note: "年度官方统计原文证据已归档" });
+  }
+  for (const override of sourceOverrides.overrides) {
+    if (!override.record_key || overrideByKey.has(override.record_key)) {
+      throw new Error(`Duplicate or missing source override key: ${override.record_key || "—"}`);
+    }
+    const target = rawByKey.get(override.record_key);
+    if (!target) throw new Error(`Source override target not found: ${override.record_key}`);
+    const publishedTarget = publicizeSubprov(target);
+    if (!String(publishedTarget.note || "").includes(SOURCE_INDEX_NOTE)) {
+      throw new Error(`Source override target is not an index record: ${override.record_key}`);
+    }
+    let url;
+    try {
+      url = new URL(override.source_url);
+    } catch {
+      throw new Error(`Invalid source override URL: ${override.record_key}`);
+    }
+    if (
+      !["http:", "https:"].includes(url.protocol)
+      || !(url.hostname === "gov.cn" || url.hostname.endsWith(".gov.cn"))
+      || url.pathname === "/"
+      || /\/(?:index\.html?)?$/i.test(url.pathname)
+      || override.source_url === publishedTarget.source_url
+      || !override.source
+      || !override.responsible
+    ) {
+      throw new Error(`Incomplete source override evidence: ${override.record_key}`);
+    }
+    overrideByKey.set(override.record_key, override);
+  }
   const mergedMap = new Map();
-  [...basePublic, ...subprov, ...additions].map(normalizeRecord).forEach((record) => {
+  rawRecords
+    .map((record) => applySourceOverride(record, overrideByKey.get(recordKey(record))))
+    .map(publicizeSubprov)
+    .forEach((record) => {
     mergedMap.set(recordKey(record), record);
   });
-  const merged = [...mergedMap.values()].sort(sortRecord);
+  const merged = [...mergedMap.values()].map(ensureGovernanceFields).sort(sortRecord);
 
-  await buildWorkbook(headers, merged, publicXlsx);
-
-  const htmlPath = path.join(repoRoot, "index.html");
-  const html = await fs.readFile(htmlPath, "utf8");
   const dataLiteral = JSON.stringify(merged);
-  const dataPattern = /const DATA=\[.*?\];\s*const \$=/s;
-  if (!dataPattern.test(html)) throw new Error("DATA block not found");
-  const nextHtml = html.replace(dataPattern, `const DATA=${dataLiteral};\nconst $=`);
-  if (nextHtml !== html) await fs.writeFile(htmlPath, nextHtml, "utf8");
+  const checksum = crypto.createHash("sha256").update(dataLiteral).digest("hex");
+  const dataScript = `globalThis.HEALTH_INDICATOR_DATA=${dataLiteral};\n`;
+  const manifest = `${JSON.stringify({
+    schema_version: 1,
+    rows: merged.length,
+    fields: headers,
+    sha256: checksum,
+    source_files: [
+      "data/base-public-records.json",
+      "data/*-additions.json",
+      "data/source-provenance-overrides.json",
+      "data/source-provenance-bundles.json",
+    ],
+  }, null, 2)}\n`;
+  await writeOrCheck(publicDataScriptPath, dataScript, checkOnly);
+  await writeOrCheck(dataManifestPath, manifest, checkOnly);
 
-  const cityCount = new Set(subprov.map((record) => record.region)).size;
+  const html = await fs.readFile(htmlPath, "utf8");
+  let nextHtml = html.replace(
+    /const DATA=\[[\s\S]*?\];\s*const \$=/,
+    "const DATA=globalThis.HEALTH_INDICATOR_DATA||[];\nconst $=",
+  );
+  if (!nextHtml.includes('<script src="public-data.js"></script>')) {
+    nextHtml = nextHtml.replace(
+      "<script>\nconst DATA=",
+      '<script src="public-data.js"></script>\n<script src="app-core.js"></script>\n<script>\nconst DATA=',
+    );
+  }
+  nextHtml = nextHtml
+    .replace(
+      '<a href="coverage.html">覆盖维护</a><a href="about.html">关于</a>',
+      '<a href="coverage.html">覆盖维护</a><a href="city-analysis.html">城市分析</a><a href="about.html">关于</a>',
+    )
+    .replace(
+      '<div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div>',
+      '<div class="tabs" aria-label="数据视图"><button type="button" class="tab on" data-m="compare" aria-pressed="true">对比视图</button><button type="button" class="tab" data-m="list" aria-pressed="false">明细列表</button></div>',
+    )
+    .replace(
+      '<input id="q" placeholder="搜索指标、来源、地区、年份或单位，如 床位 2024、GDP、国家医保局…"><span class="count" id="count"></span>',
+      '<input id="q" aria-label="搜索指标" placeholder="搜索指标、来源、地区、年份或单位，如 床位 2024、GDP、国家医保局…"><span class="count" id="count" aria-live="polite"></span>',
+    )
+    .replace(
+      "document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.m===mode));",
+      "document.querySelectorAll('.tab').forEach(x=>{const active=x.dataset.m===mode;x.classList.toggle('on',active);x.setAttribute('aria-pressed',String(active));});",
+    );
+  await writeOrCheck(htmlPath, nextHtml, checkOnly);
+  if (shouldBuildWorkbook && !checkOnly) {
+    await buildWorkbook(headers, merged, publicWorkbookPath);
+  }
+
+  const cityCount = new Set(merged.filter((record) => String(record.region_tier).startsWith("3")).map((record) => record.region)).size;
   console.log(JSON.stringify({
     publicBaseRows: basePublic.length,
-    subprovRows: subprov.length,
     additions: additions.length,
     subprovCities: cityCount,
     mergedRows: merged.length,
-    publicXlsx,
-    privateXlsx,
+    checksum,
+    workbookBuilt: shouldBuildWorkbook && !checkOnly,
+    checked: checkOnly,
   }, null, 2));
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}
