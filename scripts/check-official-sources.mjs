@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import {
   classifyFetchError,
   classifyHttpResponse,
+  fetchWithRetry,
   isActionableSourceChange,
 } from "./lib/official-source-watch.mjs";
 
@@ -49,10 +50,10 @@ const baselineById = new Map((baseline.sources || []).map((entry) => [entry.id, 
 const results = await Promise.all(registry.map(async (entry) => {
   const checkedAt = new Date().toISOString();
   try {
-    const response = await fetch(entry.url, {
+    const response = await fetchWithRetry(entry.url, {
       headers: { "user-agent": "health-indicators-source-watch/1.0" },
       signal: AbortSignal.timeout(30000),
-    });
+    }, { attempts: 3 });
     const html = await response.text();
     const text = textFromHtml(html).slice(0, 12000);
     const classification = classifyHttpResponse(response.status, response.ok);

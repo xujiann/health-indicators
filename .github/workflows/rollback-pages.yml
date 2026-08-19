@@ -1,0 +1,42 @@
+name: Rollback GitHub Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 已验证的提交 SHA 或标签
+        required: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  rollback:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - name: Prepare rollback artifact
+        run: |
+          mkdir -p _site
+          cp index.html app-core.js public-data.js analysis-workbench.js city-analysis.html city-analysis.js about.html coverage.html README.md CHANGELOG.md .nojekyll "公开指标数据库.xlsx" _site/
+          cp -R docs data _site/
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v5

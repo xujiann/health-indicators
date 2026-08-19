@@ -8,6 +8,7 @@ const match = dataScript.match(/^globalThis\.HEALTH_INDICATOR_DATA=(\[[\s\S]*\])
 if (!match) throw new Error("Data block not found in public-data.js");
 
 const data = JSON.parse(match[1]);
+const quality = JSON.parse(fs.readFileSync(path.join(repoRoot, "data", "data-quality-report.json"), "utf8"));
 const dataDir = path.join(repoRoot, "data");
 const rawFiles = fs.readdirSync(dataDir)
   .filter((file) => file === "base-public-records.json" || file.endsWith("-additions.json"))
@@ -140,6 +141,9 @@ const result = {
   restrictedRecords: restrictedRecords.length,
   sourceIndexRows: sourceIndexRows.length,
   mixedComparisonUnits: mixedComparisonUnits.length,
+  schemaErrors: quality.summary.schema_errors,
+  sourceComplete: quality.summary.source_complete,
+  conflicts: quality.summary.conflicts,
 };
 
 console.log(JSON.stringify(result, null, 2));
@@ -157,6 +161,9 @@ if (
   || reviewRecords.length
   || restrictedRecords.length
   || mixedComparisonUnits.length
+  || quality.summary.schema_errors
+  || quality.summary.conflicts
+  || quality.summary.source_complete !== data.length
 ) {
   const sample = {
     duplicates: built.duplicates.slice(0, 3).map(([key, rows]) => ({ key, rows: rows.length })),

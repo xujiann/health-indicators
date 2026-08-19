@@ -16,8 +16,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Check official source pages
-        run: node scripts/check-official-sources.mjs
+      - name: Check official source pages with retry
+        run: npm run watch:sources:strict-network
 
       - name: Create or update review issue
         if: always()

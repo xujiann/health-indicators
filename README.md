@@ -17,6 +17,10 @@ GitHub Pages 发布后访问：
 - 明细列表：保留逐条数据表，便于核验来源、年度、单位和备注。
 - 分析工作台：提供自动洞察、指标知识、趋势构建、城市画像、对比篮、数据质量、时间轴、更新中心和专题模板 9 个分析页签。
 - 覆盖维护：提供 15 城市 × 6 年度 × 7 核心指标覆盖矩阵、缺口筛选、标准补录台账下载和来源索引替换清单。
+- 城市实值分析：按年度生成城市实际值画像、同年 Min-Max 雷达、标准化排名和缺口热力图，并可导出 SVG、CSV 与 Markdown 摘要。
+- 数据治理：按正式 Schema 校验记录，生成证据评分、异常、冲突、采集核验日期和逐条内容哈希；构建门禁要求治理字段 100% 完整。
+- 主题数据包：副省级核心、全国卫生健康和国家医保三类数据独立打包，城市分析页只按需加载约 200 KB 的副省级核心包。
+- 运维闭环：任务批次自动同步 GitHub Issues，补录完成后自动关闭；官方来源支持瞬时失败重试，发布支持指定提交回滚。
 - 材料复用：支持复制摘要、表格、来源、来源缺口及导出 CSV，卡片也可一键复制为材料文字。
 
 ## 数据内容
@@ -26,9 +30,13 @@ GitHub Pages 发布后访问：
 - `data/base-public-records.json` 与 `data/*-additions.json`：公开数据的唯一事实源；页面数据和 Excel 工作簿均为生成物，不再反向作为更新输入。
 - `data/public-data-manifest.json`：生成数据的行数、字段和 SHA-256 校验信息。
 - `coverage.html`、`data/coverage-report.json`、`docs/数据覆盖率报告.md`：15 个副省级城市 2020—2025 年核心经济、人口和财政指标覆盖矩阵及维护页。
+- `city-analysis.html`、`city-analysis.js`：副省级城市实值画像、同年排名、雷达和缺口分析页。
+- `data/public-record.schema.json`、`data/data-quality-report.json`、`docs/数据质量报告.md`：正式数据契约与逐条证据质量台账。
+- `data/packs/`：按需加载的三类主题数据包及带 SHA-256 的清单。
+- `data/release.json`、`CHANGELOG.md`、`docs/发布与回滚.md`：版本、变更记录和经过演练的发布回滚手册。
 - `data/subprov-core-matrix-backlog.csv`、`docs/城市核心指标补录工作流.md`：可填写的缺口台账和经过严格预检后写入事实源的补录流程。
 - `data/source-index-backlog.csv`、`data/source-provenance-overrides.json`、`docs/来源索引原文替换工作流.md`：来源索引替换台账、独立证据覆盖层和安全替换流程。
-- `公开指标数据库.xlsx`：结构化公开数据，共 2701 条、19 个字段，包含 2010-2024 年全国卫生健康统计公报核心序列、2022-2024 年公报扩展分类指标、2016-2025 年全国人口老龄化长序列、1998-2025 年国家医保局医保数智库跨领域长序列、2023-2025 年国家医保局年度统计公报与快报专题、2025 年国家统计局卫生资源年度公报快报及 15 个副省级城市对标数据。
+- `公开指标数据库.xlsx`：结构化公开数据，共 2885 条、19 个字段，包含 2010-2024 年全国卫生健康统计公报核心序列、2022-2024 年公报扩展分类指标、2016-2025 年全国人口老龄化长序列、1998-2025 年国家医保局医保数智库跨领域长序列、2023-2025 年国家医保局年度统计公报与快报专题、2025 年国家统计局卫生资源年度公报快报及 15 个副省级城市对标数据。
 - `data/national-aging-population-additions.json`：民政部、全国老龄办《2025年度国家老龄事业发展公报》图表中的 2016-2025 年全国老龄人口数量、占比和抚养比长序列，归入“人口—人口规模与结构”。
 - `data/national-economy-pop-health-insurance-additions.json`：国家医保局医保数智库公开的 1998-2025 年全国经济、人口、卫生、医保相关长序列数据；空白单元未录入，2025 年按官方说明标记为初步数据。
 - `data/national-health-bulletin-additions.json`：国家卫健委 2010-2024 年卫生健康统计公报核心指标补录数据。
@@ -70,6 +78,7 @@ npm test
 - `npm run import:subprov -- <补录.csv>`：只读预检副省级城市核心指标补录；复核后追加 `--apply`，以事务方式写入事实源、重建并执行全量测试，失败时自动回滚。
 - `npm run import:provenance -- <原文替换.csv>`：只读预检来源索引替换；复核后追加 `--apply`，以同样的事务方式写入来源证据覆盖层。`--write` 仅保留为兼容别名。
 - `npm run task:status -- <任务ID> <状态>`：预览任务状态变更；追加 `--apply` 后事务更新状态、维护页和全部测试。状态默认按 `pending → found → reviewed → imported` 逐级推进。
+- `npm run tasks:issues`：预览任务批次与 GitHub Issue 的新增、更新、关闭计划；追加 `:apply` 后执行同步，主分支定时任务会自动运行。
 - `npm run verify:generated`：确认已提交生成物与事实源一致；CI 会阻止生成物漂移。
 - `npm run build:workbook`：使用 Codex 工作区提供的 `@oai/artifact-tool` 重建公开工作簿。
 - `node scripts/verify-public-workbook.mjs`：核对工作簿与生成数据行数，并渲染“说明”“覆盖概览”“公开指标数据”三个工作表。
@@ -82,7 +91,7 @@ npm test
 
 `coverage.html` 同时提供“城市 × 年度”任务批次台账，可按优先级和 `pending / found / reviewed / imported` 状态筛选；状态保存在 `data/subprov-task-status.json`，任务来源入口来自 `docs/subprov-official-source-registry.json`。
 
-`npm test` 会执行生成物校验、数据门禁、发布配置校验、核心逻辑单元测试和 Chromium 端到端测试。浏览器测试覆盖搜索、列表、专题 URL 恢复、CSV 导出、分析工作台键盘关闭、移动端溢出和工作簿下载。GitHub Pages 部署必须通过完整门禁。
+`npm test` 会执行生成物校验、数据治理门禁、发布配置校验、核心逻辑单元测试和 Chromium 端到端测试。浏览器测试覆盖搜索、列表、专题 URL 恢复、CSV 导出、分析工作台、城市实值分析三类导出、移动端溢出、工作簿下载和首屏 2 秒性能预算。GitHub Pages 部署必须通过完整门禁。
 
 工作簿生成使用 Codex 工作区提供的电子表格运行时；普通干净克隆只需 `npm ci && npm run build:data && npm test` 即可完成数据、页面和发布门禁的可复现验证。
 

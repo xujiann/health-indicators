@@ -42,17 +42,17 @@
     ]
   },
   "summary": {
-    "rows": 2853,
-    "matrix_covered": 253,
+    "rows": 2885,
+    "matrix_covered": 285,
     "matrix_expected": 630,
-    "matrix_gaps": 377,
-    "matrix_completeness": 40.2,
-    "recent_matrix_covered": 252,
+    "matrix_gaps": 345,
+    "matrix_completeness": 45.2,
+    "recent_matrix_covered": 284,
     "recent_matrix_expected": 315,
-    "recent_matrix_gaps": 63,
-    "recent_matrix_completeness": 80,
-    "direct_source_rows": 2538,
-    "source_index_rows": 315
+    "recent_matrix_gaps": 31,
+    "recent_matrix_completeness": 90.2,
+    "direct_source_rows": 2689,
+    "source_index_rows": 196
   },
   "cities": [
     {
@@ -112,27 +112,27 @@
         "2025": 7
       },
       "records": 37,
-      "direct_source_rows": 20,
-      "source_index_rows": 17
+      "direct_source_rows": 37,
+      "source_index_rows": 0
     },
     {
       "city": "哈尔滨市",
-      "covered": 1,
+      "covered": 12,
       "expected": 42,
-      "completeness": 2.4,
-      "recent_covered": 1,
+      "completeness": 28.6,
+      "recent_covered": 12,
       "recent_expected": 21,
-      "recent_completeness": 4.8,
+      "recent_completeness": 57.1,
       "by_year": {
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0,
-        "2024": 0,
+        "2023": 7,
+        "2024": 4,
         "2025": 1
       },
-      "records": 17,
-      "direct_source_rows": 0,
+      "records": 28,
+      "direct_source_rows": 11,
       "source_index_rows": 17
     },
     {
@@ -152,31 +152,11 @@
         "2025": 7
       },
       "records": 37,
-      "direct_source_rows": 20,
-      "source_index_rows": 17
+      "direct_source_rows": 37,
+      "source_index_rows": 0
     },
     {
       "city": "济南市",
-      "covered": 19,
-      "expected": 42,
-      "completeness": 45.2,
-      "recent_covered": 19,
-      "recent_expected": 21,
-      "recent_completeness": 90.5,
-      "by_year": {
-        "2020": 0,
-        "2021": 0,
-        "2022": 0,
-        "2023": 7,
-        "2024": 6,
-        "2025": 6
-      },
-      "records": 35,
-      "direct_source_rows": 18,
-      "source_index_rows": 17
-    },
-    {
-      "city": "南京市",
       "covered": 20,
       "expected": 42,
       "completeness": 47.6,
@@ -192,8 +172,28 @@
         "2025": 6
       },
       "records": 36,
-      "direct_source_rows": 19,
-      "source_index_rows": 17
+      "direct_source_rows": 36,
+      "source_index_rows": 0
+    },
+    {
+      "city": "南京市",
+      "covered": 21,
+      "expected": 42,
+      "completeness": 50,
+      "recent_covered": 21,
+      "recent_expected": 21,
+      "recent_completeness": 100,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 7,
+        "2024": 7,
+        "2025": 7
+      },
+      "records": 37,
+      "direct_source_rows": 37,
+      "source_index_rows": 0
     },
     {
       "city": "宁波市",
@@ -217,63 +217,63 @@
     },
     {
       "city": "青岛市",
-      "covered": 15,
+      "covered": 16,
       "expected": 42,
-      "completeness": 35.7,
-      "recent_covered": 15,
+      "completeness": 38.1,
+      "recent_covered": 16,
       "recent_expected": 21,
-      "recent_completeness": 71.4,
+      "recent_completeness": 76.2,
       "by_year": {
         "2020": 0,
         "2021": 0,
         "2022": 0,
         "2023": 5,
-        "2024": 5,
+        "2024": 6,
         "2025": 5
       },
-      "records": 31,
-      "direct_source_rows": 14,
+      "records": 32,
+      "direct_source_rows": 15,
       "source_index_rows": 17
     },
     {
       "city": "厦门市",
-      "covered": 14,
+      "covered": 21,
       "expected": 42,
-      "completeness": 33.3,
-      "recent_covered": 14,
+      "completeness": 50,
+      "recent_covered": 21,
       "recent_expected": 21,
-      "recent_completeness": 66.7,
+      "recent_completeness": 100,
       "by_year": {
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 6,
-        "2024": 6,
-        "2025": 2
+        "2023": 7,
+        "2024": 7,
+        "2025": 7
       },
-      "records": 30,
-      "direct_source_rows": 13,
+      "records": 37,
+      "direct_source_rows": 20,
       "source_index_rows": 17
     },
     {
       "city": "深圳市",
-      "covered": 18,
+      "covered": 20,
       "expected": 42,
-      "completeness": 42.9,
-      "recent_covered": 18,
+      "completeness": 47.6,
+      "recent_covered": 20,
       "recent_expected": 21,
-      "recent_completeness": 85.7,
+      "recent_completeness": 95.2,
       "by_year": {
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 6,
-        "2024": 6,
+        "2023": 7,
+        "2024": 7,
         "2025": 6
       },
-      "records": 34,
-      "direct_source_rows": 17,
-      "source_index_rows": 17
+      "records": 36,
+      "direct_source_rows": 36,
+      "source_index_rows": 0
     },
     {
       "city": "沈阳市",
@@ -297,62 +297,62 @@
     },
     {
       "city": "武汉市",
-      "covered": 17,
+      "covered": 20,
       "expected": 42,
-      "completeness": 40.5,
-      "recent_covered": 17,
+      "completeness": 47.6,
+      "recent_covered": 20,
       "recent_expected": 21,
-      "recent_completeness": 81,
+      "recent_completeness": 95.2,
+      "by_year": {
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 7,
+        "2024": 6,
+        "2025": 7
+      },
+      "records": 36,
+      "direct_source_rows": 36,
+      "source_index_rows": 0
+    },
+    {
+      "city": "西安市",
+      "covered": 18,
+      "expected": 42,
+      "completeness": 42.9,
+      "recent_covered": 18,
+      "recent_expected": 21,
+      "recent_completeness": 85.7,
       "by_year": {
         "2020": 0,
         "2021": 0,
         "2022": 0,
         "2023": 6,
-        "2024": 5,
-        "2025": 6
-      },
-      "records": 33,
-      "direct_source_rows": 16,
-      "source_index_rows": 17
-    },
-    {
-      "city": "西安市",
-      "covered": 17,
-      "expected": 42,
-      "completeness": 40.5,
-      "recent_covered": 17,
-      "recent_expected": 21,
-      "recent_completeness": 81,
-      "by_year": {
-        "2020": 0,
-        "2021": 0,
-        "2022": 0,
-        "2023": 5,
         "2024": 6,
         "2025": 6
       },
-      "records": 33,
-      "direct_source_rows": 16,
-      "source_index_rows": 17
+      "records": 34,
+      "direct_source_rows": 34,
+      "source_index_rows": 0
     },
     {
       "city": "长春市",
-      "covered": 9,
+      "covered": 14,
       "expected": 42,
-      "completeness": 21.4,
-      "recent_covered": 9,
+      "completeness": 33.3,
+      "recent_covered": 14,
       "recent_expected": 21,
-      "recent_completeness": 42.9,
+      "recent_completeness": 66.7,
       "by_year": {
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 4,
-        "2024": 4,
-        "2025": 1
+        "2023": 6,
+        "2024": 6,
+        "2025": 2
       },
-      "records": 25,
-      "direct_source_rows": 8,
+      "records": 30,
+      "direct_source_rows": 13,
       "source_index_rows": 17
     }
   ],
@@ -1048,70 +1048,6 @@
     {
       "city": "哈尔滨市",
       "region_code": "230100",
-      "year": 2023,
-      "metric_key": "gdp",
-      "compare_key": "GDP",
-      "unit": "亿元"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2023,
-      "metric_key": "gdp_per_capita",
-      "compare_key": "人均GDP",
-      "unit": "元"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2023,
-      "metric_key": "resident_population",
-      "compare_key": "年末常住人口",
-      "unit": "万人"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2023,
-      "metric_key": "registered_population",
-      "compare_key": "年末户籍人口",
-      "unit": "万人"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2023,
-      "metric_key": "urbanization_rate",
-      "compare_key": "城镇化率(常住)",
-      "unit": "%"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2023,
-      "metric_key": "local_public_budget_revenue",
-      "compare_key": "地方一般公共预算收入",
-      "unit": "亿元"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2023,
-      "metric_key": "local_public_budget_expenditure",
-      "compare_key": "地方一般公共预算支出",
-      "unit": "亿元"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2024,
-      "metric_key": "gdp",
-      "compare_key": "GDP",
-      "unit": "亿元"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
       "year": 2024,
       "metric_key": "gdp_per_capita",
       "compare_key": "人均GDP",
@@ -1129,33 +1065,9 @@
       "city": "哈尔滨市",
       "region_code": "230100",
       "year": 2024,
-      "metric_key": "registered_population",
-      "compare_key": "年末户籍人口",
-      "unit": "万人"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2024,
       "metric_key": "urbanization_rate",
       "compare_key": "城镇化率(常住)",
       "unit": "%"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2024,
-      "metric_key": "local_public_budget_revenue",
-      "compare_key": "地方一般公共预算收入",
-      "unit": "亿元"
-    },
-    {
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2024,
-      "metric_key": "local_public_budget_expenditure",
-      "compare_key": "地方一般公共预算支出",
-      "unit": "亿元"
     },
     {
       "city": "哈尔滨市",
@@ -1544,14 +1456,6 @@
     {
       "city": "济南市",
       "region_code": "370100",
-      "year": 2024,
-      "metric_key": "gdp_per_capita",
-      "compare_key": "人均GDP",
-      "unit": "元"
-    },
-    {
-      "city": "济南市",
-      "region_code": "370100",
       "year": 2025,
       "metric_key": "gdp_per_capita",
       "compare_key": "人均GDP",
@@ -1724,14 +1628,6 @@
       "metric_key": "local_public_budget_expenditure",
       "compare_key": "地方一般公共预算支出",
       "unit": "亿元"
-    },
-    {
-      "city": "南京市",
-      "region_code": "320100",
-      "year": 2025,
-      "metric_key": "registered_population",
-      "compare_key": "年末户籍人口",
-      "unit": "万人"
     },
     {
       "city": "宁波市",
@@ -2097,14 +1993,6 @@
       "city": "青岛市",
       "region_code": "370200",
       "year": 2024,
-      "metric_key": "gdp_per_capita",
-      "compare_key": "人均GDP",
-      "unit": "元"
-    },
-    {
-      "city": "青岛市",
-      "region_code": "370200",
-      "year": 2024,
       "metric_key": "registered_population",
       "compare_key": "年末户籍人口",
       "unit": "万人"
@@ -2294,62 +2182,6 @@
       "unit": "亿元"
     },
     {
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2023,
-      "metric_key": "gdp_per_capita",
-      "compare_key": "人均GDP",
-      "unit": "元"
-    },
-    {
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2024,
-      "metric_key": "gdp_per_capita",
-      "compare_key": "人均GDP",
-      "unit": "元"
-    },
-    {
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2025,
-      "metric_key": "gdp_per_capita",
-      "compare_key": "人均GDP",
-      "unit": "元"
-    },
-    {
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2025,
-      "metric_key": "registered_population",
-      "compare_key": "年末户籍人口",
-      "unit": "万人"
-    },
-    {
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2025,
-      "metric_key": "urbanization_rate",
-      "compare_key": "城镇化率(常住)",
-      "unit": "%"
-    },
-    {
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2025,
-      "metric_key": "local_public_budget_revenue",
-      "compare_key": "地方一般公共预算收入",
-      "unit": "亿元"
-    },
-    {
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2025,
-      "metric_key": "local_public_budget_expenditure",
-      "compare_key": "地方一般公共预算支出",
-      "unit": "亿元"
-    },
-    {
       "city": "深圳市",
       "region_code": "440300",
       "year": 2020,
@@ -2516,22 +2348,6 @@
       "metric_key": "local_public_budget_expenditure",
       "compare_key": "地方一般公共预算支出",
       "unit": "亿元"
-    },
-    {
-      "city": "深圳市",
-      "region_code": "440300",
-      "year": 2023,
-      "metric_key": "urbanization_rate",
-      "compare_key": "城镇化率(常住)",
-      "unit": "%"
-    },
-    {
-      "city": "深圳市",
-      "region_code": "440300",
-      "year": 2024,
-      "metric_key": "urbanization_rate",
-      "compare_key": "城镇化率(常住)",
-      "unit": "%"
     },
     {
       "city": "深圳市",
@@ -2875,22 +2691,6 @@
       "year": 2022,
       "metric_key": "local_public_budget_expenditure",
       "compare_key": "地方一般公共预算支出",
-      "unit": "亿元"
-    },
-    {
-      "city": "武汉市",
-      "region_code": "420100",
-      "year": 2023,
-      "metric_key": "local_public_budget_expenditure",
-      "compare_key": "地方一般公共预算支出",
-      "unit": "亿元"
-    },
-    {
-      "city": "武汉市",
-      "region_code": "420100",
-      "year": 2024,
-      "metric_key": "local_public_budget_revenue",
-      "compare_key": "地方一般公共预算收入",
       "unit": "亿元"
     },
     {
@@ -2902,14 +2702,6 @@
       "unit": "亿元"
     },
     {
-      "city": "武汉市",
-      "region_code": "420100",
-      "year": 2025,
-      "metric_key": "gdp_per_capita",
-      "compare_key": "人均GDP",
-      "unit": "元"
-    },
-    {
       "city": "西安市",
       "region_code": "610100",
       "year": 2020,
@@ -3076,14 +2868,6 @@
       "metric_key": "local_public_budget_expenditure",
       "compare_key": "地方一般公共预算支出",
       "unit": "亿元"
-    },
-    {
-      "city": "西安市",
-      "region_code": "610100",
-      "year": 2023,
-      "metric_key": "gdp_per_capita",
-      "compare_key": "人均GDP",
-      "unit": "元"
     },
     {
       "city": "西安市",
@@ -3288,50 +3072,10 @@
     {
       "city": "长春市",
       "region_code": "220100",
-      "year": 2023,
-      "metric_key": "local_public_budget_revenue",
-      "compare_key": "地方一般公共预算收入",
-      "unit": "亿元"
-    },
-    {
-      "city": "长春市",
-      "region_code": "220100",
-      "year": 2023,
-      "metric_key": "local_public_budget_expenditure",
-      "compare_key": "地方一般公共预算支出",
-      "unit": "亿元"
-    },
-    {
-      "city": "长春市",
-      "region_code": "220100",
       "year": 2024,
       "metric_key": "registered_population",
       "compare_key": "年末户籍人口",
       "unit": "万人"
-    },
-    {
-      "city": "长春市",
-      "region_code": "220100",
-      "year": 2024,
-      "metric_key": "local_public_budget_revenue",
-      "compare_key": "地方一般公共预算收入",
-      "unit": "亿元"
-    },
-    {
-      "city": "长春市",
-      "region_code": "220100",
-      "year": 2024,
-      "metric_key": "local_public_budget_expenditure",
-      "compare_key": "地方一般公共预算支出",
-      "unit": "亿元"
-    },
-    {
-      "city": "长春市",
-      "region_code": "220100",
-      "year": 2025,
-      "metric_key": "gdp",
-      "compare_key": "GDP",
-      "unit": "亿元"
     },
     {
       "city": "长春市",
@@ -3544,52 +3288,6 @@
       ]
     },
     {
-      "id": "320100-2025",
-      "city": "南京市",
-      "region_code": "320100",
-      "year": 2025,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "registered_population",
-          "compare_key": "年末户籍人口",
-          "unit": "万人"
-        }
-      ],
-      "expected_impact": 1,
-      "recommended_document": "2025年南京市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "nanjing-statistics",
-          "city": "南京市",
-          "region_code": "320100",
-          "channel": "statistics",
-          "agency": "南京市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://tjj.nanjing.gov.cn/"
-        },
-        {
-          "id": "nanjing-finance",
-          "city": "南京市",
-          "region_code": "320100",
-          "channel": "finance",
-          "agency": "南京市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://czj.nanjing.gov.cn/"
-        },
-        {
-          "id": "nanjing-health",
-          "city": "南京市",
-          "region_code": "320100",
-          "channel": "health",
-          "agency": "南京市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://wjw.nanjing.gov.cn/"
-        }
-      ]
-    },
-    {
       "id": "330200-2025",
       "city": "宁波市",
       "region_code": "330200",
@@ -3687,72 +3385,6 @@
       ]
     },
     {
-      "id": "350200-2025",
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2025,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "gdp_per_capita",
-          "compare_key": "人均GDP",
-          "unit": "元"
-        },
-        {
-          "metric_key": "registered_population",
-          "compare_key": "年末户籍人口",
-          "unit": "万人"
-        },
-        {
-          "metric_key": "urbanization_rate",
-          "compare_key": "城镇化率(常住)",
-          "unit": "%"
-        },
-        {
-          "metric_key": "local_public_budget_revenue",
-          "compare_key": "地方一般公共预算收入",
-          "unit": "亿元"
-        },
-        {
-          "metric_key": "local_public_budget_expenditure",
-          "compare_key": "地方一般公共预算支出",
-          "unit": "亿元"
-        }
-      ],
-      "expected_impact": 5,
-      "recommended_document": "2025年厦门市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "xiamen-statistics",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "statistics",
-          "agency": "厦门市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://tjj.xm.gov.cn/"
-        },
-        {
-          "id": "xiamen-finance",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "finance",
-          "agency": "厦门市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://czj.xm.gov.cn/"
-        },
-        {
-          "id": "xiamen-health",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "health",
-          "agency": "厦门市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://hfpc.xm.gov.cn/"
-        }
-      ]
-    },
-    {
       "id": "440300-2025",
       "city": "深圳市",
       "region_code": "440300",
@@ -3795,52 +3427,6 @@
           "agency": "深圳市卫生健康委员会",
           "topic": "卫生健康公开数据",
           "url": "https://wjw.sz.gov.cn/"
-        }
-      ]
-    },
-    {
-      "id": "420100-2025",
-      "city": "武汉市",
-      "region_code": "420100",
-      "year": 2025,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "gdp_per_capita",
-          "compare_key": "人均GDP",
-          "unit": "元"
-        }
-      ],
-      "expected_impact": 1,
-      "recommended_document": "2025年武汉市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "wuhan-statistics",
-          "city": "武汉市",
-          "region_code": "420100",
-          "channel": "statistics",
-          "agency": "武汉市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://tjj.wuhan.gov.cn/"
-        },
-        {
-          "id": "wuhan-finance",
-          "city": "武汉市",
-          "region_code": "420100",
-          "channel": "finance",
-          "agency": "武汉市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://czj.wuhan.gov.cn/"
-        },
-        {
-          "id": "wuhan-health",
-          "city": "武汉市",
-          "region_code": "420100",
-          "channel": "health",
-          "agency": "武汉市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://wjw.wuhan.gov.cn/"
         }
       ]
     },
@@ -3899,11 +3485,6 @@
       "priority": "P0",
       "missing_metrics": [
         {
-          "metric_key": "gdp",
-          "compare_key": "GDP",
-          "unit": "亿元"
-        },
-        {
           "metric_key": "gdp_per_capita",
           "compare_key": "人均GDP",
           "unit": "元"
@@ -3929,7 +3510,7 @@
           "unit": "亿元"
         }
       ],
-      "expected_impact": 6,
+      "expected_impact": 5,
       "recommended_document": "2025年长春市国民经济和社会发展统计公报",
       "source_channels": [
         {
@@ -3970,11 +3551,6 @@
       "priority": "P0",
       "missing_metrics": [
         {
-          "metric_key": "gdp",
-          "compare_key": "GDP",
-          "unit": "亿元"
-        },
-        {
           "metric_key": "gdp_per_capita",
           "compare_key": "人均GDP",
           "unit": "元"
@@ -3985,27 +3561,12 @@
           "unit": "万人"
         },
         {
-          "metric_key": "registered_population",
-          "compare_key": "年末户籍人口",
-          "unit": "万人"
-        },
-        {
           "metric_key": "urbanization_rate",
           "compare_key": "城镇化率(常住)",
           "unit": "%"
-        },
-        {
-          "metric_key": "local_public_budget_revenue",
-          "compare_key": "地方一般公共预算收入",
-          "unit": "亿元"
-        },
-        {
-          "metric_key": "local_public_budget_expenditure",
-          "compare_key": "地方一般公共预算支出",
-          "unit": "亿元"
         }
       ],
-      "expected_impact": 7,
+      "expected_impact": 3,
       "recommended_document": "2024年哈尔滨市国民经济和社会发展统计公报",
       "source_channels": [
         {
@@ -4038,52 +3599,6 @@
       ]
     },
     {
-      "id": "370100-2024",
-      "city": "济南市",
-      "region_code": "370100",
-      "year": 2024,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "gdp_per_capita",
-          "compare_key": "人均GDP",
-          "unit": "元"
-        }
-      ],
-      "expected_impact": 1,
-      "recommended_document": "2024年济南市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "jinan-statistics",
-          "city": "济南市",
-          "region_code": "370100",
-          "channel": "statistics",
-          "agency": "济南市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://jntj.jinan.gov.cn/"
-        },
-        {
-          "id": "jinan-finance",
-          "city": "济南市",
-          "region_code": "370100",
-          "channel": "finance",
-          "agency": "济南市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://jncz.jinan.gov.cn/"
-        },
-        {
-          "id": "jinan-health",
-          "city": "济南市",
-          "region_code": "370100",
-          "channel": "health",
-          "agency": "济南市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://jnmhc.jinan.gov.cn/"
-        }
-      ]
-    },
-    {
       "id": "370200-2024",
       "city": "青岛市",
       "region_code": "370200",
@@ -4092,17 +3607,12 @@
       "priority": "P0",
       "missing_metrics": [
         {
-          "metric_key": "gdp_per_capita",
-          "compare_key": "人均GDP",
-          "unit": "元"
-        },
-        {
           "metric_key": "registered_population",
           "compare_key": "年末户籍人口",
           "unit": "万人"
         }
       ],
-      "expected_impact": 2,
+      "expected_impact": 1,
       "recommended_document": "2024年青岛市国民经济和社会发展统计公报",
       "source_channels": [
         {
@@ -4135,98 +3645,6 @@
       ]
     },
     {
-      "id": "350200-2024",
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2024,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "gdp_per_capita",
-          "compare_key": "人均GDP",
-          "unit": "元"
-        }
-      ],
-      "expected_impact": 1,
-      "recommended_document": "2024年厦门市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "xiamen-statistics",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "statistics",
-          "agency": "厦门市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://tjj.xm.gov.cn/"
-        },
-        {
-          "id": "xiamen-finance",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "finance",
-          "agency": "厦门市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://czj.xm.gov.cn/"
-        },
-        {
-          "id": "xiamen-health",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "health",
-          "agency": "厦门市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://hfpc.xm.gov.cn/"
-        }
-      ]
-    },
-    {
-      "id": "440300-2024",
-      "city": "深圳市",
-      "region_code": "440300",
-      "year": 2024,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "urbanization_rate",
-          "compare_key": "城镇化率(常住)",
-          "unit": "%"
-        }
-      ],
-      "expected_impact": 1,
-      "recommended_document": "2024年深圳市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "shenzhen-statistics",
-          "city": "深圳市",
-          "region_code": "440300",
-          "channel": "statistics",
-          "agency": "深圳市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://tjj.sz.gov.cn/"
-        },
-        {
-          "id": "shenzhen-finance",
-          "city": "深圳市",
-          "region_code": "440300",
-          "channel": "finance",
-          "agency": "深圳市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://szfb.sz.gov.cn/"
-        },
-        {
-          "id": "shenzhen-health",
-          "city": "深圳市",
-          "region_code": "440300",
-          "channel": "health",
-          "agency": "深圳市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://wjw.sz.gov.cn/"
-        }
-      ]
-    },
-    {
       "id": "420100-2024",
       "city": "武汉市",
       "region_code": "420100",
@@ -4235,17 +3653,12 @@
       "priority": "P0",
       "missing_metrics": [
         {
-          "metric_key": "local_public_budget_revenue",
-          "compare_key": "地方一般公共预算收入",
-          "unit": "亿元"
-        },
-        {
           "metric_key": "local_public_budget_expenditure",
           "compare_key": "地方一般公共预算支出",
           "unit": "亿元"
         }
       ],
-      "expected_impact": 2,
+      "expected_impact": 1,
       "recommended_document": "2024年武汉市国民经济和社会发展统计公报",
       "source_channels": [
         {
@@ -4335,19 +3748,9 @@
           "metric_key": "registered_population",
           "compare_key": "年末户籍人口",
           "unit": "万人"
-        },
-        {
-          "metric_key": "local_public_budget_revenue",
-          "compare_key": "地方一般公共预算收入",
-          "unit": "亿元"
-        },
-        {
-          "metric_key": "local_public_budget_expenditure",
-          "compare_key": "地方一般公共预算支出",
-          "unit": "亿元"
         }
       ],
-      "expected_impact": 3,
+      "expected_impact": 1,
       "recommended_document": "2024年长春市国民经济和社会发展统计公报",
       "source_channels": [
         {
@@ -4426,82 +3829,6 @@
       ]
     },
     {
-      "id": "230100-2023",
-      "city": "哈尔滨市",
-      "region_code": "230100",
-      "year": 2023,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "gdp",
-          "compare_key": "GDP",
-          "unit": "亿元"
-        },
-        {
-          "metric_key": "gdp_per_capita",
-          "compare_key": "人均GDP",
-          "unit": "元"
-        },
-        {
-          "metric_key": "resident_population",
-          "compare_key": "年末常住人口",
-          "unit": "万人"
-        },
-        {
-          "metric_key": "registered_population",
-          "compare_key": "年末户籍人口",
-          "unit": "万人"
-        },
-        {
-          "metric_key": "urbanization_rate",
-          "compare_key": "城镇化率(常住)",
-          "unit": "%"
-        },
-        {
-          "metric_key": "local_public_budget_revenue",
-          "compare_key": "地方一般公共预算收入",
-          "unit": "亿元"
-        },
-        {
-          "metric_key": "local_public_budget_expenditure",
-          "compare_key": "地方一般公共预算支出",
-          "unit": "亿元"
-        }
-      ],
-      "expected_impact": 7,
-      "recommended_document": "2023年哈尔滨市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "harbin-statistics",
-          "city": "哈尔滨市",
-          "region_code": "230100",
-          "channel": "statistics",
-          "agency": "哈尔滨市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://www.harbin.gov.cn/haerbin/c104569/common_list.shtml"
-        },
-        {
-          "id": "harbin-finance",
-          "city": "哈尔滨市",
-          "region_code": "230100",
-          "channel": "finance",
-          "agency": "哈尔滨市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://www.harbin.gov.cn/haerbin/c104597/common_list.shtml"
-        },
-        {
-          "id": "harbin-health",
-          "city": "哈尔滨市",
-          "region_code": "230100",
-          "channel": "health",
-          "agency": "哈尔滨市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://www.harbin.gov.cn/haerbin/c104621/common_list.shtml"
-        }
-      ]
-    },
-    {
       "id": "370200-2023",
       "city": "青岛市",
       "region_code": "370200",
@@ -4553,144 +3880,6 @@
       ]
     },
     {
-      "id": "350200-2023",
-      "city": "厦门市",
-      "region_code": "350200",
-      "year": 2023,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "gdp_per_capita",
-          "compare_key": "人均GDP",
-          "unit": "元"
-        }
-      ],
-      "expected_impact": 1,
-      "recommended_document": "2023年厦门市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "xiamen-statistics",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "statistics",
-          "agency": "厦门市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://tjj.xm.gov.cn/"
-        },
-        {
-          "id": "xiamen-finance",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "finance",
-          "agency": "厦门市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://czj.xm.gov.cn/"
-        },
-        {
-          "id": "xiamen-health",
-          "city": "厦门市",
-          "region_code": "350200",
-          "channel": "health",
-          "agency": "厦门市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://hfpc.xm.gov.cn/"
-        }
-      ]
-    },
-    {
-      "id": "440300-2023",
-      "city": "深圳市",
-      "region_code": "440300",
-      "year": 2023,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "urbanization_rate",
-          "compare_key": "城镇化率(常住)",
-          "unit": "%"
-        }
-      ],
-      "expected_impact": 1,
-      "recommended_document": "2023年深圳市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "shenzhen-statistics",
-          "city": "深圳市",
-          "region_code": "440300",
-          "channel": "statistics",
-          "agency": "深圳市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://tjj.sz.gov.cn/"
-        },
-        {
-          "id": "shenzhen-finance",
-          "city": "深圳市",
-          "region_code": "440300",
-          "channel": "finance",
-          "agency": "深圳市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://szfb.sz.gov.cn/"
-        },
-        {
-          "id": "shenzhen-health",
-          "city": "深圳市",
-          "region_code": "440300",
-          "channel": "health",
-          "agency": "深圳市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://wjw.sz.gov.cn/"
-        }
-      ]
-    },
-    {
-      "id": "420100-2023",
-      "city": "武汉市",
-      "region_code": "420100",
-      "year": 2023,
-      "status": "pending",
-      "priority": "P0",
-      "missing_metrics": [
-        {
-          "metric_key": "local_public_budget_expenditure",
-          "compare_key": "地方一般公共预算支出",
-          "unit": "亿元"
-        }
-      ],
-      "expected_impact": 1,
-      "recommended_document": "2023年武汉市国民经济和社会发展统计公报",
-      "source_channels": [
-        {
-          "id": "wuhan-statistics",
-          "city": "武汉市",
-          "region_code": "420100",
-          "channel": "statistics",
-          "agency": "武汉市统计局",
-          "topic": "统计公报与统计数据",
-          "url": "https://tjj.wuhan.gov.cn/"
-        },
-        {
-          "id": "wuhan-finance",
-          "city": "武汉市",
-          "region_code": "420100",
-          "channel": "finance",
-          "agency": "武汉市财政局",
-          "topic": "财政预决算与财政数据",
-          "url": "https://czj.wuhan.gov.cn/"
-        },
-        {
-          "id": "wuhan-health",
-          "city": "武汉市",
-          "region_code": "420100",
-          "channel": "health",
-          "agency": "武汉市卫生健康委员会",
-          "topic": "卫生健康公开数据",
-          "url": "https://wjw.wuhan.gov.cn/"
-        }
-      ]
-    },
-    {
       "id": "610100-2023",
       "city": "西安市",
       "region_code": "610100",
@@ -4699,17 +3888,12 @@
       "priority": "P0",
       "missing_metrics": [
         {
-          "metric_key": "gdp_per_capita",
-          "compare_key": "人均GDP",
-          "unit": "元"
-        },
-        {
           "metric_key": "registered_population",
           "compare_key": "年末户籍人口",
           "unit": "万人"
         }
       ],
-      "expected_impact": 2,
+      "expected_impact": 1,
       "recommended_document": "2023年西安市国民经济和社会发展统计公报",
       "source_channels": [
         {
@@ -4753,19 +3937,9 @@
           "metric_key": "registered_population",
           "compare_key": "年末户籍人口",
           "unit": "万人"
-        },
-        {
-          "metric_key": "local_public_budget_revenue",
-          "compare_key": "地方一般公共预算收入",
-          "unit": "亿元"
-        },
-        {
-          "metric_key": "local_public_budget_expenditure",
-          "compare_key": "地方一般公共预算支出",
-          "unit": "亿元"
         }
       ],
-      "expected_impact": 3,
+      "expected_impact": 1,
       "recommended_document": "2023年长春市国民经济和社会发展统计公报",
       "source_channels": [
         {
@@ -8298,116 +7472,8 @@
       ]
     },
     {
-      "region": "广州市",
-      "source_url": "https://wjw.gz.gov.cn/",
-      "rows": 17,
-      "years": [
-        2025
-      ],
-      "compare_keys": [
-        "出院人数",
-        "公立医院数",
-        "基层医疗卫生机构数",
-        "每千人口卫生技术人员数",
-        "每千人口医疗卫生机构床位数",
-        "每千人口执业(助理)医师数",
-        "每千人口注册护士数",
-        "年末常住人口",
-        "三级医院数",
-        "三甲医院数",
-        "卫生技术人员数",
-        "医疗卫生机构实有床位数",
-        "医疗卫生机构总数",
-        "医院数",
-        "执业(助理)医师数",
-        "注册护士数",
-        "总诊疗人次"
-      ]
-    },
-    {
       "region": "哈尔滨市",
       "source_url": "https://www.harbin.gov.cn/",
-      "rows": 17,
-      "years": [
-        2025
-      ],
-      "compare_keys": [
-        "出院人数",
-        "公立医院数",
-        "基层医疗卫生机构数",
-        "每千人口卫生技术人员数",
-        "每千人口医疗卫生机构床位数",
-        "每千人口执业(助理)医师数",
-        "每千人口注册护士数",
-        "年末常住人口",
-        "三级医院数",
-        "三甲医院数",
-        "卫生技术人员数",
-        "医疗卫生机构实有床位数",
-        "医疗卫生机构总数",
-        "医院数",
-        "执业(助理)医师数",
-        "注册护士数",
-        "总诊疗人次"
-      ]
-    },
-    {
-      "region": "杭州市",
-      "source_url": "https://wsjkw.hangzhou.gov.cn/",
-      "rows": 17,
-      "years": [
-        2025
-      ],
-      "compare_keys": [
-        "出院人数",
-        "公立医院数",
-        "基层医疗卫生机构数",
-        "每千人口卫生技术人员数",
-        "每千人口医疗卫生机构床位数",
-        "每千人口执业(助理)医师数",
-        "每千人口注册护士数",
-        "年末常住人口",
-        "三级医院数",
-        "三甲医院数",
-        "卫生技术人员数",
-        "医疗卫生机构实有床位数",
-        "医疗卫生机构总数",
-        "医院数",
-        "执业(助理)医师数",
-        "注册护士数",
-        "总诊疗人次"
-      ]
-    },
-    {
-      "region": "济南市",
-      "source_url": "https://jnmhc.jinan.gov.cn/",
-      "rows": 17,
-      "years": [
-        2025
-      ],
-      "compare_keys": [
-        "出院人数",
-        "公立医院数",
-        "基层医疗卫生机构数",
-        "每千人口卫生技术人员数",
-        "每千人口医疗卫生机构床位数",
-        "每千人口执业(助理)医师数",
-        "每千人口注册护士数",
-        "年末常住人口",
-        "三级医院数",
-        "三甲医院数",
-        "卫生技术人员数",
-        "医疗卫生机构实有床位数",
-        "医疗卫生机构总数",
-        "医院数",
-        "执业(助理)医师数",
-        "注册护士数",
-        "总诊疗人次"
-      ]
-    },
-    {
-      "region": "南京市",
-      "source_url": "https://wjw.nanjing.gov.cn/",
       "rows": 17,
       "years": [
         2025
@@ -8514,89 +7580,8 @@
       ]
     },
     {
-      "region": "深圳市",
-      "source_url": "https://wjw.sz.gov.cn/",
-      "rows": 17,
-      "years": [
-        2025
-      ],
-      "compare_keys": [
-        "出院人数",
-        "公立医院数",
-        "基层医疗卫生机构数",
-        "每千人口卫生技术人员数",
-        "每千人口医疗卫生机构床位数",
-        "每千人口执业(助理)医师数",
-        "每千人口注册护士数",
-        "年末常住人口",
-        "三级医院数",
-        "三甲医院数",
-        "卫生技术人员数",
-        "医疗卫生机构实有床位数",
-        "医疗卫生机构总数",
-        "医院数",
-        "执业(助理)医师数",
-        "注册护士数",
-        "总诊疗人次"
-      ]
-    },
-    {
       "region": "沈阳市",
       "source_url": "https://wjw.shenyang.gov.cn/",
-      "rows": 17,
-      "years": [
-        2025
-      ],
-      "compare_keys": [
-        "出院人数",
-        "公立医院数",
-        "基层医疗卫生机构数",
-        "每千人口卫生技术人员数",
-        "每千人口医疗卫生机构床位数",
-        "每千人口执业(助理)医师数",
-        "每千人口注册护士数",
-        "年末常住人口",
-        "三级医院数",
-        "三甲医院数",
-        "卫生技术人员数",
-        "医疗卫生机构实有床位数",
-        "医疗卫生机构总数",
-        "医院数",
-        "执业(助理)医师数",
-        "注册护士数",
-        "总诊疗人次"
-      ]
-    },
-    {
-      "region": "武汉市",
-      "source_url": "https://wjw.wuhan.gov.cn/",
-      "rows": 17,
-      "years": [
-        2025
-      ],
-      "compare_keys": [
-        "出院人数",
-        "公立医院数",
-        "基层医疗卫生机构数",
-        "每千人口卫生技术人员数",
-        "每千人口医疗卫生机构床位数",
-        "每千人口执业(助理)医师数",
-        "每千人口注册护士数",
-        "年末常住人口",
-        "三级医院数",
-        "三甲医院数",
-        "卫生技术人员数",
-        "医疗卫生机构实有床位数",
-        "医疗卫生机构总数",
-        "医院数",
-        "执业(助理)医师数",
-        "注册护士数",
-        "总诊疗人次"
-      ]
-    },
-    {
-      "region": "西安市",
-      "source_url": "https://xawjw.xa.gov.cn/",
       "rows": 17,
       "years": [
         2025

@@ -112,3 +112,27 @@ test("覆盖维护页可筛选缺口并下载标准台账", async ({ page, reque
   await expect(page.locator("#taskList")).toContainText("当前条件下没有任务");
   expect(pageErrors).toEqual([]);
 });
+
+test("城市实值分析按需加载数据包并可切换年度", async ({ page }) => {
+  const requested = [];
+  page.on("request", (request) => requested.push(new URL(request.url()).pathname));
+  const started = Date.now();
+  await page.goto("/city-analysis.html");
+  await expect(page).toHaveTitle(/城市实值分析/);
+  await expect(page.locator("#status")).toContainText("实际值");
+  expect(Date.now() - started).toBeLessThan(2000);
+  await expect(page.locator("#ranking tr")).toHaveCount(7);
+  await expect(page.locator("#radar .shape")).toBeVisible();
+  await page.locator("#year").selectOption("2024");
+  await expect(page.locator("#status")).toContainText("2024");
+  await expect(page.locator("#heat .gap").first()).toBeVisible();
+  expect(requested).toContain("/data/packs/subprov-core.json");
+  expect(requested).not.toContain("/public-data.js");
+
+  for (const buttonName of ["导出雷达图 SVG", "导出排名 CSV", "导出分析摘要"]) {
+    const downloadPromise = page.waitForEvent("download");
+    await page.getByRole("button", { name: buttonName, exact: true }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/\.(svg|csv|md)$/);
+  }
+});

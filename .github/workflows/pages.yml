@@ -58,9 +58,12 @@ jobs:
           cp app-core.js _site/
           cp public-data.js _site/
           cp analysis-workbench.js _site/
+          cp city-analysis.html _site/
+          cp city-analysis.js _site/
           cp about.html _site/
           cp coverage.html _site/
           cp README.md _site/
+          cp CHANGELOG.md _site/
           cp .nojekyll _site/
           cp "公开指标数据库.xlsx" _site/
           cp -R docs _site/docs

@@ -1,13 +1,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
+import { createRequire } from "node:module";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const workbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
 const dataScriptPath = path.join(repoRoot, "public-data.js");
 const tmpDir = path.join(repoRoot, "tmp");
-const outputDir = path.join(repoRoot, "outputs", "closeout-20260803");
+const outputDir = path.join(repoRoot, "outputs", "complete-plan-20260819");
+
+const artifactTool = process.env.DATA_WORKSPACE_NODE_MODULES
+  ? await import(pathToFileURL(createRequire(path.join(process.env.DATA_WORKSPACE_NODE_MODULES, "package.json")).resolve("@oai/artifact-tool")).href)
+  : await import("@oai/artifact-tool");
+const { FileBlob, SpreadsheetFile } = artifactTool;
 
 await fs.mkdir(tmpDir, { recursive: true });
 await fs.mkdir(outputDir, { recursive: true });

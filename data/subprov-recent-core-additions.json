@@ -57,6 +57,7 @@
       "source_url": "https://tjj.xa.gov.cn/web_files/tjj/file/2024/04/08/202404080948532613896.pdf",
       "metrics": {
         "gdp": 12010.76,
+        "gdp_per_capita": 92128,
         "resident_population": 1307.82,
         "urbanization_rate": 79.88,
         "local_public_budget_revenue": 951.61,
@@ -132,7 +133,9 @@
         "gdp": 7002.06,
         "gdp_per_capita": 77084,
         "resident_population": 910.19,
-        "urbanization_rate": 68.2
+        "urbanization_rate": 68.2,
+        "local_public_budget_revenue": 576.52,
+        "local_public_budget_expenditure": 1074.97
       }
     },
     {
@@ -145,8 +148,19 @@
         "gdp": 7632.19,
         "gdp_per_capita": 83930,
         "resident_population": 908.51,
-        "urbanization_rate": 68.43
+        "urbanization_rate": 68.43,
+        "local_public_budget_revenue": 427.48,
+        "local_public_budget_expenditure": 1056.21
       }
+    },
+    {
+      "region_code": "220100",
+      "region": "长春市",
+      "year": 2025,
+      "responsible": "长春市统计局",
+      "source_url": "https://tjj.changchun.gov.cn/tjsj/",
+      "source": "2025年长春市地区生产总值统一核算结果",
+      "metrics": { "gdp": 8005.59 }
     },
     {
       "region_code": "510100",
@@ -465,7 +479,11 @@
       "responsible": "厦门市统计局",
       "source_url": "https://tjj.xm.gov.cn/tjzl/tjkb/202601/t20260124_2978684.htm",
       "metrics": {
-        "gdp": 8980.37
+        "gdp": 8980.37,
+        "registered_population": 315.96,
+        "urbanization_rate": 91.31,
+        "local_public_budget_revenue": 961.08,
+        "local_public_budget_expenditure": 1076.56
       }
     },
     {
@@ -477,6 +495,127 @@
       "metrics": {
         "local_public_budget_expenditure": 2520.6075
       }
+    },
+    {
+      "region_code": "320100",
+      "region": "南京市",
+      "year": 2025,
+      "responsible": "南京市卫生健康委员会",
+      "source_url": "https://wjw.nanjing.gov.cn/njswshjhsywyh/202607/t20260727_5883557.html",
+      "metrics": { "registered_population": 747.6 }
+    },
+    {
+      "region_code": "440300",
+      "region": "深圳市",
+      "year": 2023,
+      "responsible": "深圳市统计局",
+      "source_url": "https://www.sz.gov.cn/hdjlpt/detail?pid=2930916&via=pc",
+      "metrics": { "urbanization_rate": 99.8 }
+    },
+    {
+      "region_code": "420100",
+      "region": "武汉市",
+      "year": 2024,
+      "responsible": "武汉市统计局、国家统计局武汉调查队",
+      "source_url": "https://tjj.wuhan.gov.cn/tjfw/tjgb/202503/t20250327_2558447.shtml",
+      "metrics": { "local_public_budget_revenue": 1667.31 }
+    },
+    {
+      "region_code": "230100",
+      "region": "哈尔滨市",
+      "year": 2024,
+      "responsible": "哈尔滨市统计局、国家统计局哈尔滨调查队",
+      "source_url": "https://www.harbin.gov.cn/haerbin/c104569/202506/1063449/files/2024%E5%B9%B4%E5%93%88%E5%B0%94%E6%BB%A8%E5%B8%82%E5%9B%BD%E6%B0%91%E7%BB%8F%E6%B5%8E%E5%92%8C%E7%A4%BE%E4%BC%9A%E5%8F%91%E5%B1%95%E7%BB%9F%E8%AE%A1%E5%85%AC%E6%8A%A5.pdf",
+      "metrics": { "gdp": 6016.3, "registered_population": 933.0, "local_public_budget_revenue": 337.8, "local_public_budget_expenditure": 1257.6 }
+    },
+    {
+      "region_code": "230100",
+      "region": "哈尔滨市",
+      "year": 2023,
+      "responsible": "哈尔滨市统计局、国家统计局哈尔滨调查队",
+      "source": "2023年哈尔滨市国民经济和社会发展统计公报及黑龙江统计年鉴2024",
+      "source_url": "https://www.hljszw.org.cn/news/4502.html",
+      "note": "统计公报与年鉴口径交叉核验",
+      "metrics": {
+        "gdp": 5576.3,
+        "gdp_per_capita": 56901,
+        "resident_population": 977.6,
+        "registered_population": 935.15,
+        "urbanization_rate": 71.82,
+        "local_public_budget_revenue": 313.1,
+        "local_public_budget_expenditure": 1080.7
+      }
+    },
+    {
+      "region_code": "350200",
+      "region": "厦门市",
+      "year": 2023,
+      "responsible": "厦门市统计局、国家统计局厦门调查队",
+      "source_url": "https://tjj.xm.gov.cn/tjzl/ndgb/202403/t20240320_2829912.htm",
+      "note": "依据公报GDP与年均常住人口口径计算",
+      "metrics": { "gdp_per_capita": 151697 }
+    },
+    {
+      "region_code": "350200",
+      "region": "厦门市",
+      "year": 2024,
+      "responsible": "厦门市统计局、国家统计局厦门调查队",
+      "source_url": "https://tjj.xm.gov.cn/zfxxgk/zfxxgkml/tjsjzl/ndgb/202503/t20250326_2924164.htm",
+      "note": "依据公报GDP与年均常住人口口径计算",
+      "metrics": { "gdp_per_capita": 160542 }
+    },
+    {
+      "region_code": "350200",
+      "region": "厦门市",
+      "year": 2025,
+      "responsible": "厦门市统计局",
+      "source_url": "https://tjj.xm.gov.cn/tjzl/tjkb/202601/t20260124_2978684.htm",
+      "note": "依据官方经济运行数据与年均常住人口口径计算",
+      "metrics": { "gdp_per_capita": 167600 }
+    },
+    {
+      "region_code": "370100",
+      "region": "济南市",
+      "year": 2024,
+      "responsible": "济南市统计局、国家统计局济南调查队",
+      "source_url": "https://jntj.jinan.gov.cn/col57208/art/2025/art_57208_4754793.html",
+      "note": "依据公报GDP与年均常住人口口径计算",
+      "metrics": { "gdp_per_capita": 142800 }
+    },
+    {
+      "region_code": "440300",
+      "region": "深圳市",
+      "year": 2024,
+      "responsible": "深圳市统计局",
+      "source_url": "https://tjj.sz.gov.cn/gkmlpt/content/12/12190/mpost_12190509.html",
+      "metrics": { "urbanization_rate": 99.8 }
+    },
+    {
+      "region_code": "370200",
+      "region": "青岛市",
+      "year": 2024,
+      "responsible": "青岛市统计局",
+      "source_url": "https://www.qingdao.gov.cn/ywdt/zwzl/2025_gkcn/cnsx2_2025/202512/t20251205_10394645.shtml",
+      "note": "官方公开承诺事项采用16.1万元的发布精度",
+      "metrics": { "gdp_per_capita": 161000 }
+    },
+    {
+      "region_code": "420100",
+      "region": "武汉市",
+      "year": 2023,
+      "responsible": "武汉市财政局",
+      "source": "武汉市2023年预算执行情况",
+      "source_url": "https://www.wuhan.gov.cn/ztzl/yjs/2024/yjsgk/sndjs/",
+      "metrics": { "local_public_budget_expenditure": 2205.3666 }
+    },
+    {
+      "region_code": "420100",
+      "region": "武汉市",
+      "year": 2025,
+      "responsible": "武汉市统计局、国家统计局武汉调查队",
+      "source_url": "https://tjj.wuhan.gov.cn/tjfw/tjgb/202604/t20260408_2750693.shtml",
+      "note": "依据公报GDP与年均常住人口口径计算",
+      "metrics": { "gdp_per_capita": 159800 }
     }
   ]
 }

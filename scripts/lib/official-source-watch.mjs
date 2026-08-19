@@ -25,3 +25,21 @@ export function classifyFetchError(error) {
 export function isActionableSourceChange(change) {
   return change.kind !== "status" || ["unavailable", "restricted"].includes(change.current);
 }
+
+export async function fetchWithRetry(url, options = {}, policy = {}) {
+  const attempts = policy.attempts || 3;
+  const delays = policy.delays || [250, 1000, 3000];
+  let lastError;
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    try {
+      const response = await fetch(url, options);
+      if (!TRANSIENT_HTTP_STATUSES.has(response.status) || attempt === attempts - 1) return response;
+      lastError = new Error(`HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+      if (attempt === attempts - 1) throw error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, delays[Math.min(attempt, delays.length - 1)] || 0));
+  }
+  throw lastError;
+}

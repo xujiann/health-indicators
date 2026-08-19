@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
 import crypto from "node:crypto";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { SOURCE_INDEX_NOTE } from "./lib/subprov-core.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
@@ -12,6 +13,7 @@ const publicWorkbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
 const publicDataScriptPath = path.join(repoRoot, "public-data.js");
 const dataManifestPath = path.join(additionsDir, "public-data-manifest.json");
 const sourceOverridesPath = path.join(additionsDir, "source-provenance-overrides.json");
+const sourceBundlesPath = path.join(additionsDir, "source-provenance-bundles.json");
 const htmlPath = path.join(repoRoot, "index.html");
 
 const headers = [
@@ -140,6 +142,16 @@ const nationalMedicalInsuranceMetricDefinitions = {
 
 function normalizeRecord(record) {
   return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value == null ? "" : value]));
+}
+
+function ensureGovernanceFields(record) {
+  const key = String(record.compare_key || record.indicator || "");
+  const fallbackUnit = /增速|增长率|占比|城镇化率/.test(key) ? "%" : (/比/.test(key) ? "比值" : "无量纲");
+  return normalizeRecord({
+    ...record,
+    responsible: record.responsible || record.source,
+    unit: record.unit || fallbackUnit,
+  });
 }
 
 function expandNationalHealthSeries(payload) {
@@ -340,7 +352,10 @@ export function recordKey(record) {
 }
 
 async function buildWorkbook(headers, records, outputPath) {
-  const { SpreadsheetFile, Workbook } = await import("@oai/artifact-tool");
+  const artifactTool = process.env.DATA_WORKSPACE_NODE_MODULES
+    ? await import(pathToFileURL(createRequire(path.join(process.env.DATA_WORKSPACE_NODE_MODULES, "package.json")).resolve("@oai/artifact-tool")).href)
+    : await import("@oai/artifact-tool");
+  const { SpreadsheetFile, Workbook } = artifactTool;
   const workbook = Workbook.create();
   const note = workbook.worksheets.add("说明");
   note.getRange("A1").values = [["国家·辽宁·大连 公开指标数据库"]];
@@ -470,12 +485,19 @@ async function main() {
   const basePublic = JSON.parse(await fs.readFile(baseRecordsPath, "utf8")).map(normalizeRecord);
   const additions = (await loadAdditions()).map(normalizeRecord);
   const sourceOverrides = JSON.parse(await fs.readFile(sourceOverridesPath, "utf8"));
+  const sourceBundles = JSON.parse(await fs.readFile(sourceBundlesPath, "utf8"));
   if (sourceOverrides.schema_version !== 1 || !Array.isArray(sourceOverrides.overrides)) {
     throw new Error("Unsupported source provenance overrides");
   }
   const rawRecords = [...basePublic, ...additions];
   const rawByKey = new Map(rawRecords.map((record) => [recordKey(record), record]));
   const overrideByKey = new Map();
+  if (sourceBundles.schema_version !== 1 || !Array.isArray(sourceBundles.bundles)) throw new Error("Unsupported source provenance bundles");
+  for (const bundle of sourceBundles.bundles) {
+    const targets = rawRecords.filter((record) => record.region === bundle.region && +record.year === +bundle.year && String(publicizeSubprov(record).note || "").includes(SOURCE_INDEX_NOTE));
+    if (!targets.length) throw new Error(`Source provenance bundle has no targets: ${bundle.region} ${bundle.year}`);
+    for (const target of targets) overrideByKey.set(recordKey(target), { ...bundle, note: "年度官方统计原文证据已归档" });
+  }
   for (const override of sourceOverrides.overrides) {
     if (!override.record_key || overrideByKey.has(override.record_key)) {
       throw new Error(`Duplicate or missing source override key: ${override.record_key || "—"}`);
@@ -512,7 +534,7 @@ async function main() {
     .forEach((record) => {
     mergedMap.set(recordKey(record), record);
   });
-  const merged = [...mergedMap.values()].sort(sortRecord);
+  const merged = [...mergedMap.values()].map(ensureGovernanceFields).sort(sortRecord);
 
   const dataLiteral = JSON.stringify(merged);
   const checksum = crypto.createHash("sha256").update(dataLiteral).digest("hex");
@@ -526,6 +548,7 @@ async function main() {
       "data/base-public-records.json",
       "data/*-additions.json",
       "data/source-provenance-overrides.json",
+      "data/source-provenance-bundles.json",
     ],
   }, null, 2)}\n`;
   await writeOrCheck(publicDataScriptPath, dataScript, checkOnly);
@@ -543,6 +566,10 @@ async function main() {
     );
   }
   nextHtml = nextHtml
+    .replace(
+      '<a href="coverage.html">覆盖维护</a><a href="about.html">关于</a>',
+      '<a href="coverage.html">覆盖维护</a><a href="city-analysis.html">城市分析</a><a href="about.html">关于</a>',
+    )
     .replace(
       '<div class="tabs"><div class="tab on" data-m="compare">对比视图</div><div class="tab" data-m="list">明细列表</div></div>',
       '<div class="tabs" aria-label="数据视图"><button type="button" class="tab on" data-m="compare" aria-pressed="true">对比视图</button><button type="button" class="tab" data-m="list" aria-pressed="false">明细列表</button></div>',

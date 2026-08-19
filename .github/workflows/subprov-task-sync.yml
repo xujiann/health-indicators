@@ -1,0 +1,30 @@
+name: Sync data task issues
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 2 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - data/subprov-task-batches.json
+      - scripts/sync-task-issues.mjs
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: gh label create data-task --color 1D76DB --description "副省级城市数据补录任务" --force
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - run: npm run tasks:issues:apply
+        env:
+          GH_TOKEN: ${{ github.token }}
