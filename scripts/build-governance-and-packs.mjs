@@ -11,7 +11,7 @@ const match = script.match(/^globalThis\.HEALTH_INDICATOR_DATA=(\[[\s\S]*\]);\s*
 if (!match) throw new Error("无法解析 public-data.js");
 const records = JSON.parse(match[1]);
 const release = JSON.parse(await fs.readFile(path.join(root, "data", "release.json"), "utf8"));
-const collectedAt = release.released_at || release.released_on;
+const collectedAt = release.dataset_collected_at || release.released_at || release.released_on;
 const analysis = analyzeRecords(records, { collectedAt });
 const manifest = JSON.parse(await fs.readFile(path.join(root, "data", "public-data-manifest.json"), "utf8"));
 const quality = {

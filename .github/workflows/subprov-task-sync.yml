@@ -9,6 +9,8 @@ on:
     paths:
       - data/subprov-task-batches.json
       - scripts/sync-task-issues.mjs
+      - scripts/lib/task-issue-sync.mjs
+      - .github/workflows/subprov-task-sync.yml
 
 permissions:
   contents: read

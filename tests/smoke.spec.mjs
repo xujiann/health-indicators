@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import fs from "node:fs/promises";
 
 test("核心页面、来源筛选与分析工作台可用", async ({ page }) => {
   const pageErrors = [];
@@ -134,5 +135,19 @@ test("城市实值分析按需加载数据包并可切换年度", async ({ page 
     await page.getByRole("button", { name: buttonName, exact: true }).click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/\.(svg|csv|md)$/);
+    if (buttonName === "导出排名 CSV") {
+      const content = await fs.readFile(await download.path(), "utf8");
+      expect(content).toContain("来源");
+      expect(content).toMatch(/https:\/\//);
+    }
   }
+});
+
+test("城市分析数据包失败时给出可操作提示并锁定导出", async ({ page }) => {
+  await page.route("**/data/packs/subprov-core.json", (route) => route.fulfill({ status: 503, body: "unavailable" }));
+  await page.goto("/city-analysis.html");
+  await expect(page.locator("#status")).toContainText("数据加载失败");
+  await expect(page.locator("#status")).toContainText("请刷新页面或稍后重试");
+  await expect(page.locator("#exportCsv")).toBeDisabled();
+  await expect(page.locator("#year")).toBeDisabled();
 });

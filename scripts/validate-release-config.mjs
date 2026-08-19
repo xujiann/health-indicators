@@ -45,6 +45,7 @@ const checks = [
   ["来源变化进入复核 Issue", /gh issue (?:create|comment)/.test(sourceWatch)],
   ["任务批次同步具备 Issue 写权限", /issues:\s*write/.test(taskSync)],
   ["任务批次同步调用可写模式", /npm run tasks:issues:apply/.test(taskSync)],
+  ["任务同步逻辑变更会触发工作流", /scripts\/lib\/task-issue-sync\.mjs/.test(taskSync)],
   ["回滚工作流要求指定 ref 并先通过测试", /ref:\s*\$\{\{ inputs\.ref \}\}/.test(rollback) && /run:\s*npm test/.test(rollback)],
   ["Pages 发布版本与变更日志", /cp\s+CHANGELOG\.md\s+_site\//.test(pages) && fs.existsSync(path.join(repoRoot, "data", "release.json"))],
   ["主题数据包清单纳入发布制品", fs.existsSync(path.join(repoRoot, "data", "packs", "manifest.json")) && /cp -R data _site\/data/.test(pages)],
