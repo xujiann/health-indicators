@@ -14,6 +14,9 @@ const sourceWatch = fs.readFileSync(path.join(repoRoot, ".github", "workflows", 
 const sourceRegistry = JSON.parse(fs.readFileSync(path.join(repoRoot, "docs", "official-source-registry.json"), "utf8"));
 const citySourceRegistry = JSON.parse(fs.readFileSync(path.join(repoRoot, "docs", "subprov-official-source-registry.json"), "utf8"));
 const sourceBaseline = JSON.parse(fs.readFileSync(path.join(repoRoot, "docs", "official-source-baseline.json"), "utf8"));
+const coverageReport = JSON.parse(fs.readFileSync(path.join(repoRoot, "data", "coverage-report.json"), "utf8"));
+const publicManifest = JSON.parse(fs.readFileSync(path.join(repoRoot, "data", "public-data-manifest.json"), "utf8"));
+const packManifest = JSON.parse(fs.readFileSync(path.join(repoRoot, "data", "packs", "manifest.json"), "utf8"));
 const registryIds = [...sourceRegistry, ...citySourceRegistry].map((entry) => entry.id).sort();
 const baselineIds = sourceBaseline.sources.map((entry) => entry.id).sort();
 const cityChannelKeys = new Set(citySourceRegistry.map((entry) => `${entry.region_code}|${entry.channel}`));
@@ -49,6 +52,9 @@ const checks = [
   ["回滚工作流要求指定 ref 并先通过测试", /ref:\s*\$\{\{ inputs\.ref \}\}/.test(rollback) && /run:\s*npm test/.test(rollback)],
   ["Pages 发布版本与变更日志", /cp\s+CHANGELOG\.md\s+_site\//.test(pages) && fs.existsSync(path.join(repoRoot, "data", "release.json"))],
   ["主题数据包清单纳入发布制品", fs.existsSync(path.join(repoRoot, "data", "packs", "manifest.json")) && /cp -R data _site\/data/.test(pages)],
+  ["2025年国家卫健委公报专题已纳入发布", /data-p="nhc2025"/.test(html) && packManifest.packs?.["national-health-2025"]?.rows >= 300],
+  ["副省级核心矩阵没有未处置缺口", coverageReport.summary.unresolved_matrix_gaps === 0 && coverageReport.summary.matrix_resolution_rate === 100],
+  ["公开发布包不包含仅来源索引记录", coverageReport.summary.source_index_rows === 0 && publicManifest.publication_policy?.excluded_source_index_rows >= 0],
 ];
 
 const failed = checks.filter(([, passed]) => !passed).map(([name]) => name);

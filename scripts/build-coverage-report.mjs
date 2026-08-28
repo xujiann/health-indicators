@@ -19,6 +19,7 @@ const csvPath = path.join(repoRoot, "data", "subprov-core-matrix-backlog.csv");
 const sourceBacklogPath = path.join(repoRoot, "data", "source-index-backlog.csv");
 const taskBatchesPath = path.join(repoRoot, "data", "subprov-task-batches.json");
 const taskStatusPath = path.join(repoRoot, "data", "subprov-task-status.json");
+const coverageExceptionsPath = path.join(repoRoot, "data", "subprov-core-coverage-exceptions.json");
 const citySourceRegistryPath = path.join(repoRoot, "docs", "subprov-official-source-registry.json");
 const markdownPath = path.join(repoRoot, "docs", "数据覆盖率报告.md");
 const htmlPath = path.join(repoRoot, "coverage.html");
@@ -29,6 +30,7 @@ const match = script.match(/^globalThis\.HEALTH_INDICATOR_DATA=(\[[\s\S]*\]);\s*
 if (!match) throw new Error("Unable to parse public-data.js");
 const records = JSON.parse(match[1]);
 const taskStatus = JSON.parse(await fs.readFile(taskStatusPath, "utf8"));
+const coverageExceptions = JSON.parse(await fs.readFile(coverageExceptionsPath, "utf8"));
 const citySourceRegistry = JSON.parse(await fs.readFile(citySourceRegistryPath, "utf8"));
 
 const cities = SUBPROV_CITIES.map((city) => city.name);
@@ -73,7 +75,7 @@ const recentExpected = cities.length * recentYears.length * coreMetrics.length;
 const recentCovered = cityRows.reduce((sum, row) => sum + row.recent_covered, 0);
 const sourceIndexRecords = records.filter((record) => String(record.note || "").includes(SOURCE_INDEX_NOTE));
 const sourceIndexRows = sourceIndexRecords.length;
-const gaps = cities.flatMap((city) => years.flatMap((year) => coreMetrics
+const numericGaps = cities.flatMap((city) => years.flatMap((year) => coreMetrics
   .filter((metric) => !recordIds.has(`${city}|${year}|${metric}`))
   .map((compareKey) => {
     const metric = metricByCompareKey.get(compareKey);
@@ -86,6 +88,39 @@ const gaps = cities.flatMap((city) => years.flatMap((year) => coreMetrics
       unit: metric.unit,
     };
   })));
+if (coverageExceptions.schema_version !== 1 || !Array.isArray(coverageExceptions.exceptions)) {
+  throw new Error("覆盖例外文件必须使用 schema_version=1 且包含 exceptions 数组");
+}
+const numericGapById = new Map(numericGaps.map((gap) => [
+  `${gap.city}|${gap.year}|${gap.metric_key}`,
+  gap,
+]));
+const exceptionById = new Map();
+for (const exception of coverageExceptions.exceptions) {
+  const id = `${exception.city}|${exception.year}|${exception.metric_key}`;
+  const gap = numericGapById.get(id);
+  if (!gap) throw new Error(`覆盖例外不对应当前数值缺口：${id}`);
+  if (exceptionById.has(id)) throw new Error(`覆盖例外重复：${id}`);
+  if (
+    exception.status !== "reviewed_no_usable_value"
+    || exception.reason_code !== "not_reported_or_incomparable"
+    || !String(exception.reason || "").trim()
+    || !String(exception.responsible || "").trim()
+    || !/^https?:\/\//.test(String(exception.source_url || ""))
+    || !/^\d{4}-\d{2}-\d{2}$/.test(String(exception.reviewed_at || ""))
+  ) {
+    throw new Error(`覆盖例外证据不完整：${id}`);
+  }
+  for (const key of ["region_code", "compare_key", "unit"]) {
+    if (String(exception[key]) !== String(gap[key])) throw new Error(`覆盖例外 ${id} 的 ${key} 与缺口定义不一致`);
+  }
+  exceptionById.set(id, exception);
+}
+const unresolvedGaps = numericGaps.filter((gap) => !exceptionById.has(`${gap.city}|${gap.year}|${gap.metric_key}`));
+const resolvedExceptions = numericGaps
+  .filter((gap) => exceptionById.has(`${gap.city}|${gap.year}|${gap.metric_key}`))
+  .map((gap) => exceptionById.get(`${gap.city}|${gap.year}|${gap.metric_key}`));
+const gaps = unresolvedGaps;
 const sourceIndexGroups = Object.values(sourceIndexRecords.reduce((groups, record) => {
     const key = `${record.region}|${record.source_url}`;
     const group = groups[key] || {
@@ -114,7 +149,7 @@ const taskStatusErrors = validateTaskStatuses(taskStatus, taskBatches);
 if (taskStatusErrors.length) throw new Error(taskStatusErrors.join("\n"));
 
 const report = {
-  schema_version: 4,
+  schema_version: 5,
   definition: { cities, years, recent_years: recentYears, core_metrics: coreMetrics },
   summary: {
     rows: records.length,
@@ -122,15 +157,22 @@ const report = {
     matrix_expected: totalExpected,
     matrix_gaps: gaps.length,
     matrix_completeness: Number((totalCovered / totalExpected * 100).toFixed(1)),
+    numeric_matrix_gaps: numericGaps.length,
+    resolved_exception_cells: resolvedExceptions.length,
+    unresolved_matrix_gaps: unresolvedGaps.length,
+    matrix_resolution_rate: Number(((totalCovered + resolvedExceptions.length) / totalExpected * 100).toFixed(1)),
     recent_matrix_covered: recentCovered,
     recent_matrix_expected: recentExpected,
-    recent_matrix_gaps: recentExpected - recentCovered,
+    recent_matrix_gaps: unresolvedGaps.filter((gap) => recentYears.includes(gap.year)).length,
+    recent_numeric_matrix_gaps: numericGaps.filter((gap) => recentYears.includes(gap.year)).length,
     recent_matrix_completeness: Number((recentCovered / recentExpected * 100).toFixed(1)),
     direct_source_rows: records.length - sourceIndexRows,
     source_index_rows: sourceIndexRows,
   },
   cities: cityRows,
+  numeric_gaps: numericGaps,
   gaps,
+  resolved_exceptions: resolvedExceptions,
   task_batches: taskBatches,
   source_index_groups: sourceIndexGroups,
 };
@@ -140,6 +182,7 @@ const taskBatchPayload = {
   summary: {
     batches: taskBatches.length,
     missing_cells: gaps.length,
+    resolved_exception_cells: resolvedExceptions.length,
     by_status: Object.fromEntries(["pending", "found", "reviewed", "imported"].map((status) => [
       status,
       taskBatches.filter((task) => task.status === status).length,
@@ -200,7 +243,9 @@ const markdown = `# 数据覆盖率报告
 - 当前公开记录：${records.length} 条
 - 核心矩阵覆盖：${totalCovered}/${totalExpected}，完整率 ${report.summary.matrix_completeness}%
 - 近期核心矩阵（${recentYears[0]}—${recentYears.at(-1)}）：${recentCovered}/${recentExpected}，完整率 ${report.summary.recent_matrix_completeness}%
-- 待补录单元：${gaps.length} 个
+- 数值缺口：${numericGaps.length} 个
+- 已核验证据型例外：${resolvedExceptions.length} 个
+- 未处置缺口：${unresolvedGaps.length} 个，缺口处置率 ${report.summary.matrix_resolution_rate}%
 - 单条或明确原文记录：${report.summary.direct_source_rows} 条
 - 仅来源索引记录：${sourceIndexRows} 条
 
@@ -223,7 +268,7 @@ ${tableRows}
 ## 维护规则
 
 1. 新增记录必须进入 \`data/base-public-records.json\` 或匹配 \`data/*-additions.json\` 的来源文件。
-2. 只有同一城市、年度和 \`compare_key\` 同时存在时，才计为一个已覆盖单元。
+2. 只有同一城市、年度和 \`compare_key\` 同时存在时，才计为一个数值已覆盖单元；官方公报未载明或口径不可比的项目只能登记为证据型例外，不计入数值完整率。
 3. “来源索引”只表示地区官方公开入口；找到统计公报单条原文后，应替换链接并移除相应索引备注。
 4. 执行 \`npm run build:data\` 会同步刷新 JSON、Markdown、补录台账和维护页面；CI 使用 \`npm run verify:generated\` 阻止生成物漂移。
 `;
@@ -269,12 +314,13 @@ const coverageHtml = `<!DOCTYPE html>
     <div class="kpi"><b>${totalCovered}/${totalExpected}</b><span>核心矩阵覆盖</span></div>
     <div class="kpi"><b>${report.summary.matrix_completeness}%</b><span>矩阵完整率</span></div>
     <div class="kpi"><b id="recentKpi">${report.summary.recent_matrix_completeness}%</b><span>${recentYears[0]}—${recentYears.at(-1)} 近期完整率</span></div>
-    <div class="kpi"><b id="gapKpi">${gaps.length}</b><span>待补录单元</span></div>
+    <div class="kpi"><b id="gapKpi">${gaps.length}</b><span>未处置缺口</span></div>
     <div class="kpi"><b id="sourceIndexKpi">${sourceIndexRows}</b><span>仅来源索引记录</span></div>
   </section>
   <section class="panel"><h2>城市 × 年度覆盖矩阵</h2><div class="scroll"><table><thead><tr><th>城市</th>${years.map((year) => `<th>${year}</th>`).join("")}<th>近期</th><th>合计</th><th>完整率</th></tr></thead><tbody>${cityTableHtml}</tbody></table></div><p class="muted">单元格为该城市该年度已收录核心指标数，满格为 7/7；“近期”为 ${recentYears[0]}—${recentYears.at(-1)} 合计。</p></section>
   <section class="panel">
     <div class="toolbar"><h2>待补录单元</h2><a class="button" href="data/subprov-core-matrix-backlog.csv" download>下载标准补录台账</a></div>
+    <p class="muted">数值完整率 ${report.summary.matrix_completeness}%；另有 ${resolvedExceptions.length} 个已核验证据型例外，未处置缺口 ${unresolvedGaps.length} 个。例外不作为数值填充。</p>
     <div class="filters">
       <label>城市<select id="cityFilter"><option value="">全部城市</option>${cities.map((city) => `<option>${escapeHtml(city)}</option>`).join("")}</select></label>
       <label>年度<select id="yearFilter"><option value="">全部年度</option>${years.map((year) => `<option>${year}</option>`).join("")}</select></label>

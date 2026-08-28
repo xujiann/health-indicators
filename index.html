@@ -244,10 +244,10 @@ footer b{color:var(--limit)}
 </style></head>
 <body>
 <header><div class="wrap"><div><h1>国家 · 辽宁 · 大连 指标对比速查<small>多级对标 · 层级自选 · 历年趋势 · 基数→目标 · 占比排名 · 一键复制为材料文字 · 公开版</small></h1></div><nav class="project-nav" aria-label="统一导航"><a href="https://xujiann.github.io/healthpolicy/">主页</a><a href="coverage.html">覆盖维护</a><a href="city-analysis.html">城市分析</a><a href="about.html">关于</a></nav><div class="tabs" aria-label="数据视图"><button type="button" class="tab on" data-m="compare" aria-pressed="true">对比视图</button><button type="button" class="tab" data-m="list" aria-pressed="false">明细列表</button></div></div></header>
-<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="profile" id="profile"></div><div class="srow"><input id="q" aria-label="搜索指标" placeholder="搜索指标、来源、地区、年份或单位，如 床位 2024、GDP、国家医保局…"><span class="count" id="count" aria-live="polite"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="insurance">国家医保专题</button><button class="quickchip" data-p="official2025">2025 官方快报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button><button class="quickchip" data-p="longseries">全国长序列</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copyTable" type="button">复制表格</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copySourceIssues" type="button">复制待核来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg" id="regionWrap"><span class="fl">地区（可多选）</span><div class="chips" id="fRegion"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg" id="formWrap"><span class="fl">指标口径</span><div class="chips" id="fForm"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg"><span class="fl">数据性质</span><div class="chips" id="fNature"></div></div><div class="fg"><span class="fl">来源状态</span><div class="chips" id="fSourceState"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
+<div class="controls"><div class="wrap"><div class="summary" id="summary"></div><div class="profile" id="profile"></div><div class="srow"><input id="q" aria-label="搜索指标" placeholder="搜索指标、来源、地区、年份或单位，如 床位 2025、GDP、国家卫健委…"><span class="count" id="count" aria-live="polite"></span><button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false">筛选</button></div><div class="control-strip"><div class="quickbar" id="quickbar"><b>专题入口</b><button class="quickchip" data-p="nhc2025">2025 卫健公报</button><button class="quickchip" data-p="nhc">全国卫健公报</button><button class="quickchip" data-p="insurance">国家医保专题</button><button class="quickchip" data-p="official2025">2025 官方快报</button><button class="quickchip" data-p="resource">卫生资源对标</button><button class="quickchip" data-p="dalian">大连趋势</button><button class="quickchip" data-p="bulletin">统计公报补录</button><button class="quickchip" data-p="longseries">全国长序列</button></div><div class="filterbar" id="filterbar"></div><div class="view-actions"><button class="actionbtn" id="resetView" type="button">重置</button><button class="actionbtn" id="copyLink" type="button">复制链接</button><button class="actionbtn" id="copyView" type="button">复制摘要</button><button class="actionbtn" id="copyTable" type="button">复制表格</button><button class="actionbtn" id="copySources" type="button">复制来源</button><button class="actionbtn" id="copySourceIssues" type="button">复制待核来源</button><button class="actionbtn" id="copyGaps" type="button">复制缺口</button><button class="actionbtn" id="exportCsv" type="button">导出CSV</button></div></div><div class="filter-panel" id="filterPanel"><div class="filters"><div class="fg" id="tierWrap"><span class="fl">对比层级（可多选）</span><div class="chips" id="fTier"></div></div><div class="fg" id="regionWrap"><span class="fl">地区（可多选）</span><div class="chips" id="fRegion"></div></div><div class="fg"><span class="fl">类别</span><div class="chips" id="fCat"></div></div><div class="fg" id="subWrap" style="display:none"><span class="fl">具体分类</span><div class="chips" id="fSub"></div></div><div class="fg" id="formWrap"><span class="fl">指标口径</span><div class="chips" id="fForm"></div></div><div class="fg"><span class="fl">年份</span><div class="chips" id="fYear"></div></div><div class="fg"><span class="fl">数据性质</span><div class="chips" id="fNature"></div></div><div class="fg"><span class="fl">来源状态</span><div class="chips" id="fSourceState"></div></div><div class="fg" id="cmpToggleWrap"><span class="fl">显示</span><label class="toggle"><input type="checkbox" id="onlyCmp" checked><span class="sw"></span>仅看可对比指标</label></div><div class="fg" id="chartWrap"><span class="fl">多城市图示</span><div class="chips" id="fChart"></div></div></div></div></div></div>
 <main><div class="wrap"><div id="overview" class="overview"></div><div id="compareView"></div><div id="listView" style="display:none"><table><thead><tr><th data-k="indicator" aria-sort="none">指标</th><th data-k="value" aria-sort="none">数值</th><th data-k="nature" aria-sort="none">性质</th><th data-k="year" aria-sort="none">年度</th><th data-k="region" aria-sort="none">地区</th><th data-k="source" class="hide-m" aria-sort="none">来源</th></tr></thead><tbody id="rows"></tbody></table><div class="listpager" id="listPager"></div></div><div class="empty" id="empty" style="display:none"><b>没有匹配的指标</b>换个关键词或关闭"仅看可对比"</div></div></main>
 <div id="toast"></div>
-<footer>数据来源：国家统计局、财政部、国家卫生健康委、国家医疗保障局及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>国家卫生健康委统计公报当前收录 2010-2024 年核心序列，并补入 2022-2024 年官方 PDF 中可稳定结构化的 12 类扩展指标；全国长序列与医保待遇专题均已关联国家医保局医保数智库公开页面；来源索引不是单条原文，引用请以原始公报或正式来源为准。</footer>
+<footer>数据来源：国家统计局、财政部、国家卫生健康委、国家医疗保障局及地方统计公报、财政公开数据、经确认可公开的副省级城市对标数据。<br>国家卫生健康委统计公报当前收录 2010-2025 年核心序列，并补入 2022-2025 年官方 PDF 中可稳定结构化的 12 类扩展指标；全国长序列与医保待遇专题均已关联国家医保局医保数智库公开页面；来源索引不是单条原文，引用请以原始公报或正式来源为准。</footer>
 <script src="public-data.js"></script>
 <script src="app-core.js"></script>
 <script>
@@ -267,7 +267,11 @@ function applyStateFromHash(){
   if(!raw)return;
   const p=new URLSearchParams(raw);
   const preset=p.get('p');
-  if(preset==='nhc'){
+  if(preset==='nhc2025'){
+    const healthCat=DATA.find(d=>String(d.category).replace('卫生健康(','').replace(')','')==='卫生健康')?.category||'卫生健康';
+    Object.assign(state,{mode:'compare',q:'国家卫生健康委',cat:healthCat,sub:'',year:'2025',onlyCmp:false,chart:'hbar'});
+    state.tiers=new Set([1]);
+  }else if(preset==='nhc'){
     const healthCat=DATA.find(d=>String(d.category).replace('卫生健康(','').replace(')','')==='卫生健康')?.category||'卫生健康';
     Object.assign(state,{mode:'compare',q:'国家卫生健康委',cat:healthCat,sub:'',year:'',onlyCmp:true,chart:'hbar'});
     state.tiers=new Set([1]);
@@ -475,7 +479,10 @@ function applyPreset(name){
   resetFacets();
   const healthCat=DATA.find(d=>catShort(d.category)==='卫生健康')?.category||'卫生健康';
   const insuranceCat=DATA.find(d=>catShort(d.category)==='医疗保障')?.category||'医疗保障';
-  if(name==='nhc'){
+  if(name==='nhc2025'){
+    Object.assign(state,{q:'国家卫生健康委',cat:healthCat,sub:'',year:'2025',onlyCmp:false,chart:'hbar'});
+    state.tiers=new Set([1]);
+  }else if(name==='nhc'){
     Object.assign(state,{q:'国家卫生健康委',cat:healthCat,sub:'',year:'',onlyCmp:true,chart:'hbar'});
     state.tiers=new Set([1]);
   }else if(name==='insurance'){
@@ -507,6 +514,7 @@ function activePreset(){
   if(state.insuranceTopic)return 'insurance';
   if(state.official2025)return 'official2025';
   if(isInsuranceView())return 'insurance';
+  if(isNHCView()&&state.year==='2025')return 'nhc2025';
   if(isNHCView())return 'nhc';
   if(catShort(state.cat)==='卫生健康'&&state.sub==='卫生资源')return 'resource';
   if(state.q.includes('大连')&&state.tiers.size===1&&state.tiers.has(3))return 'dalian';
@@ -643,7 +651,7 @@ function renderNHCDashboard(rows,entries,years,totalKeys){
   const yearCounts={};rows.forEach(r=>{const y=+r.year;if(y&&y<2030)yearCounts[y]=(yearCounts[y]||0)+1;});
   const maxYear=Math.max(...Object.values(yearCounts),1);
   const maxSub=Math.max(...entries.map(([,g])=>g.keys.size),1);
-  const focus=nhcFocusSeries(rows);
+  const focus=nhcFocusSeries(years.length===1?nhcBulletinRows():rows);
   const metricHtml=[
     [years[0]+'-'+latestYear,'公报年份'],
     [totalKeys+' 个','指标口径'],
@@ -657,7 +665,7 @@ function renderNHCDashboard(rows,entries,years,totalKeys){
     const pct=(f.pct>=0?'+':'')+f.pct.toFixed(Math.abs(f.pct)>=10?0:1)+'%';
     return '<div class="focusitem"><div><div class="fname" title="'+esc(f.key)+'">'+esc(f.label)+'</div><div class="fval">'+fmtNum(f.last.value)+'<small> '+esc(f.unit)+'</small></div><div class="fdelta '+cls+'">较 '+esc(f.first.year)+' 年 '+pct+'</div></div>'+sparkline(f.series)+'</div>';
   }).join('');
-  return '<div class="nhcmetrics">'+metricHtml+'</div><div class="nhcvis"><div class="nhcsection"><h3>年度收录密度</h3>'+yearHtml+'</div><div class="nhcsection"><h3>分类指标构成</h3>'+subHtml+'</div></div><div class="nhcfocus">'+focusHtml+'</div><div class="nhcnote">核心趋势卡按现有公报序列自动生成；2022-2024 年扩展分类来自已结构化的官方 PDF 表格，引用仍以原始公报为准。</div>';
+  return '<div class="nhcmetrics">'+metricHtml+'</div><div class="nhcvis"><div class="nhcsection"><h3>年度收录密度</h3>'+yearHtml+'</div><div class="nhcsection"><h3>分类指标构成</h3>'+subHtml+'</div></div><div class="nhcfocus">'+focusHtml+'</div><div class="nhcnote">核心趋势卡按现有公报序列自动生成；2022-'+latestYear+' 年扩展分类来自已结构化的官方 PDF 表格，引用仍以原始公报为准。</div>';
 }
 
 function insuranceFocusSeries(rows){
@@ -768,7 +776,8 @@ function renderOverview(){
   const years=[...new Set(nhcRows.map(r=>+r.year).filter(y=>y&&y<2030))].sort((a,b)=>a-b);
   host.className='overview show';
   const scope=state.sub||state.year?'筛选分析':'可视化总览';
-  host.innerHTML='<div class="ovpanel nhc"><div class="ovtop"><div class="ovtitle">全国卫生健康统计公报'+scope+'</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+nhcRows.length+' 条记录 · '+years[0]+'-'+years[years.length-1]+'</div></div>'+renderNHCDashboard(nhcRows,entries,years,totalKeys)+'<div class="ovgrid">'+
+  const topicTitle=state.year==='2025'?'2025年我国卫生健康事业发展统计公报专题':'全国卫生健康统计公报'+scope;
+  host.innerHTML='<div class="ovpanel nhc"><div class="ovtop"><div class="ovtitle">'+topicTitle+'</div><div class="ovmeta">'+entries.length+' 类 · '+totalKeys+' 个指标口径 · '+nhcRows.length+' 条记录 · '+years[0]+(years[0]===years[years.length-1]?'':'-'+years[years.length-1])+'</div></div>'+renderNHCDashboard(nhcRows,entries,years,totalKeys)+'<div class="ovgrid">'+
     entries.map(([sub,g],i)=>{
       const ys=[...g.years].sort((a,b)=>a-b);
       const yr=ys.length?(ys[0]===ys[ys.length-1]?ys[0]:ys[0]+'-'+ys[ys.length-1]):'—';
@@ -828,7 +837,7 @@ function renderSummary(){
   if(state.mode==='compare'&&[...state.tiers].sort().join(',')!=='1,2,3')parts.push({key:'tiers',label:'层级',value:tiers.join('、')||'未选择'});
   if(state.mode==='compare'&&state.onlyCmp)parts.push({key:'onlyCmp',label:'显示',value:'仅可对比'});
   const nhcCoreView=isNHCView();
-  if(nhcCoreView)parts.push({key:'',label:'卫健公报',value:'2015-2024核心序列，2022-2024扩展分类'});
+  if(nhcCoreView)parts.push({key:'',label:'卫健公报',value:state.year==='2025'?'2025专题，12类扩展指标':'2010-2025核心序列，2022-2025扩展分类'});
   if(isInsuranceView())parts.push({key:'',label:'医保待遇',value:'2012-2025国家医保局医保数智库'});
   const hasImageLongSeries=rows.some(d=>String(d.source||'').includes('用户提供图片表'));
   if(hasImageLongSeries)parts.push({key:'',label:'长序列',value:'用户图片表录入，待正式来源复核'});
@@ -1318,7 +1327,7 @@ function currentVisibleRows(){
 }
 
 function nhcSummaryText(){
-  const rows=nhcBulletinRows();
+  const rows=nhcBulletinRows().filter(baseFilter);
   if(!rows.length)return '';
   const years=[...new Set(rows.map(d=>+d.year).filter(y=>y&&y<2030))].sort((a,b)=>a-b);
   const groups={};
@@ -1346,7 +1355,7 @@ function nhcSummaryText(){
     '数据范围：收录'+years[0]+'-'+latestYear+'年国家卫生健康委统计公报相关记录'+rows.length+'条，覆盖'+new Set(rows.map(r=>r.compare_key).filter(Boolean)).size+'个指标口径；'+latestYear+'年可见指标口径'+latestKeys+'个。',
     '分类构成：共'+entries.length+'类；'+subLine+'。',
     '核心趋势：'+(focus.length?focus.join('；')+'。':'当前核心趋势序列不足以生成变化幅度。'),
-    '来源状态：'+Math.round(linked/rows.length*100)+'%记录带原文链接；2022-2024年扩展分类来自已结构化的官方PDF表格。',
+    '来源状态：'+Math.round(linked/rows.length*100)+'%记录带原文链接；2022-'+latestYear+'年扩展分类来自已结构化的官方PDF表格。',
     (filters.length?'当前视图：'+filters.join('；')+'。':'当前视图：全国层级公报专题总览。'),
     '引用：请以国家卫生健康委原始统计公报或正式公开来源为准。'
   ].join('\n');

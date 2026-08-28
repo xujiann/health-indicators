@@ -26,7 +26,7 @@ test("核心页面、来源筛选与分析工作台可用", async ({ page }) => 
 
   await expect(page.locator(".workbench")).not.toHaveClass(/open/);
   await expect(page.locator("#fSourceState .chip.on")).toHaveText("非单条原文");
-  await expect(page.locator("#count")).not.toContainText(/^0 /);
+  await expect(page.locator("#count")).toHaveText("0 个指标");
   expect(pageErrors).toEqual([]);
 });
 
@@ -92,8 +92,8 @@ test("覆盖维护页可筛选缺口并下载标准台账", async ({ page, reque
   await expect(page.locator("#recentKpi")).toHaveText(`${report.summary.recent_matrix_completeness}%`);
 
   await page.locator("#cityFilter").selectOption("大连市");
-  await expect(page.locator("#gapCount")).toContainText("当前筛选");
-  await expect(page.locator("#gapList .gap").first()).toContainText("大连市");
+  await expect(page.locator("#gapCount")).toHaveText("当前筛选 0 个缺口");
+  await expect(page.locator("#gapList .empty")).toHaveText("当前条件下没有缺口");
 
   const backlog = await request.get("/data/subprov-core-matrix-backlog.csv");
   expect(backlog.ok()).toBeTruthy();
@@ -106,11 +106,13 @@ test("覆盖维护页可筛选缺口并下载标准台账", async ({ page, reque
   const taskPayload = await taskBatches.json();
   const tasks = taskPayload.tasks || taskPayload;
   await expect(page.locator("#taskCount")).toHaveText(`当前 ${tasks.length} 个批次`);
-  await expect(page.locator("#taskList .gap").first()).toContainText(tasks[0].id);
+  await expect(page.locator("#taskList .empty")).toHaveText("当前条件下没有任务");
   await page.locator("#taskPriorityFilter").selectOption("P0");
   await expect(page.locator("#taskCount")).toHaveText(`当前 ${tasks.filter((task) => task.priority === "P0").length} 个批次`);
+  await expect(page.locator("#taskList .empty")).toHaveText("当前条件下没有任务");
   await page.locator("#taskStatusFilter").selectOption("found");
   await expect(page.locator("#taskList")).toContainText("当前条件下没有任务");
+  await expect(page.locator("#sourceList .empty")).toHaveText("没有待替换的来源索引");
   expect(pageErrors).toEqual([]);
 });
 
@@ -141,6 +143,15 @@ test("城市实值分析按需加载数据包并可切换年度", async ({ page 
       expect(content).toMatch(/https:\/\//);
     }
   }
+});
+
+test("2025年国家卫健委公报专题可恢复并展示十二类数据", async ({ page }) => {
+  await page.goto("/index.html#p=nhc2025");
+  await expect(page.locator(".ovtitle")).toHaveText("2025年我国卫生健康事业发展统计公报专题");
+  await expect(page.locator("#fYear .chip.on")).toHaveText("2025");
+  await expect(page.locator("#quickbar [data-p='nhc2025']")).toHaveClass(/on/);
+  await expect(page.locator("#overview .ovitem")).toHaveCount(12);
+  await expect(page.locator("#count")).not.toContainText(/^0 /);
 });
 
 test("城市分析数据包失败时给出可操作提示并锁定导出", async ({ page }) => {

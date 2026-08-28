@@ -34,6 +34,7 @@ const quality = {
 const packDefs = {
   "subprov-core": (row) => String(row.region_tier).startsWith("3") && ["经济", "人口", "财政"].includes(String(row.category).replace(/^\d+·/, "")),
   "national-health": (row) => row.region === "全国" && String(row.category).includes("卫生健康"),
+  "national-health-2025": (row) => row.region === "全国" && Number(row.year) === 2025 && String(row.category).includes("卫生健康") && String(row.source).includes("2025年我国卫生健康事业发展统计公报"),
   "medical-insurance": (row) => String(row.category).includes("医疗保障"),
 };
 const packManifest = { schema_version: 1, dataset_sha256: manifest.sha256, generated_at: collectedAt, packs: {} };

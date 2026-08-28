@@ -1,0 +1,779 @@
+{
+  "kind": "subprov-stat-bulletin-series-v1",
+  "note": "2020—2022年副省级城市官方统计公报历史核心指标补录",
+  "records": [
+    {
+      "region_code": "210200",
+      "region": "大连市",
+      "year": 2020,
+      "responsible": "大连市统计局、国家统计局大连调查队",
+      "source": "2020年大连市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.ln.gov.cn/web/zwgkx/tjgb2/shizfgzbg/dls/EDEEA7F052E14D6C8DDFA82D75C15DDA/index.shtml",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 7030.4,
+        "registered_population": 601.6,
+        "local_public_budget_revenue": 702.7,
+        "local_public_budget_expenditure": 1002
+      }
+    },
+    {
+      "region_code": "210200",
+      "region": "大连市",
+      "year": 2021,
+      "responsible": "大连市统计局、国家统计局大连调查队",
+      "source": "2021年大连市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.dl.gov.cn/art/2022/5/31/art_7854_2020358.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 7825.9,
+        "registered_population": 603.6,
+        "local_public_budget_revenue": 737.6,
+        "local_public_budget_expenditure": 980.1
+      }
+    },
+    {
+      "region_code": "210200",
+      "region": "大连市",
+      "year": 2022,
+      "responsible": "大连市统计局、国家统计局大连调查队",
+      "source": "2022年大连市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://stats.dl.gov.cn/art/2023/4/26/art_3812_2074319.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 8430.9,
+        "gdp_per_capita": 112270,
+        "registered_population": 608.7,
+        "local_public_budget_revenue": 669.7,
+        "local_public_budget_expenditure": 991.1
+      }
+    },
+    {
+      "region_code": "510100",
+      "region": "成都市",
+      "year": 2021,
+      "responsible": "成都市统计局、国家统计局成都调查队",
+      "source": "2021年成都市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://cdstats.chengdu.gov.cn/",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 19917,
+        "gdp_per_capita": 94622,
+        "resident_population": 2119.2,
+        "registered_population": 1556.2,
+        "urbanization_rate": 79.5,
+        "local_public_budget_revenue": 1697.9,
+        "local_public_budget_expenditure": 2237.6
+      }
+    },
+    {
+      "region_code": "510100",
+      "region": "成都市",
+      "year": 2022,
+      "responsible": "成都市统计局、国家统计局成都调查队",
+      "source": "2022年成都市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://cdstats.chengdu.gov.cn/",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 20817.5,
+        "gdp_per_capita": 98149,
+        "resident_population": 2126.8,
+        "registered_population": 1571.6,
+        "urbanization_rate": 79.9,
+        "local_public_budget_revenue": 1722.4,
+        "local_public_budget_expenditure": 2435
+      }
+    },
+    {
+      "region_code": "440100",
+      "region": "广州市",
+      "year": 2021,
+      "responsible": "广州市统计局、国家统计局广州调查队",
+      "source": "2021年广州市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.gz.gov.cn/zwgk/sjfb/tjgb/content/post_8156569.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "resident_population": 1881.06,
+        "registered_population": 1011.53,
+        "urbanization_rate": 86.46,
+        "local_public_budget_revenue": 1883.18,
+        "local_public_budget_expenditure": 3020.72
+      }
+    },
+    {
+      "region_code": "440100",
+      "region": "广州市",
+      "year": 2022,
+      "responsible": "广州市统计局、国家统计局广州调查队",
+      "source": "2022年广州市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.gz.gov.cn/zwgk/sjfb/tjgb/content/mpost_8922708.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 28839,
+        "gdp_per_capita": 153625,
+        "resident_population": 1873.41,
+        "registered_population": 1034.91,
+        "urbanization_rate": 86.48,
+        "local_public_budget_revenue": 1854.73,
+        "local_public_budget_expenditure": 3014.22
+      }
+    },
+    {
+      "region_code": "440100",
+      "region": "广州市",
+      "year": 2020,
+      "responsible": "广州市统计局、国家统计局广州调查队",
+      "source": "2020年广州市国民经济和社会发展统计公报",
+      "doc_no": "1144010000748276X6/2021-00155",
+      "source_url": "https://tjj.gz.gov.cn/gkmlpt/content/8/8540/post_8540099.html",
+      "note": "官方统计公报正文核验",
+      "metrics": {
+        "gdp": 25019.11,
+        "registered_population": 985.11,
+        "local_public_budget_revenue": 1721.59,
+        "local_public_budget_expenditure": 2953.04
+      }
+    },
+    {
+      "region_code": "440100",
+      "region": "广州市",
+      "year": 2021,
+      "responsible": "广州市统计局、国家统计局广州调查队",
+      "source": "广州统计年鉴2022",
+      "doc_no": "—（公开统计年鉴）",
+      "source_url": "https://tjj.gz.gov.cn/datav/admin/home/www_nj/2022/directory/01/html/01-07-0.htm",
+      "note": "官方统计年鉴核验公报缺失的经济总量字段",
+      "metrics": {
+        "gdp": 28231.97,
+        "gdp_per_capita": 150366
+      }
+    },
+    {
+      "region_code": "610100",
+      "region": "西安市",
+      "year": 2020,
+      "responsible": "西安市统计局、国家统计局西安调查队",
+      "source": "2020年西安市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.xa.gov.cn/tjsj/tjgb/gmjjhshfzgb/1.html",
+      "note": "官方统计公报归档正文核验",
+      "metrics": {
+        "gdp": 10020.39,
+        "local_public_budget_revenue": 724.13,
+        "local_public_budget_expenditure": 1352.69
+      }
+    },
+    {
+      "region_code": "230100",
+      "region": "哈尔滨市",
+      "year": 2020,
+      "responsible": "哈尔滨市统计局、国家统计局哈尔滨调查队",
+      "source": "2020年哈尔滨市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.harbin.gov.cn/haerbin/c104569/list.shtml",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 5183.8,
+        "gdp_per_capita": 54570,
+        "registered_population": 948.5,
+        "urbanization_rate": 55.7,
+        "local_public_budget_revenue": 339.6,
+        "local_public_budget_expenditure": 1162.2
+      }
+    },
+    {
+      "region_code": "230100",
+      "region": "哈尔滨市",
+      "year": 2021,
+      "responsible": "哈尔滨市统计局、国家统计局哈尔滨调查队",
+      "source": "2021年哈尔滨市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.harbin.gov.cn/art/2022/5/18/art_25924_1259352.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 5351.7,
+        "gdp_per_capita": 56580,
+        "resident_population": 988.5,
+        "registered_population": 943.2,
+        "urbanization_rate": 55.8,
+        "local_public_budget_revenue": 365.8,
+        "local_public_budget_expenditure": 992.1
+      }
+    },
+    {
+      "region_code": "330100",
+      "region": "杭州市",
+      "year": 2020,
+      "responsible": "杭州市统计局、国家统计局杭州调查队",
+      "source": "2020年杭州市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.hangzhou.gov.cn/module/download/downfile.jsp?classid=0&filename=b82d906b5c09401593fe752870c8e6f7.pdf",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 16106,
+        "local_public_budget_revenue": 2093.4,
+        "local_public_budget_expenditure": 2069.7
+      }
+    },
+    {
+      "region_code": "330100",
+      "region": "杭州市",
+      "year": 2021,
+      "responsible": "杭州市统计局、国家统计局杭州调查队",
+      "source": "2021年杭州市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web3148/site/attach/0/2211281025046047.pdf",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 18109,
+        "gdp_per_capita": 149857,
+        "resident_population": 1220.4,
+        "registered_population": 834.5,
+        "local_public_budget_revenue": 2386.6,
+        "local_public_budget_expenditure": 2392.6,
+        "urbanization_rate": 83.6
+      }
+    },
+    {
+      "region_code": "330100",
+      "region": "杭州市",
+      "year": 2022,
+      "responsible": "杭州市统计局、国家统计局杭州调查队",
+      "source": "2022年杭州市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.hangzhou.gov.cn/col/col1229453593/index.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 18753,
+        "gdp_per_capita": 152588,
+        "resident_population": 1237.6,
+        "registered_population": 846.7,
+        "local_public_budget_revenue": 2451,
+        "local_public_budget_expenditure": 2542,
+        "urbanization_rate": 84
+      }
+    },
+    {
+      "region_code": "370100",
+      "region": "济南市",
+      "year": 2020,
+      "responsible": "济南市统计局、国家统计局济南调查队",
+      "source": "2020年济南市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://jntj.jinan.gov.cn/api-gateway/jpaas-web-server/front/document/download?fileName=5cd1a7922e8840cfbffcbf1451337082.pdf",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 10140.9,
+        "local_public_budget_revenue": 906.1,
+        "local_public_budget_expenditure": 1288.4
+      }
+    },
+    {
+      "region_code": "370100",
+      "region": "济南市",
+      "year": 2021,
+      "responsible": "济南市统计局、国家统计局济南调查队",
+      "source": "2021年济南市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://jntj.jinan.gov.cn/col18254/art/2022/art_18254_4745381.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 11432.2,
+        "resident_population": 933.6,
+        "registered_population": 816.6,
+        "local_public_budget_revenue": 1007.6,
+        "local_public_budget_expenditure": 1292.7,
+        "urbanization_rate": 74.2
+      }
+    },
+    {
+      "region_code": "370100",
+      "region": "济南市",
+      "year": 2022,
+      "responsible": "济南市统计局、国家统计局济南调查队",
+      "source": "2022年济南市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://jntj.jinan.gov.cn/col57208/art/2023/art_57208_4748588.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 12027.5,
+        "resident_population": 941.5,
+        "registered_population": 819.95,
+        "local_public_budget_revenue": 1001.1,
+        "local_public_budget_expenditure": 1225.6,
+        "urbanization_rate": 74.3
+      }
+    },
+    {
+      "region_code": "320100",
+      "region": "南京市",
+      "year": 2020,
+      "responsible": "南京市统计局、国家统计局南京调查队",
+      "source": "2020年南京市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.nanjing.gov.cn/bmfw/njsj/202201/t20220107_3256261.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 14817.95,
+        "local_public_budget_revenue": 1637.7,
+        "local_public_budget_expenditure": 1754.62
+      }
+    },
+    {
+      "region_code": "320100",
+      "region": "南京市",
+      "year": 2021,
+      "responsible": "南京市统计局、国家统计局南京调查队",
+      "source": "2021年南京市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.nanjing.gov.cn/bmfw/njsj/202204/t20220421_3348138.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 16355.32,
+        "gdp_per_capita": 174520,
+        "resident_population": 942.34,
+        "local_public_budget_revenue": 1729.52,
+        "local_public_budget_expenditure": 1817.73,
+        "urbanization_rate": 86.9
+      }
+    },
+    {
+      "region_code": "320100",
+      "region": "南京市",
+      "year": 2022,
+      "responsible": "南京市统计局、国家统计局南京调查队",
+      "source": "2022年南京市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.nanjing.gov.cn/bmfw/njsj/202303/t20230324_3871176.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 16907.85,
+        "gdp_per_capita": 178781,
+        "resident_population": 949.11,
+        "local_public_budget_revenue": 1558.2,
+        "local_public_budget_expenditure": 1828.7,
+        "urbanization_rate": 87.01
+      }
+    },
+    {
+      "region_code": "330200",
+      "region": "宁波市",
+      "year": 2020,
+      "responsible": "宁波市统计局、国家统计局宁波调查队",
+      "source": "2020年宁波市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web3426/site/nbtjj/tjnj1/20212/html/gb.htm",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 12408.7,
+        "registered_population": 613.7,
+        "local_public_budget_revenue": 1510.8,
+        "local_public_budget_expenditure": 1742.1
+      }
+    },
+    {
+      "region_code": "330200",
+      "region": "宁波市",
+      "year": 2021,
+      "responsible": "宁波市统计局、国家统计局宁波调查队",
+      "source": "2021年宁波市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web3426/site/nbtjj/tjnj1/20222/html/gb.htm",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 14594.9,
+        "gdp_per_capita": 153922,
+        "resident_population": 954.4,
+        "registered_population": 618.3,
+        "local_public_budget_revenue": 1723.1,
+        "local_public_budget_expenditure": 1944.4,
+        "urbanization_rate": 78.4
+      }
+    },
+    {
+      "region_code": "330200",
+      "region": "宁波市",
+      "year": 2022,
+      "responsible": "宁波市统计局、国家统计局宁波调查队",
+      "source": "2022年宁波市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web3426/site/nbtjj/tjnj1/20232/html/gb.htm",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 15704.3,
+        "gdp_per_capita": 163911,
+        "resident_population": 961.8,
+        "registered_population": 621.1,
+        "local_public_budget_revenue": 1680.2,
+        "local_public_budget_expenditure": 2187.8,
+        "urbanization_rate": 78.9
+      }
+    },
+    {
+      "region_code": "370200",
+      "region": "青岛市",
+      "year": 2020,
+      "responsible": "青岛市统计局、国家统计局青岛调查队",
+      "source": "2020年青岛市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.qingdao.gov.cn/zwgk/xxgk/tjj/gkml/tjjd/202103/t20210317_3016153.shtml",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 12400.56,
+        "local_public_budget_revenue": 1253.8,
+        "local_public_budget_expenditure": 1584.7
+      }
+    },
+    {
+      "region_code": "370200",
+      "region": "青岛市",
+      "year": 2022,
+      "responsible": "青岛市统计局、国家统计局青岛调查队",
+      "source": "2022年青岛市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.qingdao.gov.cn/zwgk/xxgk/fgw/ywfl/jjfz/202304/t20230420_7153787.shtml",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 14920.75,
+        "resident_population": 1034.21,
+        "urbanization_rate": 77.32,
+        "local_public_budget_revenue": 1273.2,
+        "local_public_budget_expenditure": 1696.2
+      }
+    },
+    {
+      "region_code": "350200",
+      "region": "厦门市",
+      "year": 2020,
+      "responsible": "厦门市统计局、国家统计局厦门调查队",
+      "source": "2020年厦门市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.xm.gov.cn/tjzl/ndgb/202103/t20210319_2536344.htm",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 6384.02,
+        "registered_population": 273.18,
+        "urbanization_rate": 86.99
+      }
+    },
+    {
+      "region_code": "350200",
+      "region": "厦门市",
+      "year": 2021,
+      "responsible": "厦门市统计局、国家统计局厦门调查队",
+      "source": "2021年厦门市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.xm.gov.cn/zfxxgk/zfxxgkml/tjsjzl/ndgb/202203/t20220322_2636525.htm",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 7033.89,
+        "resident_population": 528,
+        "registered_population": 282.81,
+        "urbanization_rate": 90.1
+      }
+    },
+    {
+      "region_code": "350200",
+      "region": "厦门市",
+      "year": 2022,
+      "responsible": "厦门市统计局、国家统计局厦门调查队",
+      "source": "2022年厦门市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.xm.gov.cn/tjzl/ndgb/202303/t20230321_2726562.htm",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 7802.66,
+        "resident_population": 530.8,
+        "registered_population": 293,
+        "urbanization_rate": 90.19,
+        "local_public_budget_revenue": 883.77,
+        "local_public_budget_expenditure": 1088.66
+      }
+    },
+    {
+      "region_code": "440300",
+      "region": "深圳市",
+      "year": 2020,
+      "responsible": "深圳市统计局、国家统计局深圳调查队",
+      "source": "2020年深圳市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.sz.gov.cn/zwgk/zfxxgkml/tjsj/tjgb/",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 27670.24,
+        "local_public_budget_revenue": 3857.39,
+        "local_public_budget_expenditure": 4177.72
+      }
+    },
+    {
+      "region_code": "440300",
+      "region": "深圳市",
+      "year": 2021,
+      "responsible": "深圳市统计局、国家统计局深圳调查队",
+      "source": "2021年深圳市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.sz.gov.cn/zwgk/zfxxgkml/tjsj/tjgb/",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 30664.85,
+        "gdp_per_capita": 173663,
+        "resident_population": 1768.16,
+        "registered_population": 556.39,
+        "local_public_budget_revenue": 4257.76,
+        "local_public_budget_expenditure": 4570.22
+      }
+    },
+    {
+      "region_code": "440300",
+      "region": "深圳市",
+      "year": 2022,
+      "responsible": "深圳市统计局、国家统计局深圳调查队",
+      "source": "2022年深圳市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.sz.gov.cn/zwgk/zfxxgkml/tjsj/tjgb/content/post_10577661.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 32387.68,
+        "gdp_per_capita": 183274,
+        "resident_population": 1766.18,
+        "registered_population": 583.47,
+        "local_public_budget_revenue": 4012.27,
+        "local_public_budget_expenditure": 4997.24
+      }
+    },
+    {
+      "region_code": "210100",
+      "region": "沈阳市",
+      "year": 2020,
+      "responsible": "沈阳市统计局、国家统计局沈阳调查队",
+      "source": "2020年沈阳市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.shenyang.gov.cn/sjfb/tjgb/",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 6571.6,
+        "registered_population": 762.2,
+        "local_public_budget_revenue": 736.1,
+        "local_public_budget_expenditure": 1074.1
+      }
+    },
+    {
+      "region_code": "210100",
+      "region": "沈阳市",
+      "year": 2021,
+      "responsible": "沈阳市统计局、国家统计局沈阳调查队",
+      "source": "2021年沈阳市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.shenyang.gov.cn/sjfb/tjgb/",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 7249.7,
+        "gdp_per_capita": 79706,
+        "resident_population": 911.8,
+        "registered_population": 765.4,
+        "local_public_budget_revenue": 773,
+        "local_public_budget_expenditure": 1032.3,
+        "urbanization_rate": 84.97
+      }
+    },
+    {
+      "region_code": "210100",
+      "region": "沈阳市",
+      "year": 2022,
+      "responsible": "沈阳市统计局、国家统计局沈阳调查队",
+      "source": "2022年沈阳市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.shenyang.gov.cn/sjfb/tjgb/202304/P020230406501655531571.pdf",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 7695.8,
+        "gdp_per_capita": 84268,
+        "resident_population": 914.7,
+        "registered_population": 764.7,
+        "local_public_budget_revenue": 713.7,
+        "local_public_budget_expenditure": 1048.9,
+        "urbanization_rate": 84.99
+      }
+    },
+    {
+      "region_code": "420100",
+      "region": "武汉市",
+      "year": 2020,
+      "responsible": "武汉市统计局、国家统计局武汉调查队",
+      "source": "2020年武汉市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.wuhan.gov.cn/tjfw/tjgb/202104/t20210425_1675623.shtml",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 15616.06,
+        "local_public_budget_revenue": 1230.29,
+        "local_public_budget_expenditure": 2407
+      }
+    },
+    {
+      "region_code": "420100",
+      "region": "武汉市",
+      "year": 2022,
+      "responsible": "武汉市统计局、国家统计局武汉调查队",
+      "source": "2022年武汉市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.wuhan.gov.cn/tjfw/tjgb/202303/t20230330_2177979.shtml",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 18866.43,
+        "gdp_per_capita": 137772,
+        "resident_population": 1373.9,
+        "registered_population": 944.42,
+        "local_public_budget_revenue": 1504.74,
+        "urbanization_rate": 84.66
+      }
+    },
+    {
+      "region_code": "610100",
+      "region": "西安市",
+      "year": 2022,
+      "responsible": "西安市统计局、国家统计局西安调查队",
+      "source": "2022年西安市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.xa.gov.cn/tjsj/tjgb/gmjjhshfzgb/1.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 11486.51,
+        "gdp_per_capita": 88806,
+        "resident_population": 1299.59,
+        "urbanization_rate": 79.59,
+        "local_public_budget_revenue": 834.09,
+        "local_public_budget_expenditure": 1573.13
+      }
+    },
+    {
+      "region_code": "230100",
+      "region": "哈尔滨市",
+      "year": 2022,
+      "responsible": "哈尔滨市统计局、国家统计局哈尔滨调查队",
+      "source": "2022年哈尔滨市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.harbin.gov.cn/haerbin/c104569/list.shtml",
+      "note": "官方统计公报PDF正文核验；归档入口保留年度公报检索路径",
+      "metrics": {
+        "gdp": 5490.1,
+        "registered_population": 939.5,
+        "local_public_budget_revenue": 262.2,
+        "local_public_budget_expenditure": 1065.5
+      }
+    },
+    {
+      "region_code": "370200",
+      "region": "青岛市",
+      "year": 2021,
+      "responsible": "青岛市统计局、国家统计局青岛调查队",
+      "source": "2021年青岛市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://www.qingdao.gov.cn/zwgk/xxgk/tjj/gkml/tjjd/202203/P020220317602429256100.pdf",
+      "note": "官方统计公报PDF正文核验",
+      "metrics": {
+        "gdp": 14136.46,
+        "resident_population": 1025.67,
+        "urbanization_rate": 77.17,
+        "local_public_budget_revenue": 1368.3,
+        "local_public_budget_expenditure": 1705.7
+      }
+    },
+    {
+      "region_code": "420100",
+      "region": "武汉市",
+      "year": 2021,
+      "responsible": "武汉市统计局、国家统计局武汉调查队",
+      "source": "2021年武汉市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.wuhan.gov.cn/tjfw/tjgb/202204/t20220402_1949877.shtml",
+      "note": "官方统计公报网页正文核验",
+      "metrics": {
+        "gdp": 17716.76,
+        "gdp_per_capita": 135251,
+        "resident_population": 1364.89,
+        "registered_population": 934.1,
+        "urbanization_rate": 84.56,
+        "local_public_budget_revenue": 1578.65,
+        "local_public_budget_expenditure": 2219.34
+      }
+    },
+    {
+      "region_code": "610100",
+      "region": "西安市",
+      "year": 2021,
+      "responsible": "西安市统计局、国家统计局西安调查队",
+      "source": "2021年西安市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.xa.gov.cn/tjsj/tjgb/gmjjhshfzgb/1.html",
+      "note": "官方统计公报PDF正文核验；归档入口保留年度公报检索路径",
+      "metrics": {
+        "gdp": 10688.28,
+        "gdp_per_capita": 83689,
+        "resident_population": 1316.3,
+        "urbanization_rate": 79.49,
+        "local_public_budget_revenue": 855.96,
+        "local_public_budget_expenditure": 1474.94
+      }
+    },
+    {
+      "region_code": "220100",
+      "region": "长春市",
+      "year": 2020,
+      "responsible": "长春市统计局、国家统计局长春调查队",
+      "source": "2020年长春市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.jl.gov.cn/tjsj/tjgb/ndgb/202108/t20210806_8171557.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 6638.03,
+        "gdp_per_capita": 77634,
+        "registered_population": 853.4,
+        "local_public_budget_revenue": 440.4,
+        "local_public_budget_expenditure": 1084.1
+      }
+    },
+    {
+      "region_code": "220100",
+      "region": "长春市",
+      "year": 2021,
+      "responsible": "长春市统计局、国家统计局长春调查队",
+      "source": "2021年长春市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.changchun.gov.cn/tjgb/202207/t20220704_3034598.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 7103.12,
+        "urbanization_rate": 66.8,
+        "local_public_budget_revenue": 617.09,
+        "local_public_budget_expenditure": 966.49,
+        "resident_population": 908.72
+      }
+    },
+    {
+      "region_code": "220100",
+      "region": "长春市",
+      "year": 2022,
+      "responsible": "长春市统计局、国家统计局长春调查队",
+      "source": "2022年长春市国民经济和社会发展统计公报",
+      "doc_no": "—（公开统计公报）",
+      "source_url": "https://tjj.jl.gov.cn/tjsj/tjgb/ndgb/202307/t20230719_2432438.html",
+      "note": "官方统计公报历史核心指标补录；未直接定位到单篇归档时链接为统计局公报归档入口",
+      "metrics": {
+        "gdp": 6744.56,
+        "gdp_per_capita": 74310,
+        "resident_population": 906.54,
+        "local_public_budget_revenue": 459.69,
+        "local_public_budget_expenditure": 976.67,
+        "urbanization_rate": 67.1
+      }
+    }
+  ]
+}

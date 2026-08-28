@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rows": 2885,
+  "rows": 3207,
   "fields": [
     "region_code",
     "region",
@@ -22,11 +22,15 @@
     "compare_key",
     "region_tier"
   ],
-  "sha256": "9d3992d964d7420f48405b682a7f36c9b066263228b8de17c8b58d17dd5c0054",
+  "sha256": "48c221d471a4ad45d4e973ef98b1df1c3dbb3e3c0fe15ac511bc3319ba4d1b20",
   "source_files": [
     "data/base-public-records.json",
     "data/*-additions.json",
     "data/source-provenance-overrides.json",
     "data/source-provenance-bundles.json"
-  ]
+  ],
+  "publication_policy": {
+    "excluded_source_index_rows": 196,
+    "rule": "仅指向栏目入口且无单条公开原文的记录不进入公开发布包"
+  }
 }

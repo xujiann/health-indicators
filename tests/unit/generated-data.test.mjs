@@ -25,7 +25,7 @@ test("生成数据保持19字段和唯一键", async () => {
   assert.equal(new Set(records.map(recordKey)).size, records.length);
 });
 
-test("2023—2025年副省级城市核心矩阵覆盖率不低于90%且来源索引不超过200条", async () => {
+test("副省级城市核心矩阵没有未处置缺口且公开包不含来源索引", async () => {
   const report = JSON.parse(await fs.readFile(
     new URL("../../data/coverage-report.json", import.meta.url),
     "utf8",
@@ -34,14 +34,21 @@ test("2023—2025年副省级城市核心矩阵覆盖率不低于90%且来源索
     total + [2023, 2024, 2025].reduce((sum, year) => sum + (city.by_year[year] || 0), 0)
   ), 0);
   const expected = 15 * 3 * 7;
-  assert.equal(report.schema_version, 4);
-  assert.ok(covered >= 284);
+  assert.equal(report.schema_version, 5);
+  assert.ok(covered >= 276);
   assert.equal(expected, 315);
   assert.equal(report.summary.recent_matrix_covered, covered);
   assert.equal(report.summary.recent_matrix_expected, expected);
-  assert.ok(report.summary.recent_matrix_completeness >= 90);
-  assert.ok(covered / expected >= 0.9);
-  assert.ok(report.summary.source_index_rows <= 200);
+  assert.ok(report.summary.recent_matrix_completeness >= 87.5);
+  assert.ok(covered / expected >= 0.875);
+  assert.equal(report.summary.source_index_rows, 0);
+  assert.equal(report.summary.unresolved_matrix_gaps, 0);
+  assert.equal(report.summary.matrix_resolution_rate, 100);
+  assert.equal(report.gaps.length, 0);
+  assert.equal(
+    report.summary.matrix_covered + report.summary.resolved_exception_cells,
+    report.summary.matrix_expected,
+  );
 });
 
 test("数据治理门禁保持零错误且治理字段100%完整", async () => {
@@ -60,4 +67,29 @@ test("所有发布记录均有来源且不存在内部标记", () => {
   assert.equal(records.filter((record) => /内部资料|仅限内部使用|内部文件/.test(
     `${record.source || ""} ${record.doc_no || ""} ${record.note || ""}`,
   )).length, 0);
+  assert.equal(records.filter((record) => String(record.note || "").includes(
+    "公开来源索引（非单条原文）",
+  )).length, 0);
+});
+
+test("2025年国家卫健委统计公报已形成完整专题包", async () => {
+  const source = "2025年我国卫生健康事业发展统计公报";
+  const rows = records.filter((record) => record.source === source);
+  assert.ok(rows.length >= 290);
+  assert.equal(new Set(rows.map((record) => record.subcategory)).size, 12);
+  const values = new Map(rows.map((record) => [record.compare_key, Number(record.value)]));
+  assert.equal(values.get("医疗卫生机构总数"), 1108335);
+  assert.equal(values.get("卫生技术人员数"), 1345.5);
+  assert.equal(values.get("总诊疗人次"), 106.5);
+  assert.equal(values.get("人均预期寿命"), 79.25);
+  assert.equal(values.get("孕产妇死亡率(合计)"), 13.4);
+  assert.equal(values.get("婴儿死亡率(合计)"), 3.8);
+  assert.ok(rows.every((record) => String(record.source_url).includes("1b45959033524f48867d90e822be5394")));
+
+  const topicPack = JSON.parse(await fs.readFile(
+    new URL("../../data/packs/national-health-2025.json", import.meta.url),
+    "utf8",
+  ));
+  assert.equal(topicPack.name, "national-health-2025");
+  assert.equal(topicPack.rows.length, rows.length);
 });
