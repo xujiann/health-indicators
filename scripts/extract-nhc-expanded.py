@@ -1,11 +1,12 @@
 import json
+import os
 import re
 from pathlib import Path
 
 from pypdf import PdfReader
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(os.environ.get("DATA_PROJECT_ROOT") or Path(__file__).parents[1]).absolute()
 PDF_DIR = ROOT / "tmp" / "pdfs"
 OUT = ROOT / "data" / "national-health-bulletin-expanded-additions.json"
 
@@ -13,6 +14,7 @@ SOURCE_URLS = {
     2022: "https://www.nhc.gov.cn/cms-search/downFiles/9b3fddc4703d4c9d9ad399bcca089f03.pdf",
     2023: "https://www.nhc.gov.cn/cms-search/downFiles/58c5d1e9876344e5b1aa5aa2b083a51a.pdf",
     2024: "https://www.nhc.gov.cn/guihuaxxs/c100133/202512/f1c3a3c617484a27a1a26a468afbaeee/files/2024%E5%B9%B4%E6%88%91%E5%9B%BD%E5%8D%AB%E7%94%9F%E5%81%A5%E5%BA%B7%E4%BA%8B%E4%B8%9A%E5%8F%91%E5%B1%95%E7%BB%9F%E8%AE%A1%E5%85%AC%E6%8A%A5-20251201161542231.pdf",
+    2025: "https://www.nhc.gov.cn/guihuaxxs/c100133/202608/1b45959033524f48867d90e822be5394/files/2025%E5%B9%B4%E6%88%91%E5%9B%BD%E5%8D%AB%E7%94%9F%E5%81%A5%E5%BA%B7%E4%BA%8B%E4%B8%9A%E5%8F%91%E5%B1%95%E7%BB%9F%E8%AE%A1%E5%85%AC%E6%8A%A5-20260828105402342.pdf",
 }
 
 
@@ -91,7 +93,7 @@ records = []
 seen = set()
 
 
-def add(year, subcategory, indicator, value, unit, note="国家卫健委统计公报扩展指标抽取；2022-2024年PDF表格结构化"):
+def add(year, subcategory, indicator, value, unit, note="国家卫健委统计公报扩展指标抽取；2022-2025年PDF表格结构化"):
     if value is None:
         return
     indicator = indicator.strip()
@@ -146,19 +148,21 @@ def add_table_1(year, lines):
 
 def add_table_2(year, lines):
     unit_by_base = {
-        "每千人口执业（助理）医师": "人",
+        "每千人口执业(助理)医师": "人",
+        "每千人口执业医师": "人",
         "每万人口全科医生": "人",
         "每千人口注册护士": "人",
-        "每千人口药师（士）": "人",
+        "每千人口药师(士)": "人",
         "每万人口专业公共卫生机构人员": "人",
     }
     for row in compact_rows(table_lines(lines, 2), 2):
         label, vals = current_values(row, 2)
         if not label:
             continue
-        base = re.sub(r"（.*?）", "", clean_label(label))
+        base = re.sub(r"（(?:万人|人)）$", "", clean_label(label)).strip()
+        base = base.replace("（助理）", "(助理)").replace("（士）", "(士)")
         unit = unit_by_base.get(base, "万人")
-        indicator = base if unit != "万人" or base.endswith(("数", "人员")) else f"{base}数"
+        indicator = base if base.endswith("数") else f"{base}数"
         add(year, "卫生人员", indicator, vals[1], unit)
 
 
@@ -363,17 +367,31 @@ def add_table_17_18(year, lines, table_no, subcategory, prefix):
 
 
 def add_table_19(year, lines):
+    allowed = {
+        "产前检查率",
+        "产后访视率",
+        "住院分娩率",
+        "市",
+        "县",
+        "3 岁以下儿童系统管理率",
+        "3岁以下儿童系统管理率",
+        "孕产妇系统管理率",
+        "产妇系统管理率",
+    }
     for row in compact_rows(table_lines(lines, 19), 2):
         label, vals = current_values(row, 2)
         if not label:
             continue
         label = clean_label(label)
+        normalized = re.sub(r"（.*?）", "", label).strip()
+        if normalized not in allowed:
+            continue
         if label == "市":
             indicator = "城市住院分娩率"
         elif label == "县":
             indicator = "县域住院分娩率"
         else:
-            indicator = re.sub(r"（.*?）", "", label)
+            indicator = normalized.replace(" ", "")
         add(year, "妇幼与公共卫生", indicator, vals[1], "%")
 
 
@@ -421,7 +439,30 @@ def add_body_specs(year, text):
             add(year, subcategory, indicator, float(match.group(1)), unit, "国家卫健委统计公报扩展指标抽取；正文稳定字段补充")
 
 
-for year in (2022, 2023, 2024):
+available_years = tuple(year for year in SOURCE_URLS if (PDF_DIR / f"{year}.pdf").exists())
+if OUT.exists():
+    existing = json.loads(OUT.read_text(encoding="utf-8"))
+    legacy_indicator_map = {
+        "卫生技术人员": "卫生技术人员数",
+        "执业医师数": "执业(助理)医师数",
+        "每千人口执业医师数": "每千人口执业(助理)医师数",
+        "每千人口注册护士": "每千人口注册护士数",
+        "每千人口药师数": "每千人口药师(士)数",
+        "每万人口全科医生": "每万人口全科医生数",
+        "每万人口专业公共卫生机构人员": "每万人口专业公共卫生机构人员数",
+        "药师数": "药师(士)数",
+        "技师数": "技师(士)数",
+    }
+    for row in existing:
+        if row["year"] not in available_years:
+            row["indicator"] = legacy_indicator_map.get(row["indicator"], row["indicator"])
+            row["compare_key"] = row["indicator"]
+            if row["indicator"].startswith(("每千人口", "每万人口")):
+                row["unit"] = "人"
+            records.append(row)
+            seen.add((row["year"], row["indicator"]))
+
+for year in available_years:
     lines = pdf_lines(year)
     text = " ".join(lines)
     add_table_1(year, lines)
@@ -446,5 +487,10 @@ for year in (2022, 2023, 2024):
 
 records.sort(key=lambda r: (r["subcategory"], r["indicator"], r["year"]))
 OUT.write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-summary = {"records": len(records), "indicators": len({r["indicator"] for r in records}), "years": [2022, 2023, 2024]}
+summary = {
+    "records": len(records),
+    "indicators": len({r["indicator"] for r in records}),
+    "years": sorted({r["year"] for r in records}),
+    "refreshed_years": list(available_years),
+}
 print(json.dumps(summary, ensure_ascii=False))

@@ -1,19 +1,25 @@
 {
   "schema_version": 1,
-  "dataset_sha256": "9d3992d964d7420f48405b682a7f36c9b066263228b8de17c8b58d17dd5c0054",
-  "generated_at": "2026-08-19T00:00:00+08:00",
+  "dataset_sha256": "48c221d471a4ad45d4e973ef98b1df1c3dbb3e3c0fe15ac511bc3319ba4d1b20",
+  "generated_at": "2026-08-28T00:00:00+08:00",
   "packs": {
     "subprov-core": {
       "path": "data/packs/subprov-core.json",
-      "rows": 282,
-      "bytes": 198528,
-      "sha256": "4a24c903102038204fae78576dd5ffc16aabfa339d979fb475875892340ed1b6"
+      "rows": 515,
+      "bytes": 374874,
+      "sha256": "bf037e2a6b777425ac78030e11a9ad4dc22321e0554fe83531e0ee8a6d3bee6b"
     },
     "national-health": {
       "path": "data/packs/national-health.json",
-      "rows": 1458,
-      "bytes": 1069832,
-      "sha256": "8e48287c32621b3dae4546832a3b647f62800ea2bbd64c3e366c6d28ddc06ad8"
+      "rows": 1743,
+      "bytes": 1304682,
+      "sha256": "2fcd9ccd2d2d7c0171037bb50c30f835c11d97a3b7b6f5f36ad2e2991cf6c779"
+    },
+    "national-health-2025": {
+      "path": "data/packs/national-health-2025.json",
+      "rows": 300,
+      "bytes": 245169,
+      "sha256": "496e432375def911abe75a0e82525fc2b9510db8c8307edc1a94200879d3717c"
     },
     "medical-insurance": {
       "path": "data/packs/medical-insurance.json",

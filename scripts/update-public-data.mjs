@@ -175,7 +175,7 @@ function expandNationalHealthSeries(payload) {
       source: `${entry.year}年我国卫生健康事业发展统计公报`,
       doc_no: "—（公开统计公报）",
       source_url: entry.source_url,
-      note: payload.note || "国家卫健委统计公报补录",
+      note: [payload.note, entry.note, entry.metric_notes?.[metricKey]].filter(Boolean).join("；") || "国家卫健委统计公报补录",
       compare_key: definition.compare_key,
       region_tier: "1·全国",
     });
@@ -360,7 +360,7 @@ async function buildWorkbook(headers, records, outputPath) {
   const note = workbook.worksheets.add("说明");
   note.getRange("A1").values = [["国家·辽宁·大连 公开指标数据库"]];
   note.getRange("A3").values = [[`本表仅含公开发布及经确认可公开的指标数据，共${records.length}条，不含未公开规划文件。`]];
-  note.getRange("A4").values = [["本版纳入2010-2024年全国卫生健康统计公报核心序列、2022-2024年公报扩展分类指标、2016-2025年全国人口老龄化长序列及15个副省级城市公开对标数据；来源索引不是单条原文，引用请以原始公报或正式来源为准。"]];
+  note.getRange("A4").values = [["本版纳入2010-2025年全国卫生健康统计公报核心序列、2022-2025年公报扩展分类指标、2016-2025年全国人口老龄化长序列及15个副省级城市公开对标数据；来源索引不是单条原文，引用请以原始公报或正式来源为准。"]];
   note.getRange("A1:A4").format = { font: { name: "Microsoft YaHei" }, wrapText: true };
   note.getRange("A1").format = { font: { bold: true, size: 14, color: "#1F4E79" } };
   note.getRange("A:A").format.columnWidth = 88;
@@ -412,10 +412,14 @@ async function buildWorkbook(headers, records, outputPath) {
   coverage.getRange("B6").formulas = [[`=MAX('公开指标数据'!$D$2:$D$${records.length + 1})`]];
   const sourceIndexRecords = records.filter((record) => String(record.note || "").includes("公开来源索引（非单条原文）"));
   coverage.getRange("D1").values = [["来源索引记录键"]];
-  coverage.getRangeByIndexes(1, 3, sourceIndexRecords.length, 1).values = sourceIndexRecords.map((record) => [
-    `${record.region}|${record.year}|${record.compare_key}`,
-  ]);
-  coverage.getRange("B7").formulas = [[`=COUNTA(D2:D${sourceIndexRecords.length + 1})`]];
+  if (sourceIndexRecords.length) {
+    coverage.getRangeByIndexes(1, 3, sourceIndexRecords.length, 1).values = sourceIndexRecords.map((record) => [
+      `${record.region}|${record.year}|${record.compare_key}`,
+    ]);
+    coverage.getRange("B7").formulas = [[`=COUNTA(D2:D${sourceIndexRecords.length + 1})`]];
+  } else {
+    coverage.getRange("B7").values = [[0]];
+  }
   coverage.getRange("A9:B9").values = [["地区", "记录数"]];
   coverage.getRangeByIndexes(9, 0, regions.length, 1).values = regions.map((region) => [region]);
   coverage.getRange("B10").formulas = [[`=COUNTIF('公开指标数据'!$B$2:$B$${records.length + 1},A10)`]];
@@ -528,9 +532,14 @@ async function main() {
     overrideByKey.set(override.record_key, override);
   }
   const mergedMap = new Map();
-  rawRecords
+  const publishedRecords = rawRecords
     .map((record) => applySourceOverride(record, overrideByKey.get(recordKey(record))))
-    .map(publicizeSubprov)
+    .map(publicizeSubprov);
+  const excludedSourceIndexRows = publishedRecords.filter((record) => (
+    String(record.note || "").includes(SOURCE_INDEX_NOTE)
+  )).length;
+  publishedRecords
+    .filter((record) => !String(record.note || "").includes(SOURCE_INDEX_NOTE))
     .forEach((record) => {
     mergedMap.set(recordKey(record), record);
   });
@@ -550,6 +559,10 @@ async function main() {
       "data/source-provenance-overrides.json",
       "data/source-provenance-bundles.json",
     ],
+    publication_policy: {
+      excluded_source_index_rows: excludedSourceIndexRows,
+      rule: "仅指向栏目入口且无单条公开原文的记录不进入公开发布包",
+    },
   }, null, 2)}\n`;
   await writeOrCheck(publicDataScriptPath, dataScript, checkOnly);
   await writeOrCheck(dataManifestPath, manifest, checkOnly);
@@ -593,6 +606,7 @@ async function main() {
     additions: additions.length,
     subprovCities: cityCount,
     mergedRows: merged.length,
+    excludedSourceIndexRows,
     checksum,
     workbookBuilt: shouldBuildWorkbook && !checkOnly,
     checked: checkOnly,

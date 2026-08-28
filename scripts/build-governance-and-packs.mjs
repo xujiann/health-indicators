@@ -11,7 +11,7 @@ const match = script.match(/^globalThis\.HEALTH_INDICATOR_DATA=(\[[\s\S]*\]);\s*
 if (!match) throw new Error("无法解析 public-data.js");
 const records = JSON.parse(match[1]);
 const release = JSON.parse(await fs.readFile(path.join(root, "data", "release.json"), "utf8"));
-const collectedAt = release.released_at || release.released_on;
+const collectedAt = release.dataset_collected_at || release.released_at || release.released_on;
 const analysis = analyzeRecords(records, { collectedAt });
 const manifest = JSON.parse(await fs.readFile(path.join(root, "data", "public-data-manifest.json"), "utf8"));
 const quality = {
@@ -34,6 +34,7 @@ const quality = {
 const packDefs = {
   "subprov-core": (row) => String(row.region_tier).startsWith("3") && ["经济", "人口", "财政"].includes(String(row.category).replace(/^\d+·/, "")),
   "national-health": (row) => row.region === "全国" && String(row.category).includes("卫生健康"),
+  "national-health-2025": (row) => row.region === "全国" && Number(row.year) === 2025 && String(row.category).includes("卫生健康") && String(row.source).includes("2025年我国卫生健康事业发展统计公报"),
   "medical-insurance": (row) => String(row.category).includes("医疗保障"),
 };
 const packManifest = { schema_version: 1, dataset_sha256: manifest.sha256, generated_at: collectedAt, packs: {} };

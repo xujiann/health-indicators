@@ -1,6 +1,6 @@
 {
   "kind": "national-health-series-v1",
-  "note": "国家卫健委统计公报补录；2010-2024年核心卫生健康序列",
+  "note": "国家卫健委统计公报补录；2010-2025年核心卫生健康序列",
   "years": [
     {
       "year": 2010,
@@ -308,6 +308,30 @@
         "admissions": 31192.0,
         "total_health_expenditure": 90895.5,
         "health_expenditure_per_capita": 6454.4
+      }
+    },
+    {
+      "year": 2025,
+      "source_url": "https://www.nhc.gov.cn/guihuaxxs/c100133/202608/1b45959033524f48867d90e822be5394/files/2025%E5%B9%B4%E6%88%91%E5%9B%BD%E5%8D%AB%E7%94%9F%E5%81%A5%E5%BA%B7%E4%BA%8B%E4%B8%9A%E5%8F%91%E5%B1%95%E7%BB%9F%E8%AE%A1%E5%85%AC%E6%8A%A5-20260828105402342.pdf",
+      "metrics": {
+        "total_institutions": 1108335,
+        "hospitals": 38159,
+        "beds": 1004.0,
+        "beds_per_1000": 7.15,
+        "health_workers": 1612.1,
+        "health_technicians": 1345.5,
+        "physicians_assistants": 530.6,
+        "registered_nurses": 606.2,
+        "physicians_per_1000": 3.78,
+        "nurses_per_1000": 4.32,
+        "general_practitioners_per_10000": 4.91,
+        "total_visits": 106.5,
+        "admissions": 29910.7,
+        "total_health_expenditure": 93367.2,
+        "health_expenditure_per_capita": 6637.9
+      },
+      "metric_notes": {
+        "beds_per_1000": "按公报医疗卫生机构床位10039606张与年末全国人口140489万人计算，四舍五入至两位小数"
       }
     }
   ]
