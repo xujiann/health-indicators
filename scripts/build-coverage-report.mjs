@@ -11,6 +11,7 @@ import {
   buildTaskBatches,
   validateTaskStatuses,
 } from "./lib/subprov-task-batches.mjs";
+import { sameGeneratedText } from "./lib/generated-files.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dataScriptPath = path.join(repoRoot, "public-data.js");
@@ -308,7 +309,7 @@ const coverageHtml = `<!DOCTYPE html>
 </head>
 <body>
 <main class="wrap">
-  <nav class="nav" aria-label="项目导航"><a href="index.html">数据首页</a><a href="about.html">关于</a></nav>
+  <nav class="nav" aria-label="项目导航"><a href="index.html">数据首页</a><a href="health-trends.html">可视化</a><a href="about.html">关于</a></nav>
   <section class="hero"><div class="muted">DATA MAINTENANCE</div><h1>副省级城市核心指标覆盖维护</h1><p>用同一张矩阵查看覆盖情况、筛选待补单元并下载标准台账。所有数值仍须经过官方原文校验后才能入库。</p></section>
   <section class="kpis" aria-label="覆盖概览">
     <div class="kpi"><b>${totalCovered}/${totalExpected}</b><span>核心矩阵覆盖</span></div>
@@ -376,7 +377,7 @@ async function writeOrCheck(filePath, content) {
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
   }
-  if (current === content) return;
+  if (sameGeneratedText(current, content)) return;
   if (checkOnly) throw new Error(`Generated file is stale: ${path.relative(repoRoot, filePath)}`);
   await fs.writeFile(filePath, content, "utf8");
 }

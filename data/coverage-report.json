@@ -42,7 +42,7 @@
     ]
   },
   "summary": {
-    "rows": 3207,
+    "rows": 3172,
     "matrix_covered": 510,
     "matrix_expected": 630,
     "matrix_gaps": 0,
@@ -56,7 +56,7 @@
     "recent_matrix_gaps": 0,
     "recent_numeric_matrix_gaps": 39,
     "recent_matrix_completeness": 87.6,
-    "direct_source_rows": 3207,
+    "direct_source_rows": 3172,
     "source_index_rows": 0
   },
   "cities": [

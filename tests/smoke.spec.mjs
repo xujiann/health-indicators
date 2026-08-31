@@ -162,3 +162,56 @@ test("城市分析数据包失败时给出可操作提示并锁定导出", async
   await expect(page.locator("#exportCsv")).toBeDisabled();
   await expect(page.locator("#year")).toBeDisabled();
 });
+
+test("全国卫生趋势按需加载长序列并可切换指标", async ({ page }) => {
+  const requested = [];
+  page.on("request", (request) => requested.push(new URL(request.url()).pathname));
+  await page.goto("/health-trends.html");
+  await expect(page).toHaveTitle(/全国卫生趋势/);
+  await expect(page.locator("#trendPath")).toBeVisible();
+  await expect(page.locator("#trendTable tr")).toHaveCount(16);
+  await page.locator("#metric").selectOption({ label: "总诊疗人次" });
+  await expect(page.locator("#latest")).toContainText("亿人次");
+  expect(requested).toContain("/data/packs/national-health.json");
+  expect(requested).not.toContain("/public-data.js");
+});
+
+test("城市对标矩阵显示实值、已核验缺值和年度排名", async ({ page }) => {
+  await page.goto("/city-matrix.html");
+  await expect(page).toHaveTitle(/城市对标矩阵/);
+  await expect(page.locator("#cityMatrix button")).toHaveCount(45);
+  await expect(page.locator("#cityMatrix .missing").first()).toBeVisible();
+  await page.locator("#cityMatrix button").first().click();
+  await expect(page.locator("#cityDetail")).not.toHaveText(/选择矩阵/);
+  await page.locator("#cityYear").selectOption("2024");
+  await expect(page.locator("#rankingTitle")).toContainText("2024");
+  await expect(page.locator("#cityRanking tr").first()).toBeVisible();
+});
+
+test("2025公报变化只呈现同名同单位可比项", async ({ page }) => {
+  await page.goto("/nhc-2025-change.html");
+  await expect(page).toHaveTitle(/2025公报变化/);
+  await expect(page.locator("#comparable")).not.toHaveText("—");
+  await expect(page.locator("#changeList .change-row").first()).toBeVisible();
+  await expect(page.locator("#status")).toContainText("同口径指标");
+  await page.locator("#subcategory").selectOption({ label: "卫生资源" });
+  await expect(page.locator("#changeList .change-row").first()).toBeVisible();
+});
+
+test("医保快报与年度公报保留双口径并展示修订差异", async ({ page }) => {
+  await page.goto("/insurance-compare.html");
+  await expect(page).toHaveTitle(/医保口径比较/);
+  await expect(page.locator("#insuranceBars .bar.quick").first()).toBeVisible();
+  await expect(page.locator("#insuranceBars .bar.annual").first()).toBeVisible();
+  await expect(page.locator("#insuranceTable tr").first()).toBeVisible();
+  await expect(page.locator("#status")).toContainText("快报—年度公报");
+});
+
+test("新增可视化在移动端不产生页面级水平溢出", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const path of ["/health-trends.html", "/city-matrix.html", "/nhc-2025-change.html", "/insurance-compare.html"]) {
+    await page.goto(path);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
+    expect(overflow, path).toBeFalsy();
+  }
+});

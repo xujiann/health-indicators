@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { analyzeRecords } from "./lib/data-governance.mjs";
+import { sameGeneratedText } from "./lib/generated-files.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const check = process.argv.includes("--check");
@@ -43,7 +44,7 @@ async function write(relative, content) {
   const target = path.join(root, relative);
   let current = "";
   try { current = await fs.readFile(target, "utf8"); } catch (error) { if (error.code !== "ENOENT") throw error; }
-  if (current === content) return;
+  if (sameGeneratedText(current, content)) return;
   if (check) throw new Error(`Generated file is stale: ${relative}`);
   await fs.mkdir(path.dirname(target), { recursive: true });
   await fs.writeFile(target, content, "utf8");

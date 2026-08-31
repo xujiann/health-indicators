@@ -85,6 +85,7 @@ test("2025年国家卫健委统计公报已形成完整专题包", async () => {
   assert.equal(values.get("孕产妇死亡率(合计)"), 13.4);
   assert.equal(values.get("婴儿死亡率(合计)"), 3.8);
   assert.ok(rows.every((record) => String(record.source_url).includes("1b45959033524f48867d90e822be5394")));
+  assert.equal(rows.filter((record) => /村（居委会）数报告|区）数 171 个|亿人次，/.test(record.indicator)).length, 0);
 
   const topicPack = JSON.parse(await fs.readFile(
     new URL("../../data/packs/national-health-2025.json", import.meta.url),

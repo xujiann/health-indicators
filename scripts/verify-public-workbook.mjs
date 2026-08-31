@@ -7,7 +7,9 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const workbookPath = path.join(repoRoot, "公开指标数据库.xlsx");
 const dataScriptPath = path.join(repoRoot, "public-data.js");
 const tmpDir = path.join(repoRoot, "tmp");
-const outputDir = path.join(repoRoot, "outputs", "complete-plan-20260819");
+const outputDir = process.env.DATA_WORKBOOK_OUTPUT_DIR
+  ? path.resolve(process.env.DATA_WORKBOOK_OUTPUT_DIR)
+  : path.join(repoRoot, "outputs", "workbook-verification");
 
 const artifactTool = process.env.DATA_WORKSPACE_NODE_MODULES
   ? await import(pathToFileURL(createRequire(path.join(process.env.DATA_WORKSPACE_NODE_MODULES, "package.json")).resolve("@oai/artifact-tool")).href)

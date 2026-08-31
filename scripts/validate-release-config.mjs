@@ -52,7 +52,7 @@ const checks = [
   ["回滚工作流要求指定 ref 并先通过测试", /ref:\s*\$\{\{ inputs\.ref \}\}/.test(rollback) && /run:\s*npm test/.test(rollback)],
   ["Pages 发布版本与变更日志", /cp\s+CHANGELOG\.md\s+_site\//.test(pages) && fs.existsSync(path.join(repoRoot, "data", "release.json"))],
   ["主题数据包清单纳入发布制品", fs.existsSync(path.join(repoRoot, "data", "packs", "manifest.json")) && /cp -R data _site\/data/.test(pages)],
-  ["2025年国家卫健委公报专题已纳入发布", /data-p="nhc2025"/.test(html) && packManifest.packs?.["national-health-2025"]?.rows >= 300],
+  ["2025年国家卫健委公报专题已纳入发布", /data-p="nhc2025"/.test(html) && packManifest.packs?.["national-health-2025"]?.rows >= 290],
   ["副省级核心矩阵没有未处置缺口", coverageReport.summary.unresolved_matrix_gaps === 0 && coverageReport.summary.matrix_resolution_rate === 100],
   ["公开发布包不包含仅来源索引记录", coverageReport.summary.source_index_rows === 0 && publicManifest.publication_policy?.excluded_source_index_rows >= 0],
 ];
