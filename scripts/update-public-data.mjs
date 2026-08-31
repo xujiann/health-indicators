@@ -4,6 +4,7 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { SOURCE_INDEX_NOTE } from "./lib/subprov-core.mjs";
+import { sameGeneratedText } from "./lib/generated-files.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
@@ -477,7 +478,7 @@ async function writeOrCheck(filePath, content, checkOnly) {
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
   }
-  if (current === content) return false;
+  if (sameGeneratedText(current, content)) return false;
   if (checkOnly) throw new Error(`Generated file is stale: ${path.relative(repoRoot, filePath)}`);
   await fs.writeFile(filePath, content, "utf8");
   return true;

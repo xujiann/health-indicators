@@ -66,6 +66,8 @@ def compact_rows(lines, value_count):
         "人员数 卫生技术人员",
     )
     for line in lines:
+        if rows and re.match(r"^[（(][一二三四五六七八九十]+[）)]", line):
+            break
         if not line or line.startswith(("表 ", "注：", "机构类别", "指标", "指 标", "病名", "202")):
             continue
         if line in {"次）", "人次）"}:
@@ -356,12 +358,45 @@ def add_table_14(year, lines):
         add(year, "中医药服务", f"{base}出院人次", vals[3], "万人次")
 
 
+INFECTIOUS_DISEASES = {
+    "甲乙类传染病": {
+        "合计", "鼠疫", "霍乱", "新型冠状病毒感染", "传染性非典型肺炎",
+        "艾滋病", "病毒性肝炎", "脊髓灰质炎", "人感染新亚型流感",
+        "人感染高致病性禽流感", "麻疹", "流行性出血热", "狂犬病",
+        "流行性乙型脑炎", "登革热", "猴痘", "炭疽",
+        "细菌性和阿米巴性痢疾", "肺结核", "伤寒和副伤寒",
+        "流行性脑脊髓膜炎", "百日咳", "白喉", "新生儿破伤风",
+        "猩红热", "布鲁氏菌病", "淋病", "梅毒", "钩端螺旋体病",
+        "血吸虫病", "疟疾",
+    },
+    "丙类传染病": {
+        "合计", "流行性感冒", "流行性腮腺炎", "风疹",
+        "急性出血性结膜炎", "麻风病", "流行性和地方性斑疹伤寒",
+        "斑疹伤寒", "黑热病", "包虫病", "丝虫病", "手足口病",
+        "其他感染性腹泻病",
+    },
+}
+
+
+def valid_infectious_indicator(indicator):
+    for prefix, allowed in INFECTIOUS_DISEASES.items():
+        if not indicator.startswith(prefix):
+            continue
+        suffix = indicator[len(prefix):]
+        disease = re.sub(r"报告(?:发病例数|死亡人数)$", "", suffix)
+        return disease in allowed
+    return True
+
+
 def add_table_17_18(year, lines, table_no, subcategory, prefix):
+    allowed = INFECTIOUS_DISEASES[prefix]
     for row in compact_rows(table_lines(lines, table_no), 4):
         label, vals = current_values(row, 4)
         if not label:
             continue
         base = "合计" if clean_label(label) == "总计" else clean_label(label)
+        if base not in allowed:
+            continue
         add(year, subcategory, f"{prefix}{base}报告发病例数", vals[1], "例")
         add(year, subcategory, f"{prefix}{base}报告死亡人数", vals[3], "人")
 
@@ -457,6 +492,8 @@ if OUT.exists():
         if row["year"] not in available_years:
             row["indicator"] = legacy_indicator_map.get(row["indicator"], row["indicator"])
             row["compare_key"] = row["indicator"]
+            if not valid_infectious_indicator(row["indicator"]):
+                continue
             if row["indicator"].startswith(("每千人口", "每万人口")):
                 row["unit"] = "人"
             records.append(row)

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { looksLikeNHCExtractFragment } from "./lib/nhc-extract-validation.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dataScript = fs.readFileSync(path.join(repoRoot, "public-data.js"), "utf8");
@@ -69,20 +70,7 @@ function recordKey(record) {
 }
 
 function looksLikePdfFragment(record) {
-  const isNHCExtract = String(record.source_url || "").includes("nhc.gov.cn")
-    || String(record.note || "").includes("PDF");
-  if (!isNHCExtract) return false;
-  const indicator = String(record.indicator || "");
-  const compareKey = String(record.compare_key || "");
-  const text = `${indicator} ${compareKey}`;
-  return /^\s*\d+(?:\.\d+)?[%‰]?[^\u5c81]*[）；其中]/.test(indicator)
-    || /^[万亿]人次（占/.test(indicator)
-    || /[万亿]人次（占/.test(text)
-    || /4023\.1\s*万人次（占/.test(text)
-    || /^其中：/.test(indicator)
-    || /^类/.test(indicator)
-    || /其中：城市/.test(indicator)
-    || /下降.*城市/.test(indicator);
+  return looksLikeNHCExtractFragment(record);
 }
 
 function analyze(records) {
