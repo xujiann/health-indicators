@@ -60,6 +60,13 @@ jobs:
           cp analysis-workbench.js _site/
           cp city-analysis.html _site/
           cp city-analysis.js _site/
+          cp health-trends.html _site/
+          cp city-matrix.html _site/
+          cp nhc-2025-change.html _site/
+          cp insurance-compare.html _site/
+          cp insights.css _site/
+          cp insights-core.js _site/
+          cp insights.js _site/
           cp about.html _site/
           cp coverage.html _site/
           cp README.md _site/
