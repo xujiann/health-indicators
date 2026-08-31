@@ -30,6 +30,7 @@ const checks = [
   ["Pages 制品复制分析工作台脚本", /cp\s+analysis-workbench\.js\s+_site\//.test(pages)],
   ["Pages 制品复制覆盖维护页", /cp\s+coverage\.html\s+_site\//.test(pages)],
   ["Pages 制品复制城市分析页", /cp\s+city-analysis\.html\s+_site\//.test(pages) && /cp\s+city-analysis\.js\s+_site\//.test(pages)],
+  ["Pages 制品复制四类专题可视化", ["health-trends.html", "city-matrix.html", "nhc-2025-change.html", "insurance-compare.html", "insights.css", "insights-core.js", "insights.js"].every((file) => pages.includes(`cp ${file} _site/`))],
   ["城市分析页按需加载副省级主题包", /data\/packs\/subprov-core\.json/.test(cityAnalysisScript)],
   ["城市分析页提供三类导出", /exportSvg/.test(cityAnalysisHtml) && /exportCsv/.test(cityAnalysisHtml) && /exportSummary/.test(cityAnalysisHtml)],
   ["覆盖维护页提供标准补录台账", /data\/subprov-core-matrix-backlog\.csv/.test(coverageHtml)],
